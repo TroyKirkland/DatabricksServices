@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Databricks Apps — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Databricks Apps</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Hosted web apps inside Databricks. Bring Python or Node (Streamlit/Dash/Flask/FastAPI/Gradio/Reflex/React); declare resources in <code>app.yaml</code>; deploy. Workspace OAuth + UC + serving + Lakebase access + HTTPS URL.</p>
+<ul>
+<li><strong>Hosted</strong>: no clusters/K8s.</li>
+<li><strong>UC-integrated</strong>: app identity has fine-grained access.</li>
+<li><strong>Multi-framework</strong>: Python web + Node.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><code>app.yaml</code>: command + env + resources + scopes.</li>
+<li>Runtimes: Streamlit, Dash, Gradio, Flask, FastAPI, Reflex (Python); React, Angular, Svelte, Express, FastAPI+React via APX (Node).</li>
+<li>Resources: UC tables/volumes/connections, serving endpoints, Lakebase, secrets, SQL warehouses, Genie Agents, MLflow experiments, AI Search indexes, UDFs, other apps (app-to-app).</li>
+<li>App telemetry: traces, logs, and metrics written to Unity Catalog tables.</li>
+<li>Auth: app identity (SP) + OBO (act-as-user).</li>
+<li>HTTPS endpoint with workspace SSO; can be embedded in external sites.</li>
+<li>Logs + observability in UI.</li>
+<li>Deploy via CLI / DABs / UI.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Browser] → HTTPS + OAuth → [App endpoint] → [Container running your framework]
+                                                  ├ env from app.yaml resources
+                                                  ├ App identity → UC / endpoints / Lakebase
+                                                  └ Optional OBO → user identity</code></pre>
+<p>Resources translate to env vars (e.g., <code>MY_ENDPOINT_URL</code>, Lakebase conn). Outbound to Databricks native; arbitrary internet egress per network policy.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Lifecycle</h3>
+<ul>
+<li>Create → deploy → start → update (new revision, traffic shift) → stop.</li>
+</ul>
+
+<h3>Resource resolution</h3>
+<ul>
+<li><code>resources:</code> become env vars (endpoint, table, volume, Lakebase, secret, Genie Agent, AI Search index, UDF, etc.).</li>
+<li>Resources must already exist; app runs with least privilege scoped to declared resources.</li>
+<li>Secrets pulled from scopes at startup.</li>
+<li><code>databricks-sdk</code> uses injected <code>DATABRICKS_HOST</code> + token.</li>
+</ul>
+
+<h3>Auth paths</h3>
+<ul>
+<li>App auth: OAuth M2M, refreshable.</li>
+<li>OBO: framework forwards user bearer token.</li>
+<li>External APIs: secrets + outbound policy.</li>
+</ul>
+
+<h3>Compute + scaling</h3>
+<ul>
+<li>Managed container; sized CPU/memory.</li>
+<li>Single-instance vertical sizing predominantly.</li>
+<li>Scale-to-zero with cold-start cost.</li>
+<li>Heavy compute → hand off to Jobs.</li>
+</ul>
+
+<h3>Networking</h3>
+<ul>
+<li>Same VPC/VNet (configs apply).</li>
+<li>Outbound to UC/serving/Lakebase native.</li>
+<li>Custom outbound via account network policy.</li>
+<li>Inbound: HTTPS + OAuth.</li>
+</ul>
+
+<h3>Logs + metrics</h3>
+<ul>
+<li>stdout/stderr in UI.</li>
+<li>App telemetry: declare in <code>app.yaml</code> to route traces, logs, and metrics to Unity Catalog tables.</li>
+<li>Self-instrument for additional depth (MLflow tracing, Datadog, etc.).</li>
+</ul>
+
+<h3>Integration patterns</h3>
+<ul>
+<li>AI assistant UI on Agent Bricks.</li>
+<li>Data entry forms → Lakebase / UC.</li>
+<li>Internal admin dashboards.</li>
+<li>Customer-facing portal (with account-level viewers).</li>
+<li>Embedded apps: iframed into external websites with workspace OAuth.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Resource sizing has caps.</li>
+<li>Long-running websockets: watch idle timeouts.</li>
+<li>Cold start on scale-to-zero.</li>
+<li>Outbound bounded by network policy.</li>
+<li>Long tasks → Jobs + poll.</li>
+<li>State → Lakebase / UC.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Managed Heroku-like hosting with first-class Databricks integration."</strong> Best for apps acting on lakehouse + AI endpoints.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Databricks Apps</h2>
+<ul>
+<li><strong>General-purpose B2C SaaS.</strong></li>
+<li><strong>Heavy compute in-app.</strong></li>
+<li><strong>Extensive custom infra.</strong></li>
+<li><strong>Blocking long-running requests.</strong></li>
+<li><strong>In-process multi-user state.</strong></li>
+<li><strong>External SaaS dashboards.</strong></li>
+<li><strong>Multi-third-party egress without policy.</strong></li>
+<li><strong>Custom auth flows fighting OAuth.</strong></li>
+<li><strong>Tens of thousands of concurrent users.</strong></li>
+<li><strong>Hardcoded URLs/hosts bypassing resources.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Limited runtime customisation.</strong></li>
+<li><strong>Egress control account-level.</strong></li>
+<li><strong>Scaling caps.</strong></li>
+<li><strong>Cold start.</strong></li>
+<li><strong>Logs UI basic.</strong></li>
+<li><strong>Websocket idle timeouts.</strong></li>
+<li><strong>OBO forwarding finicky.</strong></li>
+<li><strong>Local dev env mismatch.</strong></li>
+<li><strong>Basic secret rotation tooling.</strong></li>
+<li><strong>UI versioning limited.</strong></li>
+<li><strong>No cross-region failover.</strong></li>
+<li><strong>DB connection pooling discipline required.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/databricks-apps/">Databricks Apps docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/databricks-apps/resources">App resources</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/databricks-apps/auth">Authentication / OBO</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

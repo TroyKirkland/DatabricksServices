@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databricks Product Docs — Index</title>
+<link rel="stylesheet" href="_style.css">
+<style>
+  .category { margin-top: 2rem; }
+  .category h2 { color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: .3rem; font-size: 1.35rem; margin-top: 1.6rem; }
+  .product { padding: .7rem 0; border-bottom: 1px dotted var(--border); }
+  .product:last-child { border-bottom: none; }
+  .product-title { font-weight: 600; font-size: 1.05rem; }
+  .product-title a { color: var(--fg); }
+  .product-title a:hover { color: var(--accent); }
+  .product-summary { color: var(--muted); font-size: .92rem; margin: .15rem 0 .3rem; }
+  .product-links a { font-size: .85rem; margin-right: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+  .aliases { font-size: .8rem; color: var(--muted); font-style: italic; }
+  .top-links { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0 0; }
+  .top-links a {
+    background: var(--accent-soft);
+    color: var(--accent);
+    padding: .5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    border: 1px solid var(--accent);
+  }
+  .top-links a:hover { background: var(--accent); color: white; text-decoration: none; }
+  .meta-bar { color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
+
+  /* Hero image (product evolution) */
+  .hero { margin: 1rem 0 1.4rem; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: white; }
+  .hero a { display: block; }
+  .hero img { width: 100%; height: auto; display: block; }
+  .hero-caption { padding: .55rem .8rem; font-size: .88rem; color: var(--muted); border-top: 1px solid var(--border); background: var(--accent-soft); }
+
+  /* Per-product feature-timeline grid */
+  .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; margin: 1rem 0; }
+  .feature-card { display: block; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: white; text-decoration: none; color: inherit; transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
+  .feature-card:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 4px 14px rgba(0,0,0,.05); text-decoration: none; }
+  .feature-card .thumb { height: 200px; overflow: hidden; background: white; border-bottom: 1px solid var(--border); }
+  .feature-card .thumb img { width: 100%; height: auto; display: block; }
+  .feature-card .label { padding: .55rem .8rem; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+  .feature-card .count { color: var(--muted); font-size: .85rem; font-weight: 400; }
+  .feature-card .sub { padding: 0 .8rem .55rem; color: var(--muted); font-size: .82rem; line-height: 1.35; }
+  .pipeline-note { margin: .8rem 0 0; padding: .65rem .8rem; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 6px; font-size: .88rem; }
+  .pipeline-note code { background: rgba(0,0,0,.06); padding: 1px 5px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<h1>Databricks Product Docs</h1>
+<p>An L100 → L400 reference set for every major Databricks product, with anti-patterns and weaknesses called out. Field-engineer voice, no marketing fluff.</p>
+
+<div class="meta-bar">
+  Author: Troy Kirkland · <a href="_control.yaml">_control.yaml</a> (edit to add/remove products)
+</div>
+
+<div class="top-links">
+  <a href="Glossary/glossary.html">Glossary</a>
+  <a href="ProductEvolution/product-evolution.md">Product Evolution</a>
+  <a href="LakeflowConnect/lakeflow-connect.html">Lakeflow Connect (the original)</a>
+  <a href="_control.yaml">Control file (manifest)</a>
+</div>
+
+<div class="category">
+<h2>Cross-cutting Topics</h2>
+
+<div class="hero">
+  <a href="ProductEvolution/product-evolution.png">
+    <img src="ProductEvolution/product-evolution.png" alt="Databricks Product Evolution — launches, renames, sunsets, acquisitions, multi-rename chains">
+  </a>
+  <div class="hero-caption">
+    <strong>Product Evolution</strong> — launches · renames · sunsets · acquisitions · multi-rename chains.
+    <a href="ProductEvolution/product-evolution.md">source &amp; tables</a> ·
+    <a href="ProductEvolution/product-evolution.png">PNG</a> ·
+    <a href="ProductEvolution/product-evolution.svg">SVG</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="Storage/storage.html">Storage on Databricks</a></div>
+  <div class="product-summary">Cross-cutting L100–L400: cloud object storage + Delta Lake + UC governance + optimization machinery, synthesized into one read.</div>
+  <div class="product-links">
+    <a href="Storage/storage.html">HTML</a>
+    <a href="Storage/storage.md">Markdown</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="Compute/compute.html">Compute on Databricks</a></div>
+  <div class="product-summary">Cross-cutting L100–L400: Spark + Photon on classic vs serverless; clusters, SQL warehouses, Databricks Connect, runtime internals.</div>
+  <div class="product-links">
+    <a href="Compute/compute.html">HTML</a>
+    <a href="Compute/compute.md">Markdown</a>
+  </div>
+</div>
+
+</div>
+
+<div class="category">
+<h2>Data Engineering &amp; Ingestion</h2>
+
+<div class="product">
+  <div class="product-title"><a href="LakeflowConnect/lakeflow-connect.html">Lakeflow Connect</a></div>
+  <div class="product-summary">Managed ingestion for SaaS apps, CDC databases, and files into UC streaming tables.</div>
+  <div class="product-links">
+    <a href="LakeflowConnect/lakeflow-connect.html">HTML</a>
+    <a href="LakeflowConnect/lakeflow-connect.md">Markdown</a>
+    <a href="ProductEvolution/by-product/lakeflow.png" title="Feature timeline for the lakeflow bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="LakeflowSparkDeclarativePipelines/lakeflow-spark-declarative-pipelines.html">Lakeflow Spark Declarative Pipelines</a></div>
+  <div class="aliases">aka LDP, DLT, Delta Live Tables</div>
+  <div class="product-summary">Declarative ETL framework: streaming tables, materialized views, APPLY CHANGES INTO, expectations.</div>
+  <div class="product-links">
+    <a href="LakeflowSparkDeclarativePipelines/lakeflow-spark-declarative-pipelines.html">HTML</a>
+    <a href="LakeflowSparkDeclarativePipelines/lakeflow-spark-declarative-pipelines.md">Markdown</a>
+    <a href="ProductEvolution/by-product/lakeflow.png" title="Feature timeline for the lakeflow bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="LakeflowJobs/lakeflow-jobs.html">Lakeflow Jobs</a></div>
+  <div class="aliases">aka Workflows</div>
+  <div class="product-summary">Orchestrator for tasks, dependencies, triggers, repair runs.</div>
+  <div class="product-links">
+    <a href="LakeflowJobs/lakeflow-jobs.html">HTML</a>
+    <a href="LakeflowJobs/lakeflow-jobs.md">Markdown</a>
+    <a href="ProductEvolution/by-product/lakeflow.png" title="Feature timeline for the lakeflow bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="AutoLoader/auto-loader.html">Auto Loader</a></div>
+  <div class="product-summary">Incremental file ingestion (cloudFiles) with schema inference and evolution.</div>
+  <div class="product-links">
+    <a href="AutoLoader/auto-loader.html">HTML</a>
+    <a href="AutoLoader/auto-loader.md">Markdown</a>
+    <a href="ProductEvolution/by-product/lakeflow.png" title="Feature timeline for the lakeflow bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="ZerobusIngest/zerobus-ingest.html">Zerobus Ingest</a></div>
+  <div class="product-summary">gRPC direct-to-Delta low-latency ingest SDK; Kafka-less event landing.</div>
+  <div class="product-links">
+    <a href="ZerobusIngest/zerobus-ingest.html">HTML</a>
+    <a href="ZerobusIngest/zerobus-ingest.md">Markdown</a>
+    <a href="ProductEvolution/by-product/lakeflow.png" title="Feature timeline for the lakeflow bucket">Feature timeline ↗</a>
+  </div>
+</div>
+</div>
+
+<div class="category">
+<h2>Storage &amp; Format</h2>
+
+<div class="product">
+  <div class="product-title"><a href="DeltaLake/delta-lake.html">Delta Lake</a></div>
+  <div class="product-summary">ACID transactional storage layer: transaction log, OPTIMIZE, liquid clustering, CDF, time travel.</div>
+  <div class="product-links">
+    <a href="DeltaLake/delta-lake.html">HTML</a>
+    <a href="DeltaLake/delta-lake.md">Markdown</a>
+    <a href="ProductEvolution/by-product/delta-lake.png" title="Feature timeline for the delta-lake bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="DeltaSharing/delta-sharing.html">Delta Sharing</a></div>
+  <div class="product-summary">Open protocol for sharing live data across orgs/clouds without copy.</div>
+  <div class="product-links">
+    <a href="DeltaSharing/delta-sharing.html">HTML</a>
+    <a href="DeltaSharing/delta-sharing.md">Markdown</a>
+    <a href="ProductEvolution/by-product/unity-catalog.png" title="Feature timeline for the unity-catalog bucket">Feature timeline ↗</a>
+  </div>
+</div>
+</div>
+
+<div class="category">
+<h2>Compute &amp; Runtime</h2>
+
+<div class="product">
+  <div class="product-title"><a href="DatabricksRuntime/databricks-runtime.html">Databricks Runtime</a></div>
+  <div class="aliases">aka DBR</div>
+  <div class="product-summary">Versioned Spark + Photon + libraries runtime; LTS, ML, and GPU variants.</div>
+  <div class="product-links">
+    <a href="DatabricksRuntime/databricks-runtime.html">HTML</a>
+    <a href="DatabricksRuntime/databricks-runtime.md">Markdown</a>
+    <a href="ProductEvolution/by-product/compute.png" title="Feature timeline for the compute bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="Photon/photon.html">Photon</a></div>
+  <div class="product-summary">C++ vectorized execution engine accelerating Spark SQL and Delta.</div>
+  <div class="product-links">
+    <a href="Photon/photon.html">HTML</a>
+    <a href="Photon/photon.md">Markdown</a>
+    <a href="ProductEvolution/by-product/compute.png" title="Feature timeline for the compute bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="DatabricksConnect/databricks-connect.html">Databricks Connect</a></div>
+  <div class="product-summary">Local-IDE to remote-cluster Spark Connect bridge for dev loop.</div>
+  <div class="product-links">
+    <a href="DatabricksConnect/databricks-connect.html">HTML</a>
+    <a href="DatabricksConnect/databricks-connect.md">Markdown</a>
+    <a href="ProductEvolution/by-product/compute.png" title="Feature timeline for the compute bucket">Feature timeline ↗</a>
+  </div>
+</div>
+</div>
+
+<div class="category">
+<h2>SQL &amp; Analytics</h2>
+
+<div class="product">
+  <div class="product-title"><a href="DatabricksSQL/databricks-sql.html">Databricks SQL</a></div>
+  <div class="aliases">aka DBSQL, SQL Warehouses</div>
+  <div class="product-summary">SQL warehouses (Serverless/Pro/Classic), query history, alerts, Statement Execution API.</div>
+  <div class="product-links">
+    <a href="DatabricksSQL/databricks-sql.html">HTML</a>
+    <a href="DatabricksSQL/databricks-sql.md">Markdown</a>
+    <a href="ProductEvolution/by-product/databricks-sql.png" title="Feature timeline for the databricks-sql bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="AIBIDashboards/aibi-dashboards.html">AI/BI Dashboards</a></div>
+  <div class="aliases">aka Lakeview</div>
+  <div class="product-summary">Lakehouse-native dashboarding: datasets, widgets, parameters, subscriptions.</div>
+  <div class="product-links">
+    <a href="AIBIDashboards/aibi-dashboards.html">HTML</a>
+    <a href="AIBIDashboards/aibi-dashboards.md">Markdown</a>
+    <a href="ProductEvolution/by-product/aibi.png" title="Feature timeline for the aibi bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="AIBIGenie/aibi-genie.html">AI/BI Genie</a></div>
+  <div class="product-summary">Natural-language to SQL Genie Agents (formerly Genie Spaces); instructions, example queries, trust signals.</div>
+  <div class="product-links">
+    <a href="AIBIGenie/aibi-genie.html">HTML</a>
+    <a href="AIBIGenie/aibi-genie.md">Markdown</a>
+    <a href="ProductEvolution/by-product/aibi.png" title="Feature timeline for the aibi bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="LakehouseFederation/lakehouse-federation.html">Lakehouse Federation</a></div>
+  <div class="product-summary">Foreign catalogs that query Snowflake/Postgres/SQLServer/BQ/Redshift without copy.</div>
+  <div class="product-links">
+    <a href="LakehouseFederation/lakehouse-federation.html">HTML</a>
+    <a href="LakehouseFederation/lakehouse-federation.md">Markdown</a>
+    <a href="ProductEvolution/by-product/databricks-sql.png" title="Feature timeline for the databricks-sql bucket">Feature timeline ↗</a>
+  </div>
+</div>
+</div>
+
+<div class="category">
+<h2>Governance</h2>
+
+<div class="product">
+  <div class="product-title"><a href="UnityCatalog/unity-catalog.html">Unity Catalog</a></div>
+  <div class="aliases">aka UC</div>
+  <div class="product-summary">Metastore for tables, models, volumes, ML assets; lineage, ABAC, row/column masks.</div>
+  <div class="product-links">
+    <a href="UnityCatalog/unity-catalog.html">HTML</a>
+    <a href="UnityCatalog/unity-catalog.md">Markdown</a>
+    <a href="ProductEvolution/by-product/unity-catalog.png" title="Feature timeline for the unity-catalog bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="UCVolumes/uc-volumes.html">UC Volumes</a></div>
+  <div class="product-summary">Governed non-tabular storage abstraction (/Volumes); managed vs external.</div>
+  <div class="product-links">
+    <a href="UCVolumes/uc-volumes.html">HTML</a>
+    <a href="UCVolumes/uc-volumes.md">Markdown</a>
+    <a href="ProductEvolution/by-product/unity-catalog.png" title="Feature timeline for the unity-catalog bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="CleanRooms/clean-rooms.html">Clean Rooms</a></div>
+  <div class="product-summary">Multi-party data collaboration with approved-query gating; UC-native.</div>
+  <div class="product-links">
+    <a href="CleanRooms/clean-rooms.html">HTML</a>
+    <a href="CleanRooms/clean-rooms.md">Markdown</a>
+    <a href="ProductEvolution/by-product/unity-catalog.png" title="Feature timeline for the unity-catalog bucket">Feature timeline ↗</a>
+  </div>
+</div>
+</div>
+
+<div class="category">
+<h2>AI / ML</h2>
+
+<div class="product">
+  <div class="product-title"><a href="MLflow/mlflow.html">MLflow on Databricks</a></div>
+  <div class="product-summary">Experiment tracking, GenAI tracing, evaluation, registered models in UC.</div>
+  <div class="product-links">
+    <a href="MLflow/mlflow.html">HTML</a>
+    <a href="MLflow/mlflow.md">Markdown</a>
+    <a href="ProductEvolution/by-product/mosaic-ai.png" title="Feature timeline for the mosaic-ai bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="MosaicAIModelServing/mosaic-ai-model-serving.html">Mosaic AI Model Serving</a></div>
+  <div class="product-summary">Serverless model endpoints: CPU/GPU, scale-to-zero, external models, payload tables.</div>
+  <div class="product-links">
+    <a href="MosaicAIModelServing/mosaic-ai-model-serving.html">HTML</a>
+    <a href="MosaicAIModelServing/mosaic-ai-model-serving.md">Markdown</a>
+    <a href="ProductEvolution/by-product/mosaic-ai.png" title="Feature timeline for the mosaic-ai bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="MosaicAIVectorSearch/mosaic-ai-vector-search.html">Mosaic AI Vector Search</a></div>
+  <div class="product-summary">Delta-synced vector indexes; hybrid search, storage-optimized endpoints.</div>
+  <div class="product-links">
+    <a href="MosaicAIVectorSearch/mosaic-ai-vector-search.html">HTML</a>
+    <a href="MosaicAIVectorSearch/mosaic-ai-vector-search.md">Markdown</a>
+    <a href="ProductEvolution/by-product/mosaic-ai.png" title="Feature timeline for the mosaic-ai bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="AgentBricks/agent-bricks.html">Agent Bricks</a></div>
+  <div class="product-summary">Eval-driven agent builder: Knowledge Assistants, Genie Agents, Multi-Agent Supervisor.</div>
+  <div class="product-links">
+    <a href="AgentBricks/agent-bricks.html">HTML</a>
+    <a href="AgentBricks/agent-bricks.md">Markdown</a>
+    <a href="ProductEvolution/by-product/mosaic-ai.png" title="Feature timeline for the mosaic-ai bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="MosaicAIGateway/mosaic-ai-gateway.html">Unity Gateway</a></div>
+  <div class="aliases">formerly Mosaic AI Gateway</div>
+  <div class="product-summary">Governance/policy layer in front of model endpoints, agents, and MCP servers: rate limits, PII, fallback, smart routing, logging.</div>
+  <div class="product-links">
+    <a href="MosaicAIGateway/mosaic-ai-gateway.html">HTML</a>
+    <a href="MosaicAIGateway/mosaic-ai-gateway.md">Markdown</a>
+    <a href="ProductEvolution/by-product/mosaic-ai.png" title="Feature timeline for the mosaic-ai bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="FoundationModelAPIs/foundation-model-apis.html">Foundation Model APIs</a></div>
+  <div class="aliases">aka FMAPI</div>
+  <div class="product-summary">Pay-per-token and provisioned-throughput hosted foundation models.</div>
+  <div class="product-links">
+    <a href="FoundationModelAPIs/foundation-model-apis.html">HTML</a>
+    <a href="FoundationModelAPIs/foundation-model-apis.md">Markdown</a>
+    <a href="ProductEvolution/by-product/mosaic-ai.png" title="Feature timeline for the mosaic-ai bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="FeatureEngineeringInUC/feature-engineering-in-uc.html">Feature Engineering in Unity Catalog</a></div>
+  <div class="aliases">aka Feature Store</div>
+  <div class="product-summary">Feature tables, online tables, point-in-time joins, training-serving parity.</div>
+  <div class="product-links">
+    <a href="FeatureEngineeringInUC/feature-engineering-in-uc.html">HTML</a>
+    <a href="FeatureEngineeringInUC/feature-engineering-in-uc.md">Markdown</a>
+    <a href="ProductEvolution/by-product/mosaic-ai.png" title="Feature timeline for the mosaic-ai bucket">Feature timeline ↗</a>
+  </div>
+</div>
+</div>
+
+<div class="category">
+<h2>Apps &amp; Operations</h2>
+
+<div class="product">
+  <div class="product-title"><a href="DatabricksApps/databricks-apps.html">Databricks Apps</a></div>
+  <div class="product-summary">Hosted Python/Node web apps: Streamlit/Dash/Flask/FastAPI/React; app.yaml + resources.</div>
+  <div class="product-links">
+    <a href="DatabricksApps/databricks-apps.html">HTML</a>
+    <a href="DatabricksApps/databricks-apps.md">Markdown</a>
+    <a href="ProductEvolution/by-product/apps-ecosystem.png" title="Feature timeline for the apps-ecosystem bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="DatabricksAssetBundles/databricks-asset-bundles.html">Declarative Automation Bundles</a></div>
+  <div class="aliases">aka DAB · formerly Databricks Asset Bundles</div>
+  <div class="product-summary">YAML-defined deployable bundles of jobs, pipelines, dashboards, apps for CI/CD.</div>
+  <div class="product-links">
+    <a href="DatabricksAssetBundles/databricks-asset-bundles.html">HTML</a>
+    <a href="DatabricksAssetBundles/databricks-asset-bundles.md">Markdown</a>
+    <a href="ProductEvolution/by-product/apps-ecosystem.png" title="Feature timeline for the apps-ecosystem bucket">Feature timeline ↗</a>
+  </div>
+</div>
+
+<div class="product">
+  <div class="product-title"><a href="DatabricksMarketplace/databricks-marketplace.html">Databricks Marketplace</a></div>
+  <div class="product-summary">Open exchange for data products, AI models, notebooks; Delta-Sharing delivery.</div>
+  <div class="product-links">
+    <a href="DatabricksMarketplace/databricks-marketplace.html">HTML</a>
+    <a href="DatabricksMarketplace/databricks-marketplace.md">Markdown</a>
+    <a href="ProductEvolution/by-product/apps-ecosystem.png" title="Feature timeline for the apps-ecosystem bucket">Feature timeline ↗</a>
+  </div>
+</div>
+</div>
+
+<div class="category">
+<h2>Operational Data</h2>
+
+<div class="product">
+  <div class="product-title"><a href="Lakebase/lakebase.html">Lakebase</a></div>
+  <div class="product-summary">Managed Postgres on Databricks: provisioned + autoscale + branching; OLTP companion to lakehouse.</div>
+  <div class="product-links">
+    <a href="Lakebase/lakebase.html">HTML</a>
+    <a href="Lakebase/lakebase.md">Markdown</a>
+  </div>
+</div>
+</div>
+
+<div class="category">
+<h2>Feature Timelines (by product)</h2>
+<p>GA · Public Preview · Beta · Update events for each product bucket, scraped from <a href="https://docs.databricks.com/aws/en/release-notes/product/"><code>docs.databricks.com/aws/en/release-notes/product/</code></a> and rendered as month-by-month timelines. <strong>Last 12 months (2025-10 → 2026-09) · counts as of 2026-10-02 (in-session LLM classification).</strong></p>
+
+<div class="pipeline-note">
+  Refresh with <code>ProductEvolution/refresh.sh</code>. Pipeline: <a href="ProductEvolution/feature-scraper.py"><code>feature-scraper.py</code></a> → <a href="ProductEvolution/feature-classifier.py"><code>feature-classifier.py</code></a> → <a href="ProductEvolution/feature-timeline.py"><code>feature-timeline.py</code></a>. Raw JSON: <a href="ProductEvolution/features-classified.json"><code>features-classified.json</code></a>.
+</div>
+
+<div class="feature-grid">
+
+  <a class="feature-card" href="ProductEvolution/by-product/mosaic-ai.png">
+    <div class="thumb"><img src="ProductEvolution/by-product/mosaic-ai.png" alt="Mosaic AI feature timeline"></div>
+    <div class="label">Mosaic AI <span class="count">117 events</span></div>
+    <div class="sub">Model Serving · Vector Search · FMAPI · Agent Bricks · Unity Gateway · MLflow · Feature Eng</div>
+  </a>
+
+  <a class="feature-card" href="ProductEvolution/by-product/lakeflow.png">
+    <div class="thumb"><img src="ProductEvolution/by-product/lakeflow.png" alt="Lakeflow feature timeline"></div>
+    <div class="label">Lakeflow <span class="count">104 events</span></div>
+    <div class="sub">Jobs (was Workflows) · SDP/LDP (was DLT) · Connect · Auto Loader · Zerobus</div>
+  </a>
+
+  <a class="feature-card" href="ProductEvolution/by-product/workspace.png">
+    <div class="thumb"><img src="ProductEvolution/by-product/workspace.png" alt="Workspace &amp; Notebooks feature timeline"></div>
+    <div class="label">Workspace &amp; Notebooks <span class="count">52 events</span></div>
+    <div class="sub">Notebooks · Git folders · workspace files · Excel/Sheets · unified runs</div>
+  </a>
+
+  <a class="feature-card" href="ProductEvolution/by-product/unity-catalog.png">
+    <div class="thumb"><img src="ProductEvolution/by-product/unity-catalog.png" alt="Unity Catalog feature timeline"></div>
+    <div class="label">Unity Catalog <span class="count">45 events</span></div>
+    <div class="sub">Governance · Volumes · Clean Rooms · Delta Sharing · ABAC · system tables</div>
+  </a>
+
+  <a class="feature-card" href="ProductEvolution/by-product/security.png">
+    <div class="thumb"><img src="ProductEvolution/by-product/security.png" alt="Security &amp; Networking feature timeline"></div>
+    <div class="label">Security &amp; Networking <span class="count">39 events</span></div>
+    <div class="sub">Auth · PrivateLink · NCC · audit · identity management · PAT</div>
+  </a>
+
+  <a class="feature-card" href="ProductEvolution/by-product/compute.png">
+    <div class="thumb"><img src="ProductEvolution/by-product/compute.png" alt="Compute &amp; Runtime feature timeline"></div>
+    <div class="label">Compute &amp; Runtime <span class="count">31 events</span></div>
+    <div class="sub">DBR · Photon · serverless · Databricks Connect · access modes · GPU</div>
+  </a>
+
+  <a class="feature-card" href="ProductEvolution/by-product/aibi.png">
+    <div class="thumb"><img src="ProductEvolution/by-product/aibi.png" alt="AI/BI feature timeline"></div>
+    <div class="label">AI/BI (Dashboards &amp; Genie) <span class="count">19 events</span></div>
+    <div class="sub">AI/BI Dashboards (was Lakeview) · AI/BI Genie · Genie Agents · metric views</div>
+  </a>
+
+  <a class="feature-card" href="ProductEvolution/by-product/delta-lake.png">
+    <div class="thumb"><img src="ProductEvolution/by-product/delta-lake.png" alt="Delta Lake feature timeline"></div>
+    <div class="label">Delta Lake <span class="count">16 events</span></div>
+    <div class="sub">Liquid clustering · Predictive Optimization · Deletion Vectors · UniForm · CDF</div>
+  </a>
+
+  <a class="feature-card" href="ProductEvolution/by-product/databricks-sql.png">
+    <div class="thumb"><img src="ProductEvolution/by-product/databricks-sql.png" alt="Databricks SQL feature timeline"></div>
+    <div class="label">Databricks SQL <span class="count">14 events</span></div>
+    <div class="sub">SQL Warehouses · alerts · Statement Execution · AI functions · materialized views</div>
+  </a>
+
+  <a class="feature-card" href="ProductEvolution/by-product/apps-ecosystem.png">
+    <div class="thumb"><img src="ProductEvolution/by-product/apps-ecosystem.png" alt="Apps &amp; Ecosystem feature timeline"></div>
+    <div class="label">Apps &amp; Ecosystem <span class="count">8 events</span></div>
+    <div class="sub">Databricks Apps · Asset Bundles · Marketplace</div>
+  </a>
+
+</div>
+</div>
+
+<hr>
+
+<h2>About this doc set</h2>
+<p>Every product page follows the same structure: <strong>L100</strong> (what it is) → <strong>L200</strong> (product surface) → <strong>L300</strong> (architecture) → <strong>L400</strong> (deep internals) → <strong>Anti-patterns</strong> → <strong>Weaknesses</strong> → <strong>Sources</strong>. Cross-cutting terms are defined once in the <a href="Glossary/glossary.html">Glossary</a>.</p>
+
+<p>To <strong>add or edit a product</strong>: edit <a href="_control.yaml"><code>_control.yaml</code></a> (set <code>status: pending</code> or <code>needs-update</code>), then re-run the regeneration prompt described at the bottom of the control file.</p>
+
+</body></html>

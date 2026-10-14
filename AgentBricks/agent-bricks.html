@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Agent Bricks — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Agent Bricks</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Eval-driven agent builder. Pick a template (Knowledge Assistant / Genie Agent / Multi-Agent Supervisor), point at data; Databricks generates baseline + eval harness. Iterate via evals + labelled traces.</p>
+<ul>
+<li><strong>Use-case templates</strong>, not blank-slate agent builder.</li>
+<li><strong>Eval-first</strong>: every agent ships with a starter eval set.</li>
+<li><strong>UC + MLflow + Model Serving + Vector Search wired together.</strong></li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><strong>Knowledge Assistant</strong>: RAG over UC docs / volumes / AI Search indexes. Instructed Retriever approach with citation tracking.</li>
+<li><strong>Genie Agent</strong>: NL→SQL agent surface backed by a curated Genie Space.</li>
+<li><strong>Multi-Agent Supervisor</strong>: router LLM + child agents (KA / Genie Agents / agent endpoints / UC functions / MCP servers / custom agents).</li>
+<li><strong>Agent Bricks CLI</strong> (Beta): scaffold, run, and deploy custom code agents from CLI; managed memory, sessions, tools, MLflow tracing wired.</li>
+<li>Evaluation harness with built-in scorers + custom.</li>
+<li>One-click deploy to Model Serving (<code>ChatAgent</code>/<code>ResponsesAgent</code>, SSE streaming).</li>
+<li>Optimization loop: suggested prompt/retrieval/example changes.</li>
+<li>UC-tracked components.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>UC data → Agent Bricks pipeline (KA / Genie / MAS) → UC registered model → Model Serving endpoint → callers
+                                                                                     ↓
+                                                                             MLflow traces + payload tables + eval</code></pre>
+<p>Components are Databricks-managed but visible (Vector Search index, endpoint, MLflow run). Eval is in-the-loop.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>KA pipeline</h3>
+<ul>
+<li>Ingest UC tables/volumes → chunk → embed (FMAPI default) → Delta Sync Vector Search index → hybrid retrieve → LLM generate.</li>
+</ul>
+
+<h3>Genie integration</h3>
+<ul>
+<li>Genie Conversation API exposed as a tool.</li>
+<li>Genie governance/RLS applies.</li>
+</ul>
+
+<h3>Multi-Agent Supervisor</h3>
+<ul>
+<li>Router LLM picks child each turn.</li>
+<li>Children: KA / Genie Agents / agent endpoints / UC functions / MCP servers / sub-MAS / custom agents.</li>
+<li>MCP (Model Context Protocol) servers plug in as standardised tool sources; any MCP-compatible server works.</li>
+<li>Supervisor holds state; children stateless w.r.t. each other.</li>
+</ul>
+
+<h3>Agent Bricks CLI (Beta)</h3>
+<ul>
+<li>Code-first alternative to GUI templates; scaffold + run + deploy custom agents.</li>
+<li>Managed memory, session handling, tool declarations in config.</li>
+<li>MLflow tracing auto-wired on deploy.</li>
+<li>Beta: breaking changes likely; not yet for production-critical agents.</li>
+<li>Upgrade path: GUI templates → CLI → full LangGraph.</li>
+</ul>
+
+<h3>Evaluation</h3>
+<ul>
+<li>Auto-seeded eval dataset; expanded by labeling.</li>
+<li>Scorers: Correctness, RetrievalGroundedness, Safety, Guidelines + custom <code>@scorer</code>.</li>
+<li>Eval runs = MLflow runs.</li>
+<li>Production traces sample → label → expand dataset.</li>
+</ul>
+
+<h3>Optimization loop</h3>
+<ul>
+<li>Detects failure patterns, suggests prompt/retrieval/example tweaks.</li>
+<li>Suggestions vetted against eval before apply.</li>
+</ul>
+
+<h3>Deployment</h3>
+<ul>
+<li>Endpoint with <code>ChatAgent</code> or <code>ResponsesAgent</code> schema; SSE streaming.</li>
+<li>Payload table for live traffic; traffic-split for canary.</li>
+</ul>
+
+<h3>Auth + identity</h3>
+<ul>
+<li>Endpoint identity has UC + VS + Genie + endpoint service credentials.</li>
+<li>Caller workspace OAuth.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Opinionated; deep customisation = drop to MLflow + LangGraph.</li>
+<li>Eval scorer costs add up.</li>
+<li>MAS fan-out costs per-call.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Templates + eval loop + Databricks primitives wired."</strong> Value is opinionated patterns + tractable iteration, not raw flexibility.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Agent Bricks</h2>
+<ul>
+<li><strong>Bespoke multi-step agents.</strong> Use LangGraph directly.</li>
+<li><strong>Edge / low-latency.</strong> Multi-call agents = seconds.</li>
+<li><strong>Use cases that don't fit templates.</strong></li>
+<li><strong>Codegen agents.</strong></li>
+<li><strong>Consumer-scale high-volume API.</strong> Per-call cost dominates.</li>
+<li><strong>Domains without measurable correctness.</strong></li>
+<li><strong>Uncurated Genie spaces in MAS.</strong></li>
+<li><strong>Sub-500ms decisions.</strong></li>
+<li><strong>High-stakes decisions without HITL.</strong></li>
+<li><strong>One-time extraction.</strong> Use a notebook.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Opinionated template ceiling.</strong></li>
+<li><strong>Eval cost.</strong></li>
+<li><strong>MAS fan-out cost.</strong></li>
+<li><strong>Implicit multi-turn state.</strong></li>
+<li><strong>Trace pattern analysis manual.</strong></li>
+<li><strong>Limited tool ecosystem.</strong></li>
+<li><strong>Suggestion quality depends on eval coverage.</strong></li>
+<li><strong>Multi-provider model mixing complexity.</strong></li>
+<li><strong>Long histories balloon token cost.</strong></li>
+<li><strong>KA quality bounded by retrieval.</strong></li>
+<li><strong>Inherits Genie curation rot.</strong></li>
+<li><strong>Versioning composition rough.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/generative-ai/agent-bricks">Agent Bricks docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/generative-ai/agent-bricks/knowledge-assistant">Knowledge Assistant</a></li>
+<li><a href="https://docs.databricks.com/aws/en/generative-ai/agent-bricks/supervisor-agent">Supervisor Agent (Multi-Agent)</a></li>
+<li><a href="https://mlflow.org/docs/latest/llms/llm-evaluate/index.html">MLflow GenAI eval</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

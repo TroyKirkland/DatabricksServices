@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2640 1500" width="2640" height="1500" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBFCFD"/>
+      <stop offset="1" stop-color="#EEF1F5"/>
+    </linearGradient>
+    <linearGradient id="headerBg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0B1E36"/>
+      <stop offset="1" stop-color="#1F3A5F"/>
+    </linearGradient>
+    <marker id="arrowAmber" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#B45309"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="2640" height="1500" fill="url(#bg)"/>
+
+  <!-- Header bar -->
+  <rect x="0" y="0" width="2640" height="70" fill="url(#headerBg)"/>
+  <text x="40" y="42" fill="#FFFFFF" font-size="26" font-weight="700">Databricks Product Evolution</text>
+  <text x="40" y="61" fill="#9CB0CC" font-size="12">Launches · Renames · Sunsets · Acquisitions  ·  through 2026-06  ·  refresh 2026-06-04</text>
+  <rect x="2520" y="22" width="92" height="28" fill="#FF3621" rx="4"/>
+  <text x="2566" y="41" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">L100-400</text>
+
+  <!-- Year axis -->
+  <g font-size="18" font-weight="700" fill="#0B1E36" text-anchor="middle">
+    <text x="270"  y="106">2013</text>
+    <text x="510"  y="106">2018</text>
+    <text x="750"  y="106">2019</text>
+    <text x="990"  y="106">2020</text>
+    <text x="1230" y="106">2021</text>
+    <text x="1470" y="106">2022</text>
+    <text x="1710" y="106">2023</text>
+    <text x="1950" y="106">2024</text>
+    <text x="2190" y="106">2025</text>
+    <text x="2430" y="106">2026</text>
+  </g>
+  <g stroke="#0B1E36" stroke-width="1">
+    <line x1="270"  y1="78" x2="270"  y2="92"/>
+    <line x1="510"  y1="78" x2="510"  y2="92"/>
+    <line x1="750"  y1="78" x2="750"  y2="92"/>
+    <line x1="990"  y1="78" x2="990"  y2="92"/>
+    <line x1="1230" y1="78" x2="1230" y2="92"/>
+    <line x1="1470" y1="78" x2="1470" y2="92"/>
+    <line x1="1710" y1="78" x2="1710" y2="92"/>
+    <line x1="1950" y1="78" x2="1950" y2="92"/>
+    <line x1="2190" y1="78" x2="2190" y2="92"/>
+    <line x1="2430" y1="78" x2="2430" y2="92"/>
+  </g>
+
+  <!-- Year column dividers -->
+  <g stroke="#DDE3EB" stroke-width="1">
+    <line x1="150"  y1="120" x2="150"  y2="1180"/>
+    <line x1="390"  y1="120" x2="390"  y2="1180"/>
+    <line x1="630"  y1="120" x2="630"  y2="1180"/>
+    <line x1="870"  y1="120" x2="870"  y2="1180"/>
+    <line x1="1110" y1="120" x2="1110" y2="1180"/>
+    <line x1="1350" y1="120" x2="1350" y2="1180"/>
+    <line x1="1590" y1="120" x2="1590" y2="1180"/>
+    <line x1="1830" y1="120" x2="1830" y2="1180"/>
+    <line x1="2070" y1="120" x2="2070" y2="1180"/>
+    <line x1="2310" y1="120" x2="2310" y2="1180"/>
+    <line x1="2550" y1="120" x2="2550" y2="1180"/>
+  </g>
+
+  <!-- Lane backgrounds -->
+  <rect x="150" y="120" width="2400" height="310" fill="#1E3A8A" fill-opacity="0.04"/>
+  <rect x="150" y="430" width="2400" height="230" fill="#B45309" fill-opacity="0.05"/>
+  <rect x="150" y="660" width="2400" height="190" fill="#991B1B" fill-opacity="0.04"/>
+  <rect x="150" y="850" width="2400" height="330" fill="#166534" fill-opacity="0.05"/>
+
+  <!-- Lane separators -->
+  <g stroke="#C8D0DC" stroke-width="1">
+    <line x1="0" y1="120"  x2="2640" y2="120"/>
+    <line x1="0" y1="430"  x2="2640" y2="430"/>
+    <line x1="0" y1="660"  x2="2640" y2="660"/>
+    <line x1="0" y1="850"  x2="2640" y2="850"/>
+    <line x1="0" y1="1180" x2="2640" y2="1180"/>
+  </g>
+
+  <!-- Lane labels (left panel) -->
+  <rect x="0" y="120" width="150" height="310" fill="#1E3A8A" fill-opacity="0.10"/>
+  <rect x="0" y="430" width="150" height="230" fill="#B45309" fill-opacity="0.12"/>
+  <rect x="0" y="660" width="150" height="190" fill="#991B1B" fill-opacity="0.10"/>
+  <rect x="0" y="850" width="150" height="330" fill="#166534" fill-opacity="0.12"/>
+
+  <text x="75" y="282" fill="#1E3A8A" font-size="22" font-weight="800" text-anchor="middle">Launches</text>
+  <text x="75" y="552" fill="#B45309" font-size="22" font-weight="800" text-anchor="middle">Renames</text>
+  <text x="75" y="762" fill="#991B1B" font-size="22" font-weight="800" text-anchor="middle">Sunsets</text>
+  <text x="75" y="1003" fill="#166534" font-size="20" font-weight="800" text-anchor="middle">Acquisitions</text>
+
+  <!-- ============================================================ -->
+  <!-- LAUNCHES (lane_top=120, fill #E6EAF3, stroke #1E3A8A)        -->
+  <!-- ============================================================ -->
+  <g font-size="12" fill="#0B1E36" text-anchor="middle">
+
+    <!-- 2013 -->
+    <rect x="160" y="130" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="270" y="149">Databricks founded</text>
+
+    <!-- 2018 -->
+    <rect x="400" y="130" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="510" y="149">MLflow open-sourced</text>
+
+    <!-- 2019 -->
+    <rect x="640" y="130" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="750" y="149">Delta Lake open-sourced</text>
+
+    <!-- 2020 -->
+    <rect x="880" y="130" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="990" y="149">Delta Engine (preview)</text>
+    <rect x="880" y="166" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="990" y="185">SQL Analytics</text>
+
+    <!-- 2021 -->
+    <rect x="1120" y="130" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1230" y="149">Photon GA</text>
+    <rect x="1120" y="166" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1230" y="185">Delta Live Tables (DLT)</text>
+    <rect x="1120" y="202" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1230" y="221">Workflows</text>
+    <rect x="1120" y="238" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1230" y="257">Unity Catalog (preview)</text>
+    <rect x="1120" y="274" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1230" y="293">Delta Sharing (preview)</text>
+
+    <!-- 2022 -->
+    <rect x="1360" y="130" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1470" y="149">Unity Catalog GA</text>
+    <rect x="1360" y="166" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1470" y="185">Delta Sharing GA</text>
+    <rect x="1360" y="202" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1470" y="221">Serverless SQL Warehouses</text>
+    <rect x="1360" y="238" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1470" y="257">Marketplace</text>
+
+    <!-- 2023 -->
+    <rect x="1600" y="130" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1710" y="149">Vector Search</text>
+    <rect x="1600" y="166" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1710" y="185">Foundation Model APIs</text>
+    <rect x="1600" y="202" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1710" y="221">Lakehouse IQ</text>
+    <rect x="1600" y="238" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1710" y="257">Lakeview Dashboards</text>
+    <rect x="1600" y="274" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1710" y="293">Databricks Connect v2</text>
+
+    <!-- 2024 -->
+    <rect x="1840" y="130" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1950" y="149">DBRX (open source)</text>
+    <rect x="1840" y="166" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1950" y="185">AI/BI (Genie + Dashboards)</text>
+    <rect x="1840" y="202" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1950" y="221">UniForm GA</text>
+    <rect x="1840" y="238" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1950" y="257">Predictive Optimization GA</text>
+    <rect x="1840" y="274" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1950" y="293">Lakebase (announce)</text>
+    <rect x="1840" y="310" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1950" y="329">Mosaic AI Agent Framework</text>
+
+    <!-- 2025 -->
+    <rect x="2080" y="130" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2190" y="149">Lakebase GA</text>
+    <rect x="2080" y="166" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2190" y="185">Databricks Apps GA</text>
+    <rect x="2080" y="202" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2190" y="221">Zerobus Ingest</text>
+    <rect x="2080" y="238" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2190" y="257">Agent Bricks</text>
+    <rect x="2080" y="274" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2190" y="293">Clean Rooms GA</text>
+
+    <!-- 2026 -->
+    <rect x="2320" y="130" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2430" y="149">Serverless workspaces GA</text>
+    <rect x="2320" y="166" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2430" y="185">ABAC GA</text>
+    <rect x="2320" y="202" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2430" y="221">Governed Tags GA</text>
+    <rect x="2320" y="238" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2430" y="257">Data Classification GA</text>
+    <rect x="2320" y="274" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2430" y="293">Catalog Commits GA</text>
+    <rect x="2320" y="310" width="220" height="30" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2430" y="329">Lakeflow Pipelines Editor GA</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- RENAMES (lane_top=430, fill #FAEFE0, stroke #B45309)         -->
+  <!-- ============================================================ -->
+  <g font-size="12" fill="#0B1E36" text-anchor="middle">
+
+    <!-- 2022 -->
+    <rect x="1360" y="440" width="220" height="30" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1470" y="459">SQL Endpoints → Warehouses</text>
+
+    <!-- 2024 -->
+    <rect x="1840" y="440" width="220" height="30" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1950" y="459">Lakeview → AI/BI Dashboards</text>
+    <rect x="1840" y="476" width="220" height="30" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1950" y="495">Lakehouse IQ → AI/BI Genie</text>
+    <rect x="1840" y="512" width="220" height="30" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1950" y="531">Repos → Git folders</text>
+    <rect x="1840" y="548" width="220" height="30" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1950" y="567">Single user → Dedicated</text>
+
+    <!-- 2025 -->
+    <rect x="2080" y="440" width="220" height="30" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="2190" y="459">DLT → Lakeflow SDP</text>
+    <rect x="2080" y="476" width="220" height="30" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="2190" y="495">Workflows → Lakeflow Jobs</text>
+    <rect x="2080" y="512" width="220" height="30" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="2190" y="531">Arcion → Lakeflow Connect</text>
+
+    <!-- 2026 -->
+    <rect x="2320" y="440" width="220" height="30" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="2430" y="459">Vector Search → AI Search</text>
+    <rect x="2320" y="476" width="220" height="30" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="2430" y="495">Simba Spark → Databricks ODBC</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- SUNSETS (lane_top=660, fill #F8E3E3, stroke #991B1B)         -->
+  <!-- ============================================================ -->
+  <g font-size="12" fill="#0B1E36" text-anchor="middle">
+
+    <!-- 2022 -->
+    <rect x="1360" y="670" width="220" height="30" rx="6" fill="#F8E3E3" stroke="#991B1B" stroke-width="1.5"/>
+    <text x="1470" y="689">High-concurrency clusters dep.</text>
+
+    <!-- 2023 -->
+    <rect x="1600" y="670" width="220" height="30" rx="6" fill="#F8E3E3" stroke="#991B1B" stroke-width="1.5"/>
+    <text x="1710" y="689">Databricks Connect v1 removed</text>
+
+    <!-- 2024 -->
+    <rect x="1840" y="670" width="220" height="30" rx="6" fill="#F8E3E3" stroke="#991B1B" stroke-width="1.5"/>
+    <text x="1950" y="689">Cluster-scoped init scripts removed</text>
+    <rect x="1840" y="706" width="220" height="30" rx="6" fill="#F8E3E3" stroke="#991B1B" stroke-width="1.5"/>
+    <text x="1950" y="725">Z-order → legacy</text>
+
+    <!-- 2025 -->
+    <rect x="2080" y="670" width="220" height="30" rx="6" fill="#F8E3E3" stroke="#991B1B" stroke-width="1.5"/>
+    <text x="2190" y="689">PARTITIONED BY → legacy default</text>
+    <rect x="2080" y="706" width="220" height="30" rx="6" fill="#F8E3E3" stroke="#991B1B" stroke-width="1.5"/>
+    <text x="2190" y="725">HMS → UC migration push</text>
+
+    <!-- 2026 -->
+    <rect x="2320" y="670" width="220" height="30" rx="6" fill="#F8E3E3" stroke="#991B1B" stroke-width="1.5"/>
+    <text x="2430" y="689">Power BI compat mode removed</text>
+    <rect x="2320" y="706" width="220" height="30" rx="6" fill="#F8E3E3" stroke="#991B1B" stroke-width="1.5"/>
+    <text x="2430" y="725">Legacy Assistant slash commands</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- ACQUISITIONS (lane_top=850, fill #E1EFE5, stroke #166534)    -->
+  <!-- ============================================================ -->
+  <g font-size="12" fill="#0B1E36" text-anchor="middle">
+
+    <!-- 2020 -->
+    <rect x="880" y="860" width="220" height="30" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="990" y="879">Redash (BI / dashboards)</text>
+
+    <!-- 2021 -->
+    <rect x="1120" y="860" width="220" height="30" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1230" y="879">8080 Labs (bamboolib)</text>
+
+    <!-- 2022 -->
+    <rect x="1360" y="860" width="220" height="30" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1470" y="879">Cortex Labs (model serving)</text>
+
+    <!-- 2023 -->
+    <rect x="1600" y="860" width="220" height="30" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1710" y="879">Okera (governance)</text>
+    <rect x="1600" y="896" width="220" height="30" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1710" y="915">MosaicML — $1.3B</text>
+    <rect x="1600" y="932" width="220" height="30" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1710" y="951">Arcion (CDC ingestion)</text>
+
+    <!-- 2024 -->
+    <rect x="1840" y="860" width="220" height="30" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1950" y="879">Einblick (AI-native UIs)</text>
+    <rect x="1840" y="896" width="220" height="30" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1950" y="915">Lilac (data curation)</text>
+    <rect x="1840" y="932" width="220" height="30" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1950" y="951">Tabular — $1B+ (Iceberg)</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- Multi-rename chains (y=1180 to 1400)                         -->
+  <!-- ============================================================ -->
+  <rect x="0" y="1180" width="2640" height="220" fill="#B45309" fill-opacity="0.04"/>
+  <line x1="0" y1="1400" x2="2640" y2="1400" stroke="#C8D0DC" stroke-width="1"/>
+
+  <text x="40" y="1212" fill="#B45309" font-size="18" font-weight="800">Multi-rename chains</text>
+  <text x="240" y="1212" fill="#5A7088" font-size="12">— product lines that were renamed more than once. Pills show name in use; arrows labelled with year of next rename.</text>
+
+  <!-- Chain 1: DLT line -->
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif">
+    <rect x="600"  y="1230" width="360" height="40" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="780"  y="1249" font-size="13" font-weight="700" fill="#0B1E36" text-anchor="middle">Delta Live Tables (DLT)</text>
+    <text x="780"  y="1264" font-size="10" fill="#5A7088" text-anchor="middle">launched 2021</text>
+
+    <line x1="965"  y1="1250" x2="1015" y2="1250" stroke="#B45309" stroke-width="2.5" marker-end="url(#arrowAmber)"/>
+    <text x="990"  y="1242" font-size="10" font-weight="700" fill="#B45309" text-anchor="middle">2024</text>
+
+    <rect x="1020" y="1230" width="360" height="40" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1200" y="1249" font-size="13" font-weight="700" fill="#0B1E36" text-anchor="middle">Lakeflow Declarative Pipelines</text>
+    <text x="1200" y="1264" font-size="10" fill="#5A7088" text-anchor="middle">interim Lakeflow rebrand</text>
+
+    <line x1="1385" y1="1250" x2="1435" y2="1250" stroke="#B45309" stroke-width="2.5" marker-end="url(#arrowAmber)"/>
+    <text x="1410" y="1242" font-size="10" font-weight="700" fill="#B45309" text-anchor="middle">2025</text>
+
+    <rect x="1440" y="1230" width="360" height="40" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1620" y="1249" font-size="13" font-weight="700" fill="#0B1E36" text-anchor="middle">Lakeflow Spark Declarative Pipelines</text>
+    <text x="1620" y="1264" font-size="10" fill="#5A7088" text-anchor="middle">current — LDP / SDP</text>
+  </g>
+
+  <!-- Chain 2: Dedicated access mode -->
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif">
+    <rect x="600"  y="1290" width="360" height="40" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="780"  y="1309" font-size="13" font-weight="700" fill="#0B1E36" text-anchor="middle">Single-user cluster type</text>
+    <text x="780"  y="1324" font-size="10" fill="#5A7088" text-anchor="middle">pre-UC cluster shape</text>
+
+    <line x1="965"  y1="1310" x2="1015" y2="1310" stroke="#B45309" stroke-width="2.5" marker-end="url(#arrowAmber)"/>
+    <text x="990"  y="1302" font-size="10" font-weight="700" fill="#B45309" text-anchor="middle">2022</text>
+
+    <rect x="1020" y="1290" width="360" height="40" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1200" y="1309" font-size="13" font-weight="700" fill="#0B1E36" text-anchor="middle">Single user (access mode)</text>
+    <text x="1200" y="1324" font-size="10" fill="#5A7088" text-anchor="middle">UC-aware access mode introduced</text>
+
+    <line x1="1385" y1="1310" x2="1435" y2="1310" stroke="#B45309" stroke-width="2.5" marker-end="url(#arrowAmber)"/>
+    <text x="1410" y="1302" font-size="10" font-weight="700" fill="#B45309" text-anchor="middle">2024</text>
+
+    <rect x="1440" y="1290" width="360" height="40" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1620" y="1309" font-size="13" font-weight="700" fill="#0B1E36" text-anchor="middle">Dedicated (access mode)</text>
+    <text x="1620" y="1324" font-size="10" fill="#5A7088" text-anchor="middle">current</text>
+  </g>
+
+  <!-- Chain 3: Standard access mode -->
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif">
+    <rect x="600"  y="1350" width="360" height="40" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="780"  y="1369" font-size="13" font-weight="700" fill="#0B1E36" text-anchor="middle">High Concurrency cluster</text>
+    <text x="780"  y="1384" font-size="10" fill="#5A7088" text-anchor="middle">pre-UC shared-cluster shape</text>
+
+    <line x1="965"  y1="1370" x2="1015" y2="1370" stroke="#B45309" stroke-width="2.5" marker-end="url(#arrowAmber)"/>
+    <text x="990"  y="1362" font-size="10" font-weight="700" fill="#B45309" text-anchor="middle">2022</text>
+
+    <rect x="1020" y="1350" width="360" height="40" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1200" y="1369" font-size="13" font-weight="700" fill="#0B1E36" text-anchor="middle">Shared (access mode)</text>
+    <text x="1200" y="1384" font-size="10" fill="#5A7088" text-anchor="middle">UC-aware access mode introduced</text>
+
+    <line x1="1385" y1="1370" x2="1435" y2="1370" stroke="#B45309" stroke-width="2.5" marker-end="url(#arrowAmber)"/>
+    <text x="1410" y="1362" font-size="10" font-weight="700" fill="#B45309" text-anchor="middle">2024</text>
+
+    <rect x="1440" y="1350" width="360" height="40" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1620" y="1369" font-size="13" font-weight="700" fill="#0B1E36" text-anchor="middle">Standard (access mode)</text>
+    <text x="1620" y="1384" font-size="10" fill="#5A7088" text-anchor="middle">current</text>
+  </g>
+
+  <!-- ============================================================ -->
+  <!-- Legend                                                       -->
+  <!-- ============================================================ -->
+  <g font-size="14" fill="#0B1E36">
+    <text x="40" y="1418" font-weight="700" font-size="15">Legend</text>
+
+    <rect x="40"   y="1440" width="22" height="22" rx="4" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="72"   y="1457">Launches — new products / GAs / open-source releases</text>
+
+    <rect x="700"  y="1440" width="22" height="22" rx="4" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="732"  y="1457">Renames — single or multi-step rebrands</text>
+
+    <rect x="1280" y="1440" width="22" height="22" rx="4" fill="#F8E3E3" stroke="#991B1B" stroke-width="1.5"/>
+    <text x="1312" y="1457">Sunsets — deprecations / removals</text>
+
+    <rect x="1820" y="1440" width="22" height="22" rx="4" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1852" y="1457">Acquisitions — with deal size where public</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="40" y="1490" font-size="11" fill="#5A7088">Source: companion docs in /Services/* (per-product L100-L400). See product-evolution.md for full tables.</text>
+  <text x="2600" y="1490" font-size="11" fill="#5A7088" text-anchor="end">Approximate timing; some events span quarters around year boundaries.</text>
+</svg>

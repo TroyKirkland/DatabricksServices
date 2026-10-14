@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Compute on Databricks — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Compute on Databricks</h1>
+<p><em>Cross-cutting topic doc. Synthesizes Databricks Runtime, Photon, Clusters, Serverless, SQL Warehouses, Databricks Connect, and the knobs that decide cost and latency.</em></p>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Compute on Databricks is <strong>Spark (with Photon acceleration) running on VMs you own (classic) or Databricks pre-warms (serverless)</strong>, exposed via four shapes: all-purpose clusters, jobs clusters, SQL warehouses, and Model Serving endpoints. You pick a shape, a size, a runtime — the platform runs it.</p>
+<ul>
+<li><strong>Two stewardship models</strong> — <em>classic</em> (your VPC, cloud + DBU) vs <em>serverless</em> (Databricks' account, DBU-only at a higher rate).</li>
+<li><strong>One execution engine, two implementations</strong> — JVM Spark and Photon (C++ vectorized). Photon engages automatically.</li>
+<li><strong>Billed in DBU</strong> — Jobs / All-Purpose / SQL / LDP / Serverless / Model Serving each have different rates.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><strong>All-purpose cluster</strong> — interactive notebooks/ad hoc; classic + serverless.</li>
+<li><strong>Jobs cluster</strong> — one run then teardown; classic + serverless.</li>
+<li><strong>SQL Warehouse</strong> — SQL-only compute; <em>Serverless</em> (default) / <em>Pro</em> (your VPC) / <em>Classic</em> (legacy).</li>
+<li><strong>LDP pipeline compute</strong> — Lakeflow Spark Declarative Pipelines; serverless default for new pipelines.</li>
+<li><strong>Model Serving endpoint</strong> — real-time CPU/GPU inference, scale-to-zero, serverless-only.</li>
+</ul>
+<p><strong>Core cluster knobs:</strong> DBR version (current LTS: 18 LTS / Spark 4.1 / JDK 21; 17.3 LTS / Spark 4.0; 16.4 LTS / Spark 3.5) · node type · autoscaling · Photon · access mode (Standard / Dedicated / No-isolation legacy) · spot mix (classic) · pools · init scripts (classic only) · cluster policy · dependency mode (beta, library management per workload) · local disk encryption (public preview, shuffle data on-disk) · AWS Capacity Blocks (reserved burst capacity).</p>
+<p><strong>SQL Warehouse:</strong> Serverless = seconds start, multi-tenant warm fleet, always Photon. Pro = single-tenant VPC, slower start, supports private link. Classic = legacy.</p>
+<p><strong>Authoring:</strong> UI, REST / Terraform / DAB YAML, Databricks Connect for local dev.</p>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>          ┌────── Control plane (Databricks) ──────┐
+          │ UI / REST / Scheduler / Auth / UC       │
+          └──┬─────────────────────────────────┬────┘
+       classic                          serverless
+             ▼                                 ▼
+   ┌── Customer VPC ──┐         ┌─ Databricks-owned account ─┐
+   │ Driver (DBR)     │         │ Multi-tenant warm fleet     │
+   │ Workers (1..N)   │         │ Driver + executor pods      │
+   │ Executors+Photon │         │ NAT egress / PrivateLink in │
+   └──────┬───────────┘         └──────────┬──────────────────┘
+          │  reads/writes via UC short-lived creds  │
+          ▼                                         ▼
+              ┌──── Cloud object storage (Delta) ────┐
+</code></pre>
+<p><strong>Two-plane model.</strong> Control plane (UI, scheduler, auth, UC) in Databricks. Data plane (driver+executors) in your account (classic) or Databricks (serverless). UC mediates all storage access via short-lived creds.</p>
+<p><strong>Spark exec:</strong> driver compiles plan via Catalyst+AQE, schedules tasks; executors run tasks (JVM + Photon native sidecars); shuffles via local disk+network; AQE rewrites the plan at runtime.</p>
+<p><strong>Photon</strong> is a separate C++ vectorized engine, dispatched per operator. Most decisive on scans, aggregations, joins, Delta reads. Python UDFs / Pandas UDFs / RDD APIs fall back to JVM.</p>
+<p><strong>Autoscaling:</strong> standard (reactive), enhanced (Jobs/LDP — proactive), SQL serverless (cluster-of-clusters for concurrency).</p>
+<p><strong>Access modes:</strong> Standard (multi-user, UC, Photon, row filters / masks) · Dedicated (single user/group, allows RDD/Scala) · No-isolation (legacy).</p>
+<p><strong>Cost</strong> = VM (cloud) + DBU. Serverless = DBU-only. Photon doubles the classic DBU multiplier but usually pays back via wall-clock.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>What Databricks Runtime contains</h3>
+<ul>
+<li>Specific Spark build (often ahead of OSS), Photon native libs, pinned Delta, pinned JDK. DBR 18 LTS = Spark 4.1 + JDK 21; DBR 17.3 LTS = Spark 4.0 + JDK 17; DBR 16.4 LTS = Spark 3.5 + JDK 17. DBR 18 also adds SQL Scripting (GA) and state repartitioning for stateful streaming.</li>
+<li>Pre-installed Python/Scala/R/Java libs (ML variant adds PyTorch / scikit / CUDA; GPU adds drivers).</li>
+<li>Databricks cluster manager binaries; OS + native libs (zstd, lz4).</li>
+<li>LTS = 2–3 yr support (DBR 18 LTS through June 2029); non-LTS = 6 mo. Pin LTS for production.</li>
+</ul>
+
+<h3>Photon dispatch</h3>
+<ul>
+<li>Per-operator flag set during planning. Whole Photon-supported stages run fully native, ~4096-row columnar batches.</li>
+<li>Mixed stages cross JNI as Arrow batches — costs CPU; planner avoids when possible.</li>
+<li><strong>Accelerates well:</strong> Parquet scan/decode, filters, projections, aggregations, hash joins, sort, simple windows, Delta reads (DVs+stats).</li>
+<li><strong>Falls back:</strong> Python UDFs, Pandas UDFs, RDD APIs, some narrow operators. Mixing creates a perf cliff.</li>
+<li>Photon has its own off-heap memory manager — separate from JVM heap. Spill via Photon spill manager.</li>
+</ul>
+
+<h3>Adaptive Query Execution (AQE)</h3>
+<ul>
+<li>Coalesces shuffle partitions; switches join strategies; handles skew via key-splitting; local shuffle reader.</li>
+<li>On by default since DBR 10+. Disabling is almost always a mistake.</li>
+</ul>
+
+<h3>Dynamic File Pruning (DFP)</h3>
+<p>Pushes a small dimension's filter values into the fact-scan after first probe — prunes Parquet files at scan time. Big win on Databricks vs vanilla Spark; cheaper under Photon.</p>
+
+<h3>Disk cache (legacy "Delta cache")</h3>
+<ul>
+<li>SSD-backed decoded-Parquet cache on workers; auto on classic with cache-enabled instance types.</li>
+<li><strong>Serverless</strong> doesn't expose a user-visible disk cache — block/page caches at lower layers.</li>
+<li>Per-cluster, lost on restart.</li>
+</ul>
+
+<h3>Cluster startup (classic)</h3>
+<ol>
+<li>Allocate cloud VMs via provider API.</li>
+<li>Boot from Databricks-prepared image; download runtime if not on AMI.</li>
+<li>Workspace-scoped init scripts run.</li>
+<li>Driver starts; workers register; UC token agent up.</li>
+</ol>
+<p>2–6 min typical. Pools cut VM-allocation; init scripts still run on attach.</p>
+
+<h3>Serverless internals (mental model)</h3>
+<ul>
+<li>Pre-warmed fleet, per-region.</li>
+<li>Per-workload driver+executor pods in isolated network namespaces — cross-tenant impossible.</li>
+<li>Egress NATs through Databricks-managed IPs; NCC controls allowlist; PrivateLink ingress supported for serverless SQL on some clouds.</li>
+<li>Cold start: ~5–15s SQL warehouse, sub-minute Jobs/LDP.</li>
+<li>No init scripts, no custom JARs cluster-wide, smaller Spark-config allowlist.</li>
+</ul>
+
+<h3>SQL Warehouse internals</h3>
+<ul>
+<li>Always Photon on.</li>
+<li>Serverless = cluster-of-clusters. Size = worker count per cluster; cluster scaling = how many clusters spin up under load.</li>
+<li><strong>A single query never spans clusters.</strong> Multiple clusters help concurrency, not single-query latency.</li>
+<li>Query history + profiles = primary debug surface (plan, stages, bytes scanned, Photon engagement, AQE rewrites).</li>
+</ul>
+
+<h3>Spark Connect / Databricks Connect</h3>
+<ul>
+<li>Client builds unresolved logical plan, ships to server.</li>
+<li>Pure-Python <code>pyspark</code> on client; no JVM needed.</li>
+<li>Notebooks behave the same in workspace or via Connect.</li>
+</ul>
+
+<h3>DBUs & billing</h3>
+<ul>
+<li>Per-second billing.</li>
+<li>All-purpose &gt; Jobs &gt; LDP rate (varies). Picking the right shape matters more than micro-tuning configs.</li>
+<li>Photon-on classic doubles the multiplier; usually a win on wall-clock.</li>
+<li>Spot mix lowers cloud cost; doesn't change DBU rate. Spot reclaim retries tasks.</li>
+<li><code>system.billing.usage</code> = retrospective truth. Cluster tags propagate for chargeback.</li>
+</ul>
+
+<h3>Concurrency, isolation, fault tolerance</h3>
+<ul>
+<li>Driver failure is fatal — cluster restarts. Use Jobs cluster + <code>max_retries</code>.</li>
+<li>Executor failure recoverable — Spark retries tasks. Repeated loss = spot reclaim / OOM.</li>
+<li>Standard access mode isolates via UC perms but doesn't isolate compute — one user can starve others.</li>
+<li>Egress: classic via your VPC NAT; serverless via Databricks-managed (optional NCC allowlist).</li>
+</ul>
+
+<h3>Hard limits / gotchas</h3>
+<ul>
+<li>Scaling to thousands of executors usually shuffles or storage IOPS-bottleneck first.</li>
+<li>Init scripts &gt;10 min time out and fail cluster start.</li>
+<li>DBR upgrades aren't fully backward-compatible — pin LTS, validate next LTS in staging.</li>
+<li>Serverless Spark-config allowlist is smaller than classic.</li>
+<li>Python UDFs round-trip Photon→JVM→Python — common perf surprise.</li>
+<li>Pool warmup not instant — cold pools take minutes to repopulate.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Pick the shape, pick the stewardship (classic vs serverless), pick the runtime, trust the scheduler."</strong> Spark+Photon+AQE+DFP are the same machinery everywhere. Most perf work is shape choice + Photon coverage + data layout. Debug order: <em>wrong shape → bad data layout → Photon fallback → shuffle blowup</em>.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use compute like this</h2>
+<ul>
+<li><strong>All-purpose clusters for scheduled jobs.</strong> Most expensive DBU rate. Use Jobs or serverless Jobs.</li>
+<li><strong>Long-lived "shared" clusters everyone attaches to.</strong> Noisy-neighbor; pays 24/7. Use serverless notebooks or per-user warehouses.</li>
+<li><strong>Classic SQL Warehouse for new deployments.</strong> Pro or Serverless.</li>
+<li><strong>Tiny SQL Warehouse for BI dashboards.</strong> Right-size or rely on cluster scaling.</li>
+<li><strong>Spark for sub-second OLTP.</strong> Wrong tool — Lakebase / Model Serving / KV.</li>
+<li><strong>Init scripts to install heavy native libs.</strong> Slows every start. Bake into images or use cluster libs.</li>
+<li><strong>Disabling Photon to "save money."</strong> Usually costs more in wall-clock.</li>
+<li><strong>Python UDFs in hot paths.</strong> Use SQL or Pandas UDFs.</li>
+<li><strong>Non-LTS DBR in production.</strong> Six-month support window.</li>
+<li><strong>One huge cluster for fan-out workloads.</strong> Use SQL Warehouse cluster scaling.</li>
+<li><strong>Notebook-scoped libs for a job.</strong> Pin cluster libs or DAB environments.</li>
+<li><strong>Model inference on Spark.</strong> Use Model Serving.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where compute does not do well</h2>
+<ul>
+<li><strong>Sub-second query latency at low concurrency</strong> — overhead floor of a few hundred ms.</li>
+<li><strong>Hard real-time streaming.</strong> Structured Streaming = seconds. Use Flink/Kafka for ms SLAs.</li>
+<li><strong>Custom Spark distributions / forks.</strong> You run Databricks' Spark.</li>
+<li><strong>Limited serverless GPU.</strong> Parity gap vs classic GPU runtime.</li>
+<li><strong>Init-script-heavy classic workloads</strong> don't migrate cleanly to serverless.</li>
+<li><strong>Driver bottlenecks</strong> on plans with millions of files or huge query plans.</li>
+<li><strong>JVM tuning mostly off-limits.</strong> Driver heap configurable; deep flags not.</li>
+<li><strong>Cross-region compute</strong> doesn't exist — egress + latency to read another region.</li>
+<li><strong>Pool warmup latency</strong> under bursts.</li>
+<li><strong>Spot interruptions</strong> during shuffle-heavy stages cause big retries.</li>
+<li><strong>Photon JNI boundary</strong> can dominate cost on mixed workloads.</li>
+<li><strong>ML runtime dependency hell.</strong> Pinned versions conflict with user installs.</li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/release-notes/runtime/">Databricks Runtime release notes</a></li>
+<li><a href="https://docs.databricks.com/aws/en/release-notes/runtime/18.html">DBR 18 LTS release notes</a></li>
+<li><a href="https://docs.databricks.com/aws/en/compute/configure">Compute configuration reference</a></li>
+<li><a href="https://docs.databricks.com/aws/en/compute/access-mode-limitations">Access modes</a></li>
+<li><a href="https://docs.databricks.com/aws/en/compute/photon">Photon</a></li>
+<li><a href="https://docs.databricks.com/aws/en/compute/sql-warehouse/">SQL Warehouses</a></li>
+<li><a href="https://docs.databricks.com/aws/en/compute/serverless/">Serverless compute</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/databricks-connect/">Databricks Connect</a></li>
+<li><a href="https://www.databricks.com/product/pricing">Pricing &amp; DBU rates</a></li>
+<li><a href="https://docs.databricks.com/aws/en/optimizations/aqe">Adaptive Query Execution</a></li>
+<li><a href="https://docs.databricks.com/aws/en/optimizations/dynamic-file-pruning">Dynamic File Pruning</a></li>
+<li>Companion docs: <a href="../DatabricksRuntime/databricks-runtime.html">Databricks Runtime</a> · <a href="../Photon/photon.html">Photon</a> · <a href="../DatabricksConnect/databricks-connect.html">Databricks Connect</a> · <a href="../DatabricksSQL/databricks-sql.html">Databricks SQL</a> · <a href="../LakeflowJobs/lakeflow-jobs.html">Lakeflow Jobs</a> · <a href="../MosaicAIModelServing/mosaic-ai-model-serving.html">Mosaic AI Model Serving</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+
+</body></html>

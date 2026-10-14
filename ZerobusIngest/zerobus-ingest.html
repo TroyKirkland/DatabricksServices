@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Zerobus Ingest — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Zerobus Ingest</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Zerobus is a <strong>gRPC SDK</strong> that writes events directly into a Delta table in Unity Catalog, without a Kafka / Kinesis hop. Generate a Protobuf schema from your UC table, embed the client into your producer, <code>send()</code> events.</p>
+<ul>
+<li><strong>Direct-to-Delta</strong>: no broker.</li>
+<li><strong>Low latency</strong>: sub-second p99 in the right config.</li>
+<li><strong>Multi-language</strong>: Python, Java, Go, TypeScript, Rust.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><strong>Producer SDK</strong>: <code>ZerobusClient</code> + <code>send(event)</code> / <code>send_batch()</code>.</li>
+<li><strong>Protobuf schema</strong> generated from UC table.</li>
+<li><strong>ACK semantics</strong>: future/promise per send; fire-and-forget or wait-on-ack.</li>
+<li><strong>At-least-once</strong> default; client-side dedup keys for effective-once.</li>
+<li><strong>UC governance</strong> on the destination table.</li>
+<li><strong>Schema evolution</strong>: add column → regen proto → producer recompile.</li>
+<li><strong>Auth</strong>: service principal OAuth M2M or PAT.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>Your app
+   │   (Zerobus SDK, gRPC)
+   ▼
+Databricks Zerobus endpoint ──► [batching, compression, dedupe] ──► Delta table (UC managed)
+                                                                     │
+                                                                     └── predictive optimization, OPTIMIZE/VACUUM (UC)</code></pre>
+<p>Long-lived gRPC + HTTP/2. Server batches events and commits to Delta in throughput-optimised micro-batches. ACK = event durable in Delta log. Downstream: Photon, OPTIMIZE, time-travel, Delta Sharing all apply.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Wire protocol</h3>
+<ul>
+<li>gRPC schema-driven; per-table endpoint URL.</li>
+<li>Proto message generated from UC schema; field numbers = columns.</li>
+<li>Client-streaming RPC; server-streaming ACKs back.</li>
+</ul>
+
+<h3>ACK + ordering</h3>
+<ul>
+<li>ACK = durable in Delta.</li>
+<li>Per-stream ordering preserved.</li>
+<li>Across streams: best-effort. Single-stream + await-per-send = strict order, lower throughput.</li>
+</ul>
+
+<h3>Throughput + batching</h3>
+<ul>
+<li>Pipeline sends (no await between) for peak throughput.</li>
+<li>Commits trigger on time- or size-bound; latency floor ~1s in default tuning.</li>
+<li>Per-table commit ceiling; shard for huge fan-in.</li>
+</ul>
+
+<h3>At-least-once vs exactly-once</h3>
+<ul>
+<li>Default at-least-once. Network retries can double-write.</li>
+<li>Effective exactly-once via client dedup key + downstream <code>APPLY CHANGES INTO</code>.</li>
+</ul>
+
+<h3>Schema evolution</h3>
+<ul>
+<li>Add column → new proto field; old producers fine.</li>
+<li>Drop / rename / type narrow → coordinated redeploy.</li>
+</ul>
+
+<h3>Networking</h3>
+<ul>
+<li>gRPC TLS on standard endpoints. Private Link supported.</li>
+<li>Cross-cloud producers pay WAN egress.</li>
+</ul>
+
+<h3>Failure modes</h3>
+<ul>
+<li>Backpressure manifests as send-latency growth.</li>
+<li>Reconnect with backoff; resume from last-ACKed offset client-side.</li>
+<li>Databricks restart does not lose ACKed data.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Bounded max event size (MBs).</li>
+<li>Per-table throughput ceiling; shard for multi-million-eps.</li>
+<li>Schema must be proto-representable.</li>
+<li>Zerobus is write-only; reads are normal Delta.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>Kafka producer → Delta with the broker removed.</strong> Best for high-volume event capture into the lakehouse where you don't need broker-style consumer fan-out.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Zerobus</h2>
+<ul>
+<li><strong>Need broker fan-out.</strong> Multiple independent consumers → Kafka/Kinesis.</li>
+<li><strong>Sub-millisecond latency.</strong> Use in-process buffers or real-time engines.</li>
+<li><strong>Sources you don't own.</strong> No SDK in source → use Lakeflow Connect or Kafka.</li>
+<li><strong>Tiny volumes.</strong> Nightly 10K rows → <code>COPY INTO</code>.</li>
+<li><strong>Topic replay required.</strong> Delta isn't a Kafka log; build CDF reader.</li>
+<li><strong>Strict global ordering across producers.</strong> Need single producer (often impractical).</li>
+<li><strong>Heavy in-flight transforms.</strong> Transform downstream in LDP.</li>
+<li><strong>Cross-region high-volume producers.</strong> WAN egress.</li>
+<li><strong>ACK-on-consumed required.</strong> ACK is on-Delta-commit only.</li>
+<li><strong>Mobile / browser clients.</strong> Backend / service-side only.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>No consumer pull semantics.</strong> Delta is the only "consumer".</li>
+<li><strong>Per-table commit throughput ceiling.</strong> Shard for huge fan-in.</li>
+<li><strong>Non-additive schema changes cascade.</strong> Renames, type narrows, drops force producer redeploy.</li>
+<li><strong>Limited replay tooling.</strong> Query Delta CDF or time-travel.</li>
+<li><strong>At-least-once requires dedup discipline.</strong> No native cross-retry exactly-once.</li>
+<li><strong>Opaque backpressure.</strong> Latency grows; reasons not always surfaced.</li>
+<li><strong>Less ecosystem vs Kafka.</strong> No Connect, no kSQL, lighter registry.</li>
+<li><strong>WAN cost / latency for cross-cloud.</strong></li>
+<li><strong>UC managed Delta only.</strong> No non-Delta sink.</li>
+<li><strong>SDK maturity varies.</strong> Python/Java mature; TS/Go/Rust trailing.</li>
+<li><strong>Client-side metrics on you.</strong> Export to your stack.</li>
+<li><strong>No native partitioning beyond table partition column.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/ingestion/zerobus/">Zerobus Ingest docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/ingestion/zerobus/sdk">SDK reference</a></li>
+<li><a href="https://www.databricks.com/blog/announcing-zerobus">Zerobus announcement blog</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Lakehouse Federation — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Lakehouse Federation</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Query other databases as if they were UC tables — no copy. Two modes: <strong>Query Federation</strong> (JDBC pushdown to relational databases) and <strong>Catalog Federation</strong> (direct object-storage reads for platforms with open catalog services). Both surface as foreign catalogs in UC.</p>
+<ul>
+<li><strong>No copy</strong>: live source reads.</li>
+<li><strong>UC-governed</strong>.</li>
+<li><strong>SQL-anywhere</strong>: lakehouse + external in one query.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><strong>Connection</strong>: UC securable with type/host/credentials.</li>
+<li><strong>Foreign catalog</strong>: mirrors source schemas; read-only mostly.</li>
+<li><strong>Query Federation sources</strong> (JDBC): PostgreSQL, MySQL, SQL Server, Azure Synapse, Snowflake, Redshift, BigQuery, Salesforce Data 360, Oracle, Teradata, Databricks.</li>
+<li><strong>Catalog Federation sources</strong> (object storage): Legacy/External Hive metastore, AWS Glue, Salesforce Data 360, Snowflake, Palantir Foundry, Workday Data Connect.</li>
+<li><strong>HTTP connection type</strong>: new (Runtime 16.2+).</li>
+<li><strong>Pushdown</strong>: filters, projections, aggregates when possible (Query Federation).</li>
+<li>Catalog Federation auto-refreshes schema at query time; Query Federation needs manual refresh.</li>
+<li>UI / SQL <code>CREATE CONNECTION</code> / API / Terraform / DABs.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<p><strong>Query Federation:</strong></p>
+<pre><code>[Spark/DBSQL] ─► [UC Foreign Catalog] ─► [JDBC connector] ─► [External DB] ─► rows ─► Spark</code></pre>
+<p><strong>Catalog Federation:</strong></p>
+<pre><code>[Spark/DBSQL] ─► [UC Foreign Catalog] ─► [External catalog metadata] ─► Databricks reads object storage directly</code></pre>
+<p>UC owns the credential. Query Federation: Catalyst negotiates pushdown; unpushed work pulls rows into Spark. Catalog Federation: Databricks reads object storage directly — no JDBC round-trip, more cost-efficient. Permissions: UC grants + connection identity at source.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Pushdown coverage</h3>
+<ul>
+<li>Always: simple WHERE, projections, LIMIT, single-table aggs on common functions.</li>
+<li>Often: same-source joins, common window functions.</li>
+<li>Rarely: UDFs, Photon-only funcs, cross-source joins.</li>
+<li><code>EXPLAIN</code> reveals pushed predicates. Failure-to-push pulls rows — the silent perf killer.</li>
+</ul>
+
+<h3>Cross-source joins</h3>
+<ul>
+<li>Two separate scans + join in Spark. Filter aggressively first.</li>
+</ul>
+
+<h3>Credential management</h3>
+<ul>
+<li>Connection stores creds encrypted in UC.</li>
+<li>Source-side identity = connection identity. Per-user requires OAuth federation per source.</li>
+</ul>
+
+<h3>Query lifecycle</h3>
+<ul>
+<li>Parse → resolve via UC FC metadata cache → plan with source pushdown rules → execute → stream rows.</li>
+</ul>
+
+<h3>Per-source quirks</h3>
+<ul>
+<li>Snowflake: Query Federation (JDBC, warehouse cost per query) or Catalog Federation (object storage, more cost-effective). Not all Snowflake functions map.</li>
+<li>Postgres/MySQL/SQL Server: solid JDBC pushdown; for hot paths, prefer Lakeflow Connect CDC.</li>
+<li>BigQuery: JDBC pushdown; large pulls expensive (slots).</li>
+<li>Redshift: unloads via temp S3 in some setups.</li>
+<li>Salesforce Data 360: Query Federation or Catalog Federation; rate-limit-aware.</li>
+<li>Oracle / Teradata: Query Federation (GA as of 2026).</li>
+<li>Palantir Foundry / Workday Data Connect: Catalog Federation only.</li>
+<li>AWS Glue / Hive metastores: Catalog Federation; primary use case is incremental UC migration.</li>
+</ul>
+
+<h3>Caching and schema refresh</h3>
+<ul>
+<li>No first-class FC result cache; DBSQL warehouse cache may apply.</li>
+<li>Catalog Federation: schema refreshed automatically at query time. Query Federation: manual refresh on source schema changes.</li>
+<li>For repeat workloads, materialise to Delta.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Catalog refresh on schema change may be manual.</li>
+<li>Mostly read-only; writes limited.</li>
+<li>Cost has two sides; attribution messy.</li>
+<li>Vendor type quirks (VARIANT, STRUCT).</li>
+<li>Cross-region egress hurts.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>Two tools in one:</strong> (1) <strong>Query Federation</strong> — JDBC pool with UC governance and pushdown; (2) <strong>Catalog Federation</strong> — zero-copy metadata bridge for open-format catalogs. Best for discovery, governed access, incremental UC migration, POC. Worst for hot production paths where copy-then-query is faster.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Federation</h2>
+<ul>
+<li><strong>Production batch ETL.</strong> Mirror via Lakeflow Connect.</li>
+<li><strong>Hot dashboards.</strong> Mirror first.</li>
+<li><strong>Sub-second OLTP.</strong></li>
+<li><strong>High-fan-out cross-source joins.</strong></li>
+<li><strong>Write-heavy operations.</strong></li>
+<li><strong>Source-side compute cost sensitive.</strong></li>
+<li><strong>Sources behind unreliable networks.</strong></li>
+<li><strong>Real-time streams.</strong></li>
+<li><strong>Permanent architecture.</strong> Use to scope, then mirror.</li>
+<li><strong>Cross-region without egress budget.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Pushdown coverage uneven.</strong></li>
+<li><strong>Per-user source identity hard.</strong></li>
+<li><strong>Schema refresh varies by mode.</strong> Catalog Federation auto-refreshes; Query Federation needs manual refresh.</li>
+<li><strong>Limited writes.</strong></li>
+<li><strong>Weak result caching.</strong></li>
+<li><strong>Lineage stops at edge.</strong></li>
+<li><strong>Type fidelity issues.</strong></li>
+<li><strong>Split cost attribution.</strong></li>
+<li><strong>Source audit shows one user.</strong></li>
+<li><strong>Throughput = source.</strong></li>
+<li><strong>Extra setup per source.</strong></li>
+<li><strong>No cross-source join pushdown.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/en/query-federation/index.html">Lakehouse Federation docs (Query + Catalog Federation)</a></li>
+<li><a href="https://docs.databricks.com/en/query-federation/catalog-federation.html">Catalog Federation</a></li>
+<li><a href="https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-connection.html">CREATE CONNECTION reference</a></li>
+<li><a href="https://docs.databricks.com/aws/en/query-federation/configure-pushdown">Pushdown internals</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

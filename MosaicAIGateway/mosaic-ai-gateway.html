@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Unity Gateway (formerly Mosaic AI Gateway) — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Unity Gateway <small style="font-size:0.6em;font-weight:normal">(formerly Mosaic AI Gateway)</small></h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Policy + observability layer in front of model endpoints, AI agents, and MCP servers. Centralises rate limits, budget management, PII detection, payload logging, fallback + smart routing, and cost tracking. Apps call one governed endpoint regardless of the underlying model or agent.</p>
+<ul>
+<li><strong>One pane</strong> for many models and agents (GPT/Claude/Gemini/Llama + custom + agents + MCP).</li>
+<li><strong>Governance</strong>: rate limits, budget caps, PII, audit; extends to runtime agent/tool interactions.</li>
+<li><strong>Resilience</strong>: fallback, retry, traffic split, smart routing.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Gateway-enabled endpoint (per-endpoint or workspace-wide).</li>
+<li>Rate limits + budget caps by identity/endpoint/tokens.</li>
+<li>PII detect/redact/block.</li>
+<li>Service policies / guardrails (input + output): prompt-injection, toxicity, block-lists, custom.</li>
+<li>Fallback routing on error/timeout/rate-limit.</li>
+<li>Smart routing: auto model selection for task types (e.g., coding) to reduce cost.</li>
+<li>Payload log → Delta table.</li>
+<li>Usage in <code>system.serving.*</code>.</li>
+<li>Agents + MCP servers: UC GRANT-based access control at runtime.</li>
+<li>UI + REST + DABs config.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Caller] → [Gateway-enabled endpoint]
+            ↓ request pipeline: authZ → rate limit → PII → guardrail → route
+            ↓
+            [Model: FMAPI / external / custom]
+            ↓ response pipeline: guardrail → PII scrub → payload log → usage emit
+            ↓
+          [Caller]</code></pre>
+<p>All requests + streaming go through. Fallback evaluated on error/timeout. Payload table written async.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Rate limits</h3>
+<ul>
+<li>Token + request based.</li>
+<li>Per principal / endpoint / route.</li>
+<li><code>Retry-After</code> headers.</li>
+<li>Sliding window typical.</li>
+</ul>
+
+<h3>PII detection</h3>
+<ul>
+<li>Categories (PHONE, EMAIL, SSN…). Modes: detect / redact / block.</li>
+<li>Defense layer, not guarantee.</li>
+</ul>
+
+<h3>Guardrails</h3>
+<ul>
+<li>Built-in: prompt-injection, toxicity, profanity, block-list.</li>
+<li>Custom: regex / SQL UDF.</li>
+<li>Input + output.</li>
+</ul>
+
+<h3>Fallback routing</h3>
+<ul>
+<li>Ordered served entities. Triggers: 5xx, rate-limit, timeout.</li>
+<li>Streaming: only fallback at session start, not mid-stream.</li>
+</ul>
+
+<h3>Payload tables</h3>
+<ul>
+<li>UC Delta: request/response/latency/status/identity/tokens/PII/fallback.</li>
+<li>Sampling configurable.</li>
+</ul>
+
+<h3>Usage + cost</h3>
+<ul>
+<li><code>system.serving.endpoint_usage</code> tokens.</li>
+<li>Joinable with <code>system.billing.usage</code>.</li>
+<li>Per-principal via payload identity.</li>
+</ul>
+
+<h3>External model semantics</h3>
+<ul>
+<li>UC-stored creds.</li>
+<li>Optional schema unification (OpenAI/Anthropic).</li>
+<li>Extra hop = small latency cost.</li>
+</ul>
+
+<h3>Streaming</h3>
+<ul>
+<li>SSE supported.</li>
+<li>End-of-stream token counts + final guardrail.</li>
+<li>Mid-stream moderation limited.</li>
+</ul>
+
+<h3>Multi-endpoint / shared</h3>
+<ul>
+<li>Workspace-wide defaults + per-endpoint overrides.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Burst over-shoot possible.</li>
+<li>PII false +/- both happen.</li>
+<li>Payload table size growth.</li>
+<li>Slight added latency.</li>
+<li>External provider quotas still apply.</li>
+</ul>
+
+<h3>Smart routing</h3>
+<ul>
+<li>Auto-selects cheaper/efficient model for specific task types (e.g., coding); reduces spend without manual routing logic.</li>
+<li>Databricks-managed selection logic; not a general routing DSL.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Smart proxy for model endpoints, agents, and MCP tools."</strong> Apigee/Cloudflare role tuned for LLM specifics (tokens, PII, prompt injection), extended to the full agentic runtime.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Gateway</h2>
+<ul>
+<li><strong>Trivial single-model internal deployment.</strong></li>
+<li><strong>Trust PII detection as sole defense.</strong></li>
+<li><strong>Complex custom routing.</strong></li>
+<li><strong>Mid-stream content moderation expectations.</strong></li>
+<li><strong>Replacing external provider quotas.</strong></li>
+<li><strong>Microservice/non-LLM routing.</strong></li>
+<li><strong>High-throughput edge inference.</strong></li>
+<li><strong>No payload table cost plan.</strong></li>
+<li><strong>Cross-org collaboration.</strong> Use Clean Rooms.</li>
+<li><strong>As an agent framework.</strong> Use Agent Bricks / LangGraph.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>PII false +/-.</strong></li>
+<li><strong>Limited guardrail customisation.</strong></li>
+<li><strong>Streaming guardrail blind spot.</strong></li>
+<li><strong>Policy hierarchies basic.</strong></li>
+<li><strong>Rate-limit isn't strict-realtime.</strong></li>
+<li><strong>No native dashboards.</strong></li>
+<li><strong>SQL-driven cost attribution.</strong></li>
+<li><strong>External header pass-through lossy.</strong></li>
+<li><strong>Latency overhead on small calls.</strong></li>
+<li><strong>Streaming mid-call failover hard.</strong></li>
+<li><strong>Per-region scope.</strong></li>
+<li><strong>Basic policy testing tools.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/en/ai-gateway/">Unity Gateway docs</a> (Sept 29, 2026; formerly Mosaic AI Gateway)</li>
+<li><a href="https://docs.databricks.com/aws/en/ai-gateway/rate-limits">Rate limits</a></li>
+<li><a href="https://docs.databricks.com/aws/en/ai-gateway/pii-detection">PII detection</a></li>
+<li><a href="https://docs.databricks.com/aws/en/ai-gateway/fallback">Fallback routing</a></li>
+<li><a href="https://docs.databricks.com/aws/en/ai-gateway/usage">Usage tracking</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

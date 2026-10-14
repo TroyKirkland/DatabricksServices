@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>AI/BI Dashboards — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>AI/BI Dashboards</h1>
+<blockquote>Formerly <strong>Lakeview</strong>.</blockquote>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>AI/BI Dashboards is Databricks' <strong>native dashboarding</strong>. Define datasets (SQL against UC), drop widgets, parameterise, publish. The BI layer that lives inside Databricks.</p>
+<ul>
+<li><strong>Lakehouse-native</strong>: UC tables direct.</li>
+<li><strong>Modern dashboarding</strong>: cross-filter, parameters, drill-down, Genie integration.</li>
+<li><strong>Embedded sharing</strong>: viewers without workspace access; PDF/image subscriptions.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><strong>Dataset</strong>: named SQL query against UC SQL warehouse, or a UC table/view/metric view; multi-statement queries supported. Metric views first-class; use the <code>MEASURE</code> aggregate. <strong>Local metric views</strong> can be scoped to the dashboard without publishing to UC.</li>
+<li><strong>Custom Calculations</strong>: derived columns applied on top of a dataset without modifying source SQL.</li>
+<li><strong>Widgets</strong>: line/bar/area/pie/scatter/funnel, counter, table, pivot, filter, text.</li>
+<li><strong>Parameters</strong>: bind to SQL via <code>:param</code>; drive cross-filter / drill.</li>
+<li><strong>Pages</strong>: multi-page dashboards.</li>
+<li><strong>Draft vs Publish</strong>: publish freezes viewer copy.</li>
+<li><strong>Genie integration</strong>: link a Genie Agent (formerly Genie Space) for NL follow-ups.</li>
+<li><strong>Subscriptions</strong>: scheduled email PDF/image/link.</li>
+<li><strong>Embedding</strong>: account-level viewers (paid).</li>
+<li><strong>DAB-deployable</strong> assets.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[UC tables/MVs/STs] ──► [SQL Warehouse] ──► [Datasets] ──► [Widgets render in browser]
+                                                            │
+                                                            ├─ Result cache (warehouse)
+                                                            ├─ Page cross-filter
+                                                            └─ Genie space (optional)</code></pre>
+<p>All queries run on a chosen SQL warehouse; serverless preferred. Result cache drives fast repeat loads. Permissions: VIEW/EDIT/MANAGE; query identity is "as viewer" or "as publisher".</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Datasets + execution</h3>
+<ul>
+<li>SQL + optional LIMIT (or UC table/view/metric view); multi-statement queries supported; widgets reference datasets; datasets reference UC.</li>
+<li><strong>Custom Calculations</strong>: add derived columns to a dataset without touching source SQL.</li>
+<li>Publish snapshots SQL; draft edits invisible until republish.</li>
+<li>Large results sampled to widget capacity.</li>
+</ul>
+
+<h3>Query identity</h3>
+<ul>
+<li>As viewer: per-user identity, UC row/column policies apply, audit tagged.</li>
+<li>As publisher: single identity, easier, weaker for RLS.</li>
+</ul>
+
+<h3>Parameters + cross-filter</h3>
+<ul>
+<li>Text/number/date/dropdown/multi-select. Defaults can be <code>current_user()</code> etc.</li>
+<li>Cross-filter injects predicates implicitly; needs matching column.</li>
+<li>URL query string for shareable parameterised links.</li>
+</ul>
+
+<h3>Caching layers</h3>
+<ul>
+<li>Warehouse result cache (query + params + viewer identity).</li>
+<li>Browser/page state (not durable).</li>
+<li>Subscription snapshots (delivered artifact).</li>
+</ul>
+
+<h3>Subscriptions</h3>
+<ul>
+<li>PDF / image / link; identity = subscriber or publisher.</li>
+<li>Retry semantics limited.</li>
+</ul>
+
+<h3>Genie integration</h3>
+<ul>
+<li>Linked Genie Agent (formerly Genie Space) gets dashboard context.</li>
+<li>Same warehouse.</li>
+</ul>
+
+<h3>Embedding</h3>
+<ul>
+<li>Account-level viewers (paid) for external users.</li>
+<li>iframe via SSO or signed-URL flow.</li>
+</ul>
+
+<h3>Performance</h3>
+<ul>
+<li>First load = warehouse cold (5–15s) + slowest dataset.</li>
+<li>Repeat loads cached.</li>
+<li>Heavy dashboards (20+ widgets) slow; optimise with MVs.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>~50 widgets/page soft cap.</li>
+<li>Limited custom viz vs Tableau/PowerBI.</li>
+<li>Drill-through via parameters only.</li>
+<li>No write-back / cell edit.</li>
+<li>Subscriptions static.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"BI on UC + a serverless warehouse."</strong> Lighter than Tableau, deeply integrated with lakehouse + Genie. Best for focused lakehouse-centric dashboards with governance in one place.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use AI/BI Dashboards</h2>
+<ul>
+<li><strong>Complex enterprise BI with bespoke visuals.</strong></li>
+<li><strong>Sub-second real-time monitoring.</strong> Use Grafana.</li>
+<li><strong>Write-back / data entry.</strong> Use a Databricks App.</li>
+<li><strong>Heavy custom viz.</strong></li>
+<li><strong>Printable / paginated reports.</strong></li>
+<li><strong>Pivot-table-heavy financial modelling.</strong></li>
+<li><strong>Hundreds of KPI tiles.</strong> Warehouse thrash.</li>
+<li><strong>Ad-hoc analyst sandbox.</strong> Use SQL editor + Genie.</li>
+<li><strong>One-off Slack share.</strong> Paste a result.</li>
+<li><strong>Customer-app embedding without account viewers.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>First-load cold-start latency.</strong></li>
+<li><strong>No deep custom viz.</strong></li>
+<li><strong>Cross-dashboard drill requires URL params.</strong></li>
+<li><strong>Subscriptions static.</strong></li>
+<li><strong>Limited param UI.</strong></li>
+<li><strong>Versioning via DABs only.</strong></li>
+<li><strong>Cross-filter inference surprises.</strong></li>
+<li><strong>Identity model trade-offs.</strong></li>
+<li><strong>Excel export OK, not great.</strong></li>
+<li><strong>No comments / annotations.</strong></li>
+<li><strong>Hard cost attribution per dashboard.</strong></li>
+<li><strong>MV staleness surfaces without warning.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/dashboards/">AI/BI Dashboards docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dashboards/parameters">Parameters</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dashboards/sharing">Embedding and sharing</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dashboards/subscriptions">Subscriptions</a></li>
+<li><a href="https://docs.databricks.com/en/dashboards/datasets.html">Datasets — types and sources</a></li>
+<li><a href="https://docs.databricks.com/en/metric-views/index.html">Metric Views</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

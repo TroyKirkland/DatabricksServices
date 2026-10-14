@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databricks Lakeflow Connect — L100 to L400</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #ff3621;
+    --accent-soft: #fff1ee;
+    --border: #d0d7de;
+    --code-bg: #f6f8fa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--fg);
+    background: var(--bg);
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+  h1 {
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+    font-size: 2.1rem;
+  }
+  h2 {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3rem;
+    margin-top: 2.5rem;
+    color: var(--accent);
+    font-size: 1.55rem;
+  }
+  h3 {
+    margin-top: 1.8rem;
+    font-size: 1.2rem;
+  }
+  p, li { font-size: 1rem; }
+  code {
+    background: var(--code-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+  pre code {
+    background: transparent;
+    padding: 0;
+  }
+  ul { padding-left: 1.4rem; }
+  li { margin-bottom: 0.3rem; }
+  strong { color: var(--fg); }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    margin: 1rem 0;
+    padding: 0.6rem 1rem;
+    color: var(--muted);
+  }
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+  .level-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    letter-spacing: 0.04em;
+  }
+  .sources li { font-size: 0.92rem; }
+  .toc {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.4rem;
+    margin: 1.5rem 0 2rem;
+  }
+  .toc h4 { margin: 0 0 0.5rem; font-size: 0.95rem; color: var(--muted); }
+  .toc ul { margin: 0; padding-left: 1.2rem; }
+</style>
+</head>
+<body>
+
+<h1>Databricks Lakeflow Connect</h1>
+
+<div class="toc">
+  <h4>Contents</h4>
+  <ul>
+    <li><a href="#l100">Level 100 — What it is</a></li>
+    <li><a href="#l200">Level 200 — The product surface</a></li>
+    <li><a href="#l300">Level 300 — Architecture</a></li>
+    <li><a href="#l400">Level 400 — Deep internals</a></li>
+    <li><a href="#anti-patterns">Anti-patterns — where not to use it</a></li>
+    <li><a href="#weaknesses">Weaknesses — where it doesn't do well</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ul>
+</div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+
+<p>Lakeflow Connect is Databricks' <strong>managed ingestion</strong> offering. You point it at a source (a SaaS app, an operational database, files in cloud storage), and it lands the data into <strong>Unity Catalog–governed streaming tables</strong> on <strong>Delta</strong>, on a schedule. No clusters to size, no Python to write, no Fivetran-style separate vendor.</p>
+
+<p>Three things to remember at L100:</p>
+<ul>
+  <li><strong>Managed</strong>: connectors are first-party, fully hosted by Databricks.</li>
+  <li><strong>Incremental by default</strong>: first run snapshots, subsequent runs only pull what changed.</li>
+  <li><strong>Lakehouse-native</strong>: output is UC streaming tables; downstream Lakeflow Spark Declarative Pipelines (LDP/DLT), SQL, AI/BI, and ML can use them directly.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+
+<p><strong>Connector families:</strong></p>
+<ul>
+  <li><strong>SaaS connectors</strong> (API-driven): Salesforce, Workday, ServiceNow, HubSpot, Jira, Google Analytics, NetSuite, etc.</li>
+  <li><strong>Database connectors</strong> (CDC-driven): SQL Server, PostgreSQL, MySQL, Oracle.</li>
+  <li><strong>File source connectors</strong>: Google Drive, SharePoint, and enterprise file storage. No CDC; ingest files directly into streaming tables.</li>
+  <li><strong>Query-based connectors</strong>: direct database querying without CDC configuration; no gateway or change log required.</li>
+  <li><strong>Streaming connectors</strong>: RabbitMQ and other event streaming sources.</li>
+  <li><strong>Community connectors</strong>: open-source, community-built options for sources not covered by managed connectors.</li>
+</ul>
+
+<p><strong>Core objects you create:</strong></p>
+<ol>
+  <li><strong>Connection</strong> — UC securable holding credentials/host/auth (OAuth U2M, OAuth M2M, or basic).</li>
+  <li><strong>Ingestion pipeline</strong> — the actual job that pulls from the source and writes streaming tables. Built on Lakeflow Spark Declarative Pipelines.</li>
+  <li><strong>(For DB connectors) Ingestion gateway</strong> — a separate pipeline that continuously reads the source's change log and stages it.</li>
+  <li><strong>Destination streaming tables</strong> — Delta tables in UC. CDC sources land via <code>APPLY CHANGES INTO</code>, so deletes/updates merge correctly.</li>
+  <li><strong>Schedule</strong> — a Lakeflow Job is auto-generated to run the pipeline on cadence (or continuously).</li>
+</ol>
+
+<p>You author this in the UI, via API, or as Databricks Asset Bundles for CI/CD.</p>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+
+<p><strong>Two-pipeline pattern for database CDC sources:</strong></p>
+
+<pre><code>Source DB ──► Ingestion Gateway ──► UC Staging Volume ──► Ingestion Pipeline ──► Streaming Tables
+            (classic compute)       (Avro/JSON files)      (serverless LDP)        (UC, Delta)</code></pre>
+
+<ul>
+  <li><strong>Gateway pipeline</strong> runs on <strong>classic compute</strong> inside your workspace VPC/VNet. It needs network reachability to the source (VPN, Direct Connect/ExpressRoute, peering, Private Link, or public endpoint). It does the snapshot read <strong>and</strong> the continuous change-log tail in parallel.</li>
+  <li><strong>Staging UC Volume</strong> is a Databricks-managed volume in a catalog/schema you specify; the gateway writes raw extracted change files there. Cloud-storage-encrypted at rest.</li>
+  <li><strong>Ingestion pipeline</strong> runs on <strong>serverless LDP</strong> compute. It reads from the staging volume and <code>APPLY CHANGES INTO</code> the destination streaming tables, handling inserts/updates/deletes and schema evolution. Optional SCD Type 2.</li>
+</ul>
+
+<blockquote><strong>Why split?</strong> Decoupling lets the gateway maintain a single, stable, long-lived connection to the source (which is what most operational DBs want) while the apply side scales elastically on serverless and can be backfilled/replayed from the staging volume without re-hitting the source.</blockquote>
+
+<p><strong>SaaS connectors</strong> skip the gateway — the pipeline directly calls the source's REST API and writes to streaming tables, using cursor columns or a source-provided change feed.</p>
+
+<p><strong>CDC mechanism varies by source:</strong></p>
+<ul>
+  <li><strong>SQL Server</strong>: prefers <strong>Change Tracking</strong> if a primary key exists (lighter source load, row-level only); falls back to <strong>CDC</strong> (heavier, but column-level history, no PK required). If both are enabled, Change Tracking wins.</li>
+  <li><strong>PostgreSQL</strong>: logical replication slots + WAL.</li>
+  <li><strong>MySQL</strong>: binlog (row-based).</li>
+  <li><strong>Oracle</strong>: LogMiner / redo logs.</li>
+</ul>
+
+<p><strong>Schema evolution</strong>: new columns and new tables are picked up automatically. Data-type changes and column renames are <strong>not</strong> auto-handled — they require pipeline reset for the affected table.</p>
+
+<p><strong>Governance</strong>: pipelines, gateways, connections, staging volumes, and destination tables are all UC objects. Lineage, audit, and row/column permissions are inherited from UC.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<p>This is where the architecture earns its keep. Specifics drawn from current docs/blog; behavior can shift with releases.</p>
+
+<h3>Gateway internals</h3>
+<ul>
+  <li><strong>Continuously running</strong>, not scheduled. This is a hard requirement: SQL Server CDC tables, PG replication slot positions, and MySQL binlogs are <strong>truncated</strong> after retention windows. If the gateway stops longer than source retention, you must reseed (snapshot) the affected tables.</li>
+  <li>The gateway maintains a <strong>source-side log position</strong> (LSN for SQL Server, LSN/<code>confirmed_flush_lsn</code> for PG, binlog file+pos+GTID for MySQL, SCN for Oracle) as its checkpoint. Restart resumes from the last committed position written to the staging volume — exactly-once landing into staging because position commits and file commits are sequenced.</li>
+  <li><strong>Snapshot + CDC parallelism</strong>: at first run, the gateway snapshots each table while <em>simultaneously</em> buffering change events. The handoff is reconciled by LSN: the apply pipeline knows the snapshot represents the table at LSN X, then replays change events with LSN &gt; X. This is the same pattern Debezium uses, but managed.</li>
+  <li><strong>Classic compute</strong> is used (not serverless) because the gateway needs:
+    <ul>
+      <li>long-lived stateful connections (replication slots, snapshot isolation transactions),</li>
+      <li>vendor JDBC/native client drivers and capture-agent quirks,</li>
+      <li>placement inside <em>your</em> VPC/VNet for network reachability to private sources,</li>
+      <li>sustained, predictable IO — not the bursty profile serverless is tuned for.</li>
+      <li>Minimum recommended sizing is ~8 cores; scale up for high-throughput sources.</li>
+    </ul>
+  </li>
+  <li>Mixed billing follows: <strong>classic DLT DBUs</strong> for the gateway, <strong>serverless DLT DBUs</strong> for the ingestion pipeline.</li>
+</ul>
+
+<h3>Staging volume layout</h3>
+<ul>
+  <li>A UC Volume (non-tabular storage) sits between gateway and apply. Files are written as serialized change events (Avro/JSON-style payloads with op type, before/after images where available, and the source LSN).</li>
+  <li>The volume is the <strong>system of record between the two pipelines</strong> — it's how the apply side can be reset and replayed without touching the source. If you need to fully reset a destination table, you re-snapshot from source; if you need to recompute downstream of staging, you replay from the volume.</li>
+  <li>Encrypted by the underlying cloud KMS; lives in <em>your</em> storage. Staging catalog/schema can differ from destination.</li>
+  <li>Staging data is <strong>automatically purged after 30 days</strong>. The apply-side replay window is bounded by this retention. For audit-grade event history, land changes into a separate Delta CDF table downstream rather than relying on staging replay.</li>
+</ul>
+
+<h3>Apply side (<code>APPLY CHANGES INTO</code>)</h3>
+<ul>
+  <li>The ingestion pipeline is just an LDP pipeline with declared streaming tables and <code>APPLY CHANGES INTO</code> declarations against the staged change stream. This is the same primitive available to user pipelines — Lakeflow Connect just generates and manages it for you.</li>
+  <li>Default mode is SCD Type 1 (current-state). SCD Type 2 is selectable per table and adds <code>__START_AT</code>/<code>__END_AT</code> semantics with sequence-by the source LSN, giving strict ordering even with out-of-order delivery from staging.</li>
+  <li>The apply side is <strong>idempotent</strong> because <code>APPLY CHANGES INTO</code> deduplicates by sequence key. Restarting the ingestion pipeline replays from its DLT checkpoint without producing duplicate rows in the destination.</li>
+</ul>
+
+<h3>Schema evolution mechanics</h3>
+<ul>
+  <li>New column: appended to the destination streaming table; the row that introduced it has the new column, prior rows are <code>NULL</code>. No pipeline restart needed.</li>
+  <li>New table: discovered on the next gateway run; if it's included in the table list (including wildcards), it begins snapshotting on the next cycle.</li>
+  <li>Dropped column: column persists in destination (Delta column-mapping semantics); new rows have <code>NULL</code>.</li>
+  <li><strong>Not supported automatically</strong>: type changes, renames — these surface as pipeline failures requiring a <code>FULL REFRESH</code> on the affected table.</li>
+</ul>
+
+<h3>Limits and operational realities</h3>
+<ul>
+  <li><strong>250 tables per pipeline</strong> (DB connectors). Beyond that, split into multiple gateway/ingestion pipeline pairs — typical pattern is one pair per logical source database or per workload domain.</li>
+  <li>API-based row filtering is not supported for DB connectors at present; filter at the destination view layer or restrict columns/tables instead.</li>
+  <li>The gateway is the bottleneck for source-side cost: heavy CDC (vs. Change Tracking) on SQL Server materially increases source DB load. Pick CT when PKs exist.</li>
+  <li>Networking: only the gateway needs source reachability. The ingestion pipeline reads from UC storage and never talks to the source. Private Link works for both source-to-gateway and Databricks control-plane-to-data-plane.</li>
+  <li>Fault tolerance composes: source log retention bounds gateway downtime tolerance; staging volume retention bounds apply-side replay window; Delta time-travel/Vacuum bounds downstream recovery.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p>Think of Lakeflow Connect's DB connectors as <strong>a managed Debezium-style log-shipping pipe</strong> where (a) the connector is owned and operated by Databricks, (b) the staging "topic" is a UC Volume instead of Kafka, and (c) the sink is a Delta streaming table consumed by <code>APPLY CHANGES INTO</code> rather than a Kafka Connect JDBC sink. The split into two compute pools is the key architectural decision — it trades a bit of complexity for clean separation of "talk to the source" vs. "land into the lakehouse" and lets each side scale and recover independently.</p>
+
+<hr>
+
+<h2 id="anti-patterns"><span class="level-badge">Anti-patterns</span>Where you should not use Lakeflow Connect</h2>
+
+<p>These are use cases where the product is the wrong tool; reach for something else.</p>
+
+<ul>
+  <li><strong>Sub-second / true-real-time pipelines.</strong> Lakeflow Connect is micro-batch with a staging hop. End-to-end latency floor is minutes, not milliseconds. If you need sub-second ingest (fraud scoring, ad bidding, IoT telemetry at event speed), use <strong>Spark Structured Streaming on Kafka/Kinesis/EventHubs</strong>, or <strong>Zerobus</strong> for direct gRPC writes into Delta.</li>
+  <li><strong>Reverse ETL / outbound to SaaS.</strong> It only ingests <em>into</em> the lakehouse. To push data back to Salesforce/HubSpot/etc., use a reverse-ETL tool (Hightouch, Census) or a partner integration.</li>
+  <li><strong>One-shot historical migrations.</strong> Spinning up a gateway + ingestion pipeline for a single bulk load is overkill. Use <code>COPY INTO</code>, a one-time JDBC read, or DBSQL Lakehouse Federation queries instead — they're cheaper and simpler for a one-and-done load.</li>
+  <li><strong>Sources outside the supported connector list.</strong> Don't try to wedge an unsupported SaaS or DB in via custom hacks. Use <strong>Auto Loader</strong> for files, <strong>Spark custom data sources</strong> for unique systems, <strong>Lakehouse Federation</strong> for query-time access, or a community connector. Forcing it leads to brittle pipelines you have to operate yourself.</li>
+  <li><strong>Heavy in-flight transformation, enrichment, or joins.</strong> Lakeflow Connect deliberately lands raw-ish data. Don't expect to do multi-source joins, external API enrichment, or PII tokenization <em>during</em> ingest. Do those downstream in <strong>Lakeflow Spark Declarative Pipelines</strong> (bronze → silver → gold), where you have full Spark/SQL.</li>
+  <li><strong>Fine-grained row-level filtering at the source.</strong> API-based row filtering isn't supported for DB connectors. If compliance requires that certain rows <em>never leave the source</em>, Lakeflow Connect is the wrong layer — filter inside the source DB via a replication view, or pick a different tool.</li>
+  <li><strong>Sources with extreme schema churn (frequent type changes, renames).</strong> Schema evolution handles adds well, but type changes and renames force <code>FULL REFRESH</code>. A source where dev teams rename columns weekly will cause constant re-snapshots — push back on the source team or pick another approach.</li>
+  <li><strong>Cross-region / multi-cloud sources where the gateway can't be near the source.</strong> Gateway runs in <em>your</em> workspace VPC/VNet. If the source is in a different cloud or region with no good private path, expect WAN egress costs and reliability headaches.</li>
+  <li><strong>Tiny low-value sources.</strong> Running a 24/7 classic-compute gateway for a database that only changes a few rows per day is a cost anti-pattern. Use a scheduled JDBC read into a notebook/job instead, or batch into a single shared pipeline.</li>
+  <li><strong>Destinations that aren't Delta / UC.</strong> Lakeflow Connect writes UC streaming tables on Delta. If your sink must be a non-Delta format or a non-UC location, use a different ingest tool.</li>
+</ul>
+
+<h2 id="weaknesses"><span class="level-badge">Weaknesses</span>Areas where it doesn't do well</h2>
+
+<p>These are real limitations to design around even when Lakeflow Connect <em>is</em> the right choice.</p>
+
+<ul>
+  <li><strong>Latency floor.</strong> The two-pipeline split (gateway → staging volume → ingestion pipeline → Delta) means even "continuous" mode is minutes-class, not seconds. Don't promise sub-minute freshness SLAs.</li>
+  <li><strong>Gateway is classic compute, must run 24/7.</strong> No serverless gateway today. You pay sustained classic DLT DBUs even when source change volume is low. Right-sizing is your problem; the gateway can't scale to zero.</li>
+  <li><strong>Source-side load is non-trivial.</strong> SQL Server CDC mode in particular adds meaningful load on the source — capture jobs, extra writes to CDC tables. PostgreSQL logical replication pins WAL until the slot is consumed. DBAs need to size for this.</li>
+  <li><strong>250 tables per pipeline ceiling.</strong> Large source databases (think SAP, big ERP schemas) need to be sharded across multiple gateway+ingestion pairs. There's no single-pane management across shards.</li>
+  <li><strong>Schema evolution has hard gaps.</strong> Adds: yes. Drops: tolerated. <strong>Type changes, renames: no</strong> — they fail and require <code>FULL REFRESH</code> of the affected table, which re-snapshots from source. For a multi-TB table, that's an outage-class event.</li>
+  <li><strong>Outage recovery is bounded by source log retention.</strong> If the gateway is down longer than SQL Server CDC retention / PG slot retention / MySQL binlog retention, you've lost replay capability and must re-snapshot. Plan retention windows defensively (24–72h is common).</li>
+  <li><strong>Observability spans two pipelines.</strong> Gateway and ingestion pipeline have separate event logs, separate runs, separate failures. Correlating "why didn't this row land" across both is more work than a single-pipeline tool. Lineage is good; root-causing is mediocre.</li>
+  <li><strong>No per-row transform or filter hook during ingest.</strong> You can't run a UDF, hash a column, drop a PII field, or filter rows mid-flight. All cleanup happens downstream.</li>
+  <li><strong>Connector breadth still growing.</strong> Big-name SaaS sources are covered, but the long tail (many marketing, finance, vertical-specific SaaS apps) isn't. Check the supported list before scoping; don't assume.</li>
+  <li><strong>Cost predictability is mediocre.</strong> Serverless DLT pricing on high-volume CDC streams can surprise. The gateway adds a fixed-ish classic DBU floor on top. Model both before committing.</li>
+  <li><strong>Networking for on-prem sources is on you.</strong> Direct Connect / ExpressRoute / Site-to-Site VPN / Private Link setup, firewall rules, and DNS are customer responsibilities. Lakeflow Connect won't tunnel for you.</li>
+  <li><strong>Limited replay/time-travel within staging.</strong> Staging data is automatically purged after 30 days — that is the hard bound on apply-side replay. For audit-grade event history, land changes into a separate Delta CDF table downstream.</li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+  <li><a href="https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/">Managed connectors in Lakeflow Connect (AWS docs)</a></li>
+  <li><a href="https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/cdc-overview">Database connectors (CDC) overview — gateway/staging architecture</a></li>
+  <li><a href="https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/sql-server">Ingest data from SQL Server (AWS docs)</a></li>
+  <li><a href="https://docs.databricks.com/aws/en/ingestion/lakeflow-connect/sql-server-pipeline">Ingest data from SQL Server — pipeline reference</a></li>
+  <li><a href="https://www.databricks.com/blog/lakeflow-connect-efficient-and-easy-data-ingestion-using-sql-server-connector">Lakeflow Connect: SQL Server connector blog</a></li>
+  <li><a href="https://www.databricks.com/product/data-engineering/lakeflow-connect">Lakeflow Connect product page</a></li>
+  <li><a href="https://learn.microsoft.com/en-us/azure/databricks/ingestion/overview">What is Lakeflow Connect? (Azure docs)</a></li>
+</ul>
+
+</body>
+</html>

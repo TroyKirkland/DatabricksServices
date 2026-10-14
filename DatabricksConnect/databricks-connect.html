@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Databricks Connect — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Databricks Connect</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Databricks Connect lets you write Spark code in your <strong>local IDE</strong> (VS Code, PyCharm, Cursor) that executes on a <strong>remote Databricks cluster</strong>. Thin client; cluster does the work. Built on open Spark Connect.</p>
+<ul>
+<li><strong>Local dev, remote compute.</strong></li>
+<li><strong>Spark Connect</strong>: no JVM on laptop.</li>
+<li><strong>Same DataFrame API</strong> as notebooks.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Python, R, and Scala clients.</li>
+<li>Auth: OAuth U2M / M2M / PAT.</li>
+<li>Targets: all-purpose cluster, serverless, SQL warehouse (SQL flows).</li>
+<li>Versioning: <code>databricks-connect</code> pinned to DBR.</li>
+<li>Bundles <code>pyspark</code> replacement, <code>databricks.sdk</code>, MLflow.</li>
+<li>Entry: <code>DatabricksSession.builder</code>.</li>
+<li>VS Code Databricks extension for one-click setup.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Your laptop/IDE]                              [Databricks workspace]
+  Python interpreter                              │
+   ↓                                              │
+  pyspark / DataFrame API                         │
+   ↓                                              │
+  DatabricksSession (Spark Connect client)        │
+   ↓                                              │
+  gRPC over HTTPS  ─────────────────────────► Spark Connect server
+                                                 (Spark driver on cluster)
+                                                  ↓
+                                                 Executors → UC tables</code></pre>
+<p>Client builds plans + serialises; server resolves/optimises/executes; Arrow IPC streams back. Auth determines run-as identity → UC checks.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Wire protocol</h3>
+<ul>
+<li>gRPC streaming HTTPS to <code>/api/2.0/spark/protobuf/</code>.</li>
+<li>DataFrame ops append to logical plan; actions trigger request.</li>
+<li>Results stream as Arrow IPC.</li>
+</ul>
+
+<h3>Version pinning</h3>
+<ul>
+<li>Client pinned to DBR version; cluster must match.</li>
+<li>Serverless decouples; client needs compatible Spark Connect protocol.</li>
+</ul>
+
+<h3>Auth + identity</h3>
+<ul>
+<li>U2M: browser flow + refresh token.</li>
+<li>M2M: service principal client credentials (CI/CD).</li>
+<li>PAT: legacy.</li>
+<li>Run-as identity → UC permission resolution.</li>
+</ul>
+
+<h3>Local-remote considerations</h3>
+<ul>
+<li><code>collect()</code> ships data over wire; avoid large.</li>
+<li>Closures shipped to cluster; must be serialisable.</li>
+<li>Laptop files invisible to cluster; upload to UC volumes first.</li>
+<li><code>dbutils</code> partially available; some methods server-only.</li>
+</ul>
+
+<h3>Cluster type</h3>
+<ul>
+<li>Single-user/assigned clusters preferred for UC.</li>
+<li>Shared clusters have UDF/RDD restrictions.</li>
+</ul>
+
+<h3>Differences from notebook</h3>
+<ul>
+<li>No magics (<code>%sql</code>, <code>%pip</code>, <code>%run</code>); use <code>spark.sql</code>, <code>subprocess</code>.</li>
+<li><code>display()</code> → <code>df.show()</code> or pandas.</li>
+</ul>
+
+<h3>Failure modes</h3>
+<ul>
+<li>Cluster auto-start (if permitted); first call slow.</li>
+<li>Mid-call termination → reconnect.</li>
+<li>Auth expiry → <code>databricks auth login</code>.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>One <code>DatabricksSession</code> per script.</li>
+<li>No JVM internals (<code>_jvm</code>, <code>_jsc</code>).</li>
+<li>RDD APIs mostly unavailable; DataFrame is the surface.</li>
+<li>Heavy closure ship-overhead.</li>
+<li>Streaming usable but unusual — prefer jobs.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"The cluster is your Python kernel; your laptop is the editor."</strong> Same DataFrame code as notebooks, with VC + breakpoints + types + tests.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Databricks Connect</h2>
+<ul>
+<li><strong>Production batch jobs.</strong> Use Jobs on the cluster.</li>
+<li><strong>Long-running prod streams.</strong></li>
+<li><strong>Code depending on laptop files.</strong></li>
+<li><strong>Heavy <code>collect()</code> workflows.</strong></li>
+<li><strong>Mismatched DBR.</strong></li>
+<li><strong>JVM-internals tricks.</strong></li>
+<li><strong>Noisy shared all-purpose clusters.</strong></li>
+<li><strong>Non-HTTPS networks.</strong></li>
+<li><strong>Replacing notebooks entirely.</strong></li>
+<li><strong>CI/CD with U2M auth.</strong> Use M2M.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Version pinning friction.</strong></li>
+<li><strong>No <code>display()</code>.</strong></li>
+<li><strong>No magics.</strong></li>
+<li><strong>Partial <code>dbutils</code>.</strong></li>
+<li><strong>Cold cluster start.</strong></li>
+<li><strong>Closure serialization surprises.</strong></li>
+<li><strong>Spark UI is server-side only.</strong></li>
+<li><strong>Streaming workflows awkward.</strong></li>
+<li><strong>No first-class unit-test runner.</strong></li>
+<li><strong>Per-call latency floor.</strong></li>
+<li><strong>Doesn't replace DABs.</strong></li>
+<li><strong>R and Scala support trail Python.</strong> Smaller feature surface; language-specific docs apply.</li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/databricks-connect/">Databricks Connect docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/databricks-connect/python">DB Connect for Python</a></li>
+<li><a href="https://spark.apache.org/spark-connect/">Spark Connect (OSS)</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/vscode-ext/">VS Code extension</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

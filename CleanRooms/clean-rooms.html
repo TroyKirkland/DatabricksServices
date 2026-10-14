@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Clean Rooms — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Databricks Clean Rooms</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Multi-party data collaboration where only <strong>approved queries</strong> (or trusted provider code) run on shared data and only aggregate / sanitized results come out. UC-native. Two models:</p>
+<ul>
+<li><strong>Approval-based</strong>: all collaborators equal; every notebook approved unanimously before running.</li>
+<li><strong>Packaged</strong> (GA July 2026): provider-consumer — provider's code hidden from consumer; no approval workflow required.</li>
+<li><strong>UC + Delta Sharing under the hood.</strong></li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><strong>Clean room</strong>: UC object; max <strong>10 collaborators</strong>; locked after creation.</li>
+<li><strong>Approval-based model</strong>: equal privileges; unanimous notebook approval + optional auto-approval rules.</li>
+<li><strong>Packaged model</strong> (GA July 2026): provider-consumer; provider code hidden; consumer runs without code review.</li>
+<li>Collaborators identified by Databricks metastore or Delta Sharing identity.</li>
+<li>Contributed assets: tables, views, <strong>volumes</strong> (same cloud/region only). Read via Delta Sharing; no persistent copy.</li>
+<li><strong>Serverless egress control</strong>: restrict outbound network from sandbox.</li>
+<li>Output bindings: per-collaborator UC tables.</li>
+<li>Optional differential privacy.</li>
+<li>Full audit of contributions, approvals, runs, outputs.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Org A UC] tables ─┐
+                   ├─► [Clean Room (UC obj) approved tasks, serverless compute] ─► Outputs → A and/or B
+[Org B UC] tables ─┘</code></pre>
+<p>Compute in UC-isolated serverless sandbox: no shell, no egress, only approved code. Data flows via Delta Sharing for run duration. Outputs to pre-agreed UC tables. All actions logged.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Approval model (approval-based rooms)</h3>
+<ul>
+<li>Tasks proposed → all collaborators approve → sealed; edits re-trigger approval.</li>
+<li><strong>Auto-approval rules</strong>: configure conditions for automatic re-approval of task updates.</li>
+<li>Audit logs each approval.</li>
+</ul>
+
+<h3>Packaged clean rooms (GA July 2026)</h3>
+<ul>
+<li>Provider authors notebooks/JARs + contributes data; consumer contributes their data.</li>
+<li>Provider code + assets hidden from consumer — consumer sees only names, not code.</li>
+<li>No approval workflow; consumer trusts provider. Only consumer sees run outputs.</li>
+<li>Review egress network policy: ensure provider code cannot exfiltrate consumer data.</li>
+</ul>
+
+<h3>Sandbox execution</h3>
+<ul>
+<li>Serverless, isolated; configurable egress control via serverless egress policies.</li>
+<li>Clean-room identity has READ on contributed data, WRITE only to output bindings.</li>
+<li>Logs minimised beyond approved structured outputs.</li>
+</ul>
+
+<h3>Differential privacy</h3>
+<ul>
+<li>Noise injection on aggregates; epsilon budget per query.</li>
+<li>Budget exhaustion blocks further queries.</li>
+<li>Not always required — approval review can substitute.</li>
+</ul>
+
+<h3>Output bindings</h3>
+<ul>
+<li>(target table, metastore, schema) tuples.</li>
+<li>Per-collaborator visibility configurable.</li>
+<li>Delivered via Delta Sharing.</li>
+</ul>
+
+<h3>Cross-cloud / cross-region</h3>
+<ul>
+<li>Works cross-cloud via Delta Sharing.</li>
+<li>Compute in owner region; cross-region pays egress.</li>
+<li><strong>Volumes not accessible cross-cloud or cross-region</strong> — only default-storage tables available in those configurations.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Approval cycles add latency.</li>
+<li>Code must be reviewable; opaque ML harder.</li>
+<li>Pre-approved library set conservative.</li>
+<li>Result-size caps prevent disguised raw exfiltration.</li>
+<li>Audit archival is critical.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Sealed lockbox where two parties' data meets, only approved code looks inside, only approved aggregates come out."</strong></p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Clean Rooms</h2>
+<ul>
+<li><strong>Internal single-org use.</strong> Use UC row/column + ABAC.</li>
+<li><strong>Free-form exploration.</strong> Every query needs approval.</li>
+<li><strong>Hot-path queries.</strong> Minutes, not seconds.</li>
+<li><strong>Tiny / uniform datasets.</strong> DP can't save you from re-identification risk.</li>
+<li><strong>Replace a DPA.</strong> Technical, not legal.</li>
+<li><strong>Full warehouse delivery.</strong> Use Delta Sharing.</li>
+<li><strong>Custom Python with private libs.</strong> Approval friction.</li>
+<li><strong>Petabyte cross-cloud.</strong></li>
+<li><strong>One-shot analyses.</strong> Overhead too high.</li>
+<li><strong>PII laundering.</strong> Legal rules still apply.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Approval friction.</strong></li>
+<li><strong>Library restrictions.</strong></li>
+<li><strong>Debugging hard in sealed sandbox.</strong></li>
+<li><strong>Conservative DP budget.</strong></li>
+<li><strong>Rigid output schemas.</strong></li>
+<li><strong>Cross-org review SLAs.</strong></li>
+<li><strong>Limited compute tuning.</strong></li>
+<li><strong>Heavier cross-cloud setup.</strong></li>
+<li><strong>High audit volume.</strong></li>
+<li><strong>No interactive REPL.</strong></li>
+<li><strong>Cost-attribution is contractual.</strong></li>
+<li><strong>Task versioning needs discipline.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/clean-rooms/">Clean Rooms docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/clean-rooms/approve-tasks">Approval workflows</a></li>
+<li><a href="https://docs.databricks.com/aws/en/clean-rooms/packaged-clean-rooms">Packaged clean rooms</a></li>
+<li><a href="https://docs.databricks.com/aws/en/clean-rooms/differential-privacy">Differential privacy</a></li>
+<li><a href="https://docs.databricks.com/aws/en/clean-rooms/compare">Vs Delta Sharing</a></li>
+<li><a href="https://docs.databricks.com/en/release-notes/product/2026/july.html">July 2026 release notes (Packaged GA)</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

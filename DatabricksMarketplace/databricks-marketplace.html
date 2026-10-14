@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Databricks Marketplace — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Databricks Marketplace</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Open exchange for data products, AI models, notebooks, and MCP servers. Delivery via OpenSharing protocol (built on Delta Sharing); UC-native for Databricks consumers. Browsable publicly without a workspace.</p>
+<ul>
+<li><strong>Open</strong> via OpenSharing/Delta Sharing protocol.</li>
+<li><strong>Data + AI + notebooks + MCP servers</strong> (tabular and non-tabular volumes).</li>
+<li><strong>UC-native</strong> one-click foreign catalog; MCP servers install as workspace connections.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Provider page + listing types: datasets (tabular UC catalogs + non-tabular Volumes), AI models, notebooks, MCP servers.</li>
+<li>Consumers: any workspace or OpenSharing/DS-compatible client; public browsing requires no workspace.</li>
+<li>Access models: free / free-with-approval / private exchange / paid (incl. Universal Commit Drawdown).</li>
+<li>Get-access flow creates foreign UC catalog (or workspace connection for MCP servers).</li>
+<li>Embedded sample notebooks.</li>
+<li>Discovery: category/industry/free-paid/region filters.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Provider] UC tables/models/notebooks/volumes/MCP + share + listing → Marketplace catalog
+                                              ↓ approval
+[Consumer] foreign UC catalog (OpenSharing/Delta Sharing-backed) → queries / uses
+           MCP server → installed as workspace connection → agent tools</code></pre>
+<p>Listings = OpenSharing shares + metadata + approval workflow. Non-tabular data delivered via Volumes. MCP servers install as connections.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Provider mechanics</h3>
+<ul>
+<li>Profile + listings each referencing one or more shares.</li>
+<li>Metadata: tags, industry, geography, schema preview.</li>
+</ul>
+
+<h3>Consumer mechanics</h3>
+<ul>
+<li>Browse → request → instant or approved.</li>
+<li>Auto-creates foreign UC catalog via <code>CREATE CATALOG ... USING SHARE</code>.</li>
+<li>Audit via outbound logs (provider) + access audit (consumer).</li>
+</ul>
+
+<h3>Paid listings</h3>
+<ul>
+<li>Billing via cloud marketplace (AWS/Azure/GCP).</li>
+<li>Usage metering configurable.</li>
+<li>Universal Commit Drawdown: up to 10% of Universal Commits usable for eligible third-party purchases.</li>
+</ul>
+
+<h3>Notebooks, AI models + MCP servers</h3>
+<ul>
+<li>Notebooks bundled as samples/tutorials.</li>
+<li>Models = UC registered models shared via OpenSharing/Delta Sharing for D2D.</li>
+<li>MCP servers: tools and APIs for agents; installed as workspace connections.</li>
+<li>Non-tabular data: delivered via Volumes (files, not Delta tables).</li>
+</ul>
+
+<h3>Search + discovery</h3>
+<ul>
+<li>Categories, filters, featured placement.</li>
+</ul>
+
+<h3>Auditing</h3>
+<ul>
+<li>Provider: <code>system.access.outbound_*</code>.</li>
+<li>Consumer: <code>system.access.audit</code>.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Pre-signed URL revocation isn't instant.</li>
+<li>Provider egress scales with consumer usage.</li>
+<li>Schema changes affect all consumers.</li>
+<li>Marketplace search shallow.</li>
+<li>Cross-cloud paid billing awkward.</li>
+<li>Some UC features (row/col policies) over sharing have caveats.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Discovery layer on OpenSharing/Delta Sharing + optional billing."</strong> Marketplace adds catalog, search, approval flow, MCP server distribution, billing (incl. Universal Commit Drawdown) — atop Delta Sharing.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Marketplace</h2>
+<ul>
+<li><strong>Single-org sharing.</strong> Use UC + Delta Sharing direct.</li>
+<li><strong>Real-time data.</strong> Seconds/minutes latency.</li>
+<li><strong>Cross-tenant compute isolation.</strong> Use Clean Rooms.</li>
+<li><strong>Frequent schema-changing listings.</strong></li>
+<li><strong>Reverse-distribute outputs at scale.</strong></li>
+<li><strong>OLTP-style data exchange.</strong></li>
+<li><strong>PII without legal frameworks.</strong></li>
+<li><strong>Models with tightly coupled consumer infra.</strong></li>
+<li><strong>Enterprise sales-led products.</strong> Use direct DS.</li>
+<li><strong>Listings without samples/docs.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Basic search.</strong></li>
+<li><strong>Inherited DS revocation lag.</strong></li>
+<li><strong>Cross-cloud paid billing awkward.</strong></li>
+<li><strong>No listing versioning.</strong></li>
+<li><strong>Limited provider discovery analytics.</strong></li>
+<li><strong>Consumer query cost not surfaced upfront.</strong></li>
+<li><strong>Provider egress visibility weak.</strong></li>
+<li><strong>Notebook updates = replace.</strong></li>
+<li><strong>Cross-listing deps not modelled.</strong></li>
+<li><strong>License attestation text-based.</strong></li>
+<li><strong>Per-region listings.</strong></li>
+<li><strong>Rigid paid pricing model.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/marketplace/">Marketplace docs</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

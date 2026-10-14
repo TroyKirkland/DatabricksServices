@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Feature Engineering in UC — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Feature Engineering in Unity Catalog</h1>
+<blockquote>Successor to legacy workspace Feature Store. UC-governed.</blockquote>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Feature store on UC. Compute features offline as Delta tables; optionally publish to online tables for inference. Training-serving parity + point-in-time correctness for batch training.</p>
+<ul>
+<li><strong>Feature tables</strong> = Delta + PK + (optional) timestamp.</li>
+<li><strong>Online tables</strong> = low-latency replicas synced from offline.</li>
+<li><strong>Training set logging</strong> ties model versions to features.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Feature table: Delta + declared PK + optional timestamp.</li>
+<li>Online table: synced low-latency replica.</li>
+<li>Python client <code>databricks-feature-engineering</code>: create, log, lookup.</li>
+<li>Training set via <code>fe.create_training_set</code> with point-in-time joins.</li>
+<li>Inference lookup auto or manual via feature serving endpoint.</li>
+<li><strong>Feature Views</strong> (Public Preview, DBR 17.0 ML+): declarative feature definitions; sources: DeltaTableSource, StreamSource (Kafka ~200ms p99), RequestSource; define once, materialise to offline or online stores.</li>
+<li>UC lineage feature → model → endpoint.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Source] → [Feature pipeline] → [Feature table (Delta, UC)]
+                                       ├ Training: point-in-time join → training set → MLflow run
+                                       └ Online sync via CDF → online table → low-ms lookup at inference</code></pre>
+<p>Offline pipeline is yours; online sync managed. Model logged with feature deps; serving auto-looks up if configured.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Feature table conventions</h3>
+<ul>
+<li>Declare PK + optional timestamp column.</li>
+<li>Schema add freely; remove rebuilds online.</li>
+</ul>
+
+<h3>Point-in-time join</h3>
+<ul>
+<li>(entity_id, event_ts, label) + FeatureLookup(table, key, ts, cols) → latest-as-of-event-time row.</li>
+<li>Avoids label leakage.</li>
+<li>Multi-table independent timestamp grids.</li>
+</ul>
+
+<h3>Online tables</h3>
+<ul>
+<li>Backed by <strong>Lakebase Autoscaling</strong> projects (Databricks-managed).</li>
+<li>Three sync modes: triggered (scheduled incremental), continuous (streaming CDF), snapshot (one-time bulk).</li>
+<li>Up to 3 read replicas for HA and load distribution.</li>
+<li>Low-ms read at inference.</li>
+<li><strong>Constraint</strong>: cannot create new endpoints that look up from multiple online feature stores on Lakebase Autoscaling instances; existing ones grandfathered.</li>
+</ul>
+
+<h3>Feature Views (Public Preview)</h3>
+<ul>
+<li>Declarative feature logic: define aggregations and transforms once; framework materialises to offline + online.</li>
+<li>Sources: DeltaTableSource, StreamSource (Kafka, ~200ms p99), RequestSource (request-time scalars).</li>
+<li>Requires DBR 17.0 ML or above / serverless. Enable from Previews page.</li>
+</ul>
+
+<h3>Training-time logging</h3>
+<ul>
+<li><code>fe.create_training_set</code> + <code>fe.log_model</code> attach feature spec to MLflow run + model.</li>
+</ul>
+
+<h3>Inference</h3>
+<ul>
+<li>Logged model with feature deps can auto-lookup at Model Serving.</li>
+<li>Or manual via feature serving endpoint.</li>
+</ul>
+
+<h3>Feature serving endpoints</h3>
+<ul>
+<li>REST <code>/serving-endpoints/&lt;feature&gt;/invocations</code> with PK payload.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Lakebase Autoscaling backing cost.</li>
+<li>>1 TB tables need partial publishing.</li>
+<li>PK changes = full re-sync.</li>
+<li>Point-in-time joins are Spark-heavy.</li>
+<li>No native pipeline orchestration; use Jobs + LDP.</li>
+<li>Per-lookup custom transforms aren't built-in.</li>
+<li>Cannot create new endpoints with multiple online feature stores on Lakebase Autoscaling; existing ones grandfathered.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Declare features once, govern, train+serve from one definition."</strong> Point-in-time correctness + same-features-at-serving are the load-bearing benefits.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Feature Engineering in UC</h2>
+<ul>
+<li><strong>One-shot training.</strong> Join inline.</li>
+<li><strong>Non-feature tables.</strong> Just use UC tables.</li>
+<li><strong>OLTP-scale lookup.</strong> In-process cache or global KV.</li>
+<li><strong>Daily-changing features.</strong> Defeats the point.</li>
+<li><strong>Time-series without timestamp.</strong> Label leakage.</li>
+<li><strong>Embeddings as features.</strong> Use Vector Search.</li>
+<li><strong>Compute at lookup time.</strong></li>
+<li><strong>Custom transforms in lookup.</strong></li>
+<li><strong>Online for huge rarely-read tables.</strong></li>
+<li><strong>Generic data API role.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Online table cost.</strong></li>
+<li><strong>Seconds-scale sync lag.</strong></li>
+<li><strong>No multi-region online.</strong></li>
+<li><strong>PK-change re-sync.</strong></li>
+<li><strong>Orchestration on you.</strong></li>
+<li><strong>Reproducibility by convention.</strong></li>
+<li><strong>Slow first-sync backfill.</strong></li>
+<li><strong>Limited transform hooks.</strong></li>
+<li><strong>Cross-team reuse needs governance.</strong></li>
+<li><strong>No first-class monitoring dashboard.</strong></li>
+<li><strong>Workspace→UC migration effort.</strong></li>
+<li><strong>Manual staleness tracking.</strong></li>
+<li><strong>Cannot create new multi-online-store endpoints on Lakebase Autoscaling.</strong> Existing grandfathered; new designs must consolidate.</li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/feature-store/">Feature Engineering in UC</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/feature-store/online-tables">Online tables</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/feature-store/feature-views">Feature Views (Public Preview)</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/feature-store/time-series">Point-in-time lookups</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/feature-store/feature-serving">Feature serving endpoints</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

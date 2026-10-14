@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 448" width="2400" height="448" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBFCFD"/>
+      <stop offset="1" stop-color="#EEF1F5"/>
+    </linearGradient>
+    <linearGradient id="headerBg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0B1E36"/>
+      <stop offset="1" stop-color="#1F3A5F"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="2400" height="448" fill="url(#bg)"/>
+  <rect x="0" y="0" width="2400" height="80" fill="url(#headerBg)"/>
+  <text x="40" y="44" fill="#FFFFFF" font-size="28" font-weight="700">Compute &amp; Runtime <tspan fill="#9CB0CC" font-size="18" font-weight="400">— feature timeline</tspan></text>
+  <text x="40" y="68" fill="#9CB0CC" font-size="13">31 events  ·  Oct 2025 → Sep 2026  ·  data through 2026-09-29</text>
+  <rect x="2270" y="22" width="92" height="28" fill="#FF3621" rx="4"/><text x="2316" y="41" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">compute</text>
+  <g font-size="14" font-weight="600" fill="#0B1E36" text-anchor="middle">
+    <text x="155.0" y="124">Oct 25</text>
+    <text x="345.0" y="124">Nov 25</text>
+    <text x="535.0" y="124">Dec 25</text>
+    <text x="725.0" y="124">Jan 26</text>
+    <text x="915.0" y="124">Feb 26</text>
+    <text x="1105.0" y="124">Mar 26</text>
+    <text x="1295.0" y="124">Apr 26</text>
+    <text x="1485.0" y="124">May 26</text>
+    <text x="1675.0" y="124">Jun 26</text>
+    <text x="1865.0" y="124">Jul 26</text>
+    <text x="2055.0" y="124">Aug 26</text>
+    <text x="2245.0" y="124">Sep 26</text>
+  </g>
+  <g stroke="#DDE3EB" stroke-width="1">
+    <line x1="60.0" y1="130" x2="60.0" y2="338"/>
+    <line x1="250.0" y1="130" x2="250.0" y2="338"/>
+    <line x1="440.0" y1="130" x2="440.0" y2="338"/>
+    <line x1="630.0" y1="130" x2="630.0" y2="338"/>
+    <line x1="820.0" y1="130" x2="820.0" y2="338"/>
+    <line x1="1010.0" y1="130" x2="1010.0" y2="338"/>
+    <line x1="1200.0" y1="130" x2="1200.0" y2="338"/>
+    <line x1="1390.0" y1="130" x2="1390.0" y2="338"/>
+    <line x1="1580.0" y1="130" x2="1580.0" y2="338"/>
+    <line x1="1770.0" y1="130" x2="1770.0" y2="338"/>
+    <line x1="1960.0" y1="130" x2="1960.0" y2="338"/>
+    <line x1="2150.0" y1="130" x2="2150.0" y2="338"/>
+    <line x1="2340.0" y1="130" x2="2340.0" y2="338"/>
+  </g>
+  <rect x="0" y="130" width="2400" height="208" fill="#0B1E36" fill-opacity="0.02"/>
+  <g font-size="11" fill="#0B1E36">
+    <rect x="68.0" y="144" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="155.0" y="158" text-anchor="middle" font-weight="600">New compute policy form i…</text>
+    <text x="155.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">10/29  ·  GA</text>
+    <rect x="68.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="155.0" y="194" text-anchor="middle" font-weight="600">Serverless compute has be…</text>
+    <text x="155.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">10/28  ·  Update</text>
+    <rect x="68.0" y="216" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="155.0" y="230" text-anchor="middle" font-weight="600">Configure compute to use…</text>
+    <text x="155.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">10/24  ·  Update</text>
+    <rect x="68.0" y="252" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="155.0" y="266" text-anchor="middle" font-weight="600">Databricks JDBC Driver 2.…</text>
+    <text x="155.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">10/23  ·  Update</text>
+    <rect x="258.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="345.0" y="158" text-anchor="middle" font-weight="600">Serverless notebook tasks…</text>
+    <text x="345.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">11/5  ·  Update</text>
+    <rect x="258.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="345.0" y="194" text-anchor="middle" font-weight="600">JAR tasks are now support…</text>
+    <text x="345.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">11/3  ·  Update</text>
+    <rect x="448.0" y="144" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="535.0" y="158" text-anchor="middle" font-weight="600">Flexible node types are n…</text>
+    <text x="535.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">12/17  ·  GA</text>
+    <rect x="638.0" y="144" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="725.0" y="158" text-anchor="middle" font-weight="600">Serverless workspaces are…</text>
+    <text x="725.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">1/29  ·  GA</text>
+    <rect x="638.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="725.0" y="194" text-anchor="middle" font-weight="600">You can now use custom ba…</text>
+    <text x="725.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">1/20  ·  Update</text>
+    <rect x="828.0" y="144" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="915.0" y="158" text-anchor="middle" font-weight="600">Serverless outbound IPs a…</text>
+    <text x="915.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">2/25  ·  Public Preview</text>
+    <rect x="828.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="915.0" y="194" text-anchor="middle" font-weight="600">Databricks ODBC Driver re…</text>
+    <text x="915.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">2/25  ·  Update</text>
+    <rect x="828.0" y="216" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="915.0" y="230" text-anchor="middle" font-weight="600">JAR tasks on serverless c…</text>
+    <text x="915.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">2/20  ·  Public Preview</text>
+    <rect x="1018.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1105.0" y="158" text-anchor="middle" font-weight="600">Databricks JDBC driver 2.…</text>
+    <text x="1105.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">3/18  ·  Update</text>
+    <rect x="1208.0" y="144" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1295.0" y="158" text-anchor="middle" font-weight="600">Workspace base environmen…</text>
+    <text x="1295.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">4/24  ·  GA</text>
+    <rect x="1208.0" y="180" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1295.0" y="194" text-anchor="middle" font-weight="600">Compute log delivery to v…</text>
+    <text x="1295.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">4/16  ·  GA</text>
+    <rect x="1398.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1485.0" y="158" text-anchor="middle" font-weight="600">Workspace admin setting f…</text>
+    <text x="1485.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">5/27  ·  Update</text>
+    <rect x="1398.0" y="180" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1485.0" y="194" text-anchor="middle" font-weight="600">Databricks CLI is now GA</text>
+    <text x="1485.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">5/21  ·  GA</text>
+    <rect x="1398.0" y="216" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1485.0" y="230" text-anchor="middle" font-weight="600">Instance events and insta…</text>
+    <text x="1485.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">5/21  ·  Public Preview</text>
+    <rect x="1398.0" y="252" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1485.0" y="266" text-anchor="middle" font-weight="600">Databricks Container Serv…</text>
+    <text x="1485.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">5/19  ·  Beta</text>
+    <rect x="1398.0" y="288" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1485.0" y="302" text-anchor="middle" font-weight="600">Graviton instance types a…</text>
+    <text x="1485.0" y="314" text-anchor="middle" font-size="9" fill="#5A7088">5/7  ·  Update</text>
+    <rect x="1588.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1675.0" y="158" text-anchor="middle" font-weight="600">Schedule deferred policy…</text>
+    <text x="1675.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">6/10  ·  Update</text>
+    <rect x="1588.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1675.0" y="194" text-anchor="middle" font-weight="600">AWS Graviton instances ar…</text>
+    <text x="1675.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">6/5  ·  Update</text>
+    <rect x="1968.0" y="144" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2055.0" y="158" text-anchor="middle" font-weight="600">Session restore for serve…</text>
+    <text x="2055.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">8/17  ·  Beta</text>
+    <rect x="1968.0" y="180" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2055.0" y="194" text-anchor="middle" font-weight="600">Cross-workspace access fo…</text>
+    <text x="2055.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">8/13  ·  Beta</text>
+    <rect x="1968.0" y="216" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="2055.0" y="230" text-anchor="middle" font-weight="600">JAR tasks on serverless c…</text>
+    <text x="2055.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">8/6  ·  GA</text>
+    <rect x="1968.0" y="252" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2055.0" y="266" text-anchor="middle" font-weight="600">Environment variables for…</text>
+    <text x="2055.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">8/3  ·  Beta</text>
+    <rect x="1968.0" y="288" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="2055.0" y="302" text-anchor="middle" font-weight="600">Serverless compute access…</text>
+    <text x="2055.0" y="314" text-anchor="middle" font-size="9" fill="#5A7088">8/3  ·  GA</text>
+    <rect x="2158.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2245.0" y="158" text-anchor="middle" font-weight="600">Databricks JDBC Driver (S…</text>
+    <text x="2245.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">9/29  ·  Update</text>
+    <rect x="2158.0" y="180" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2245.0" y="194" text-anchor="middle" font-weight="600">Base environments are now…</text>
+    <text x="2245.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">9/17  ·  Beta</text>
+    <rect x="2158.0" y="216" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="2245.0" y="230" text-anchor="middle" font-weight="600">Session restore for serve…</text>
+    <text x="2245.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">9/11  ·  Public Preview</text>
+    <rect x="2158.0" y="252" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2245.0" y="266" text-anchor="middle" font-weight="600">Environment version 6 is…</text>
+    <text x="2245.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">9/3  ·  Update</text>
+  </g>
+  <g font-size="13" fill="#0B1E36">
+    <text x="40" y="358" font-weight="700" font-size="14">Status</text>
+    <rect x="130" y="342" width="20" height="20" rx="4" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="158" y="358">GA</text>
+    <rect x="202" y="342" width="20" height="20" rx="4" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="230" y="358">Public Preview</text>
+    <rect x="370" y="342" width="20" height="20" rx="4" fill="#FDE8E0" stroke="#9A3412" stroke-width="1.5"/>
+    <text x="398" y="358">Private Preview</text>
+    <rect x="546" y="342" width="20" height="20" rx="4" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="574" y="358">Beta</text>
+    <rect x="634" y="342" width="20" height="20" rx="4" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="662" y="358">Update</text>
+  </g>
+  <text x="40" y="436" font-size="11" fill="#5A7088">Source: docs.databricks.com/aws/en/release-notes/product/  ·  classified into "compute" bucket  ·  generated by feature-timeline.py</text>
+</svg>

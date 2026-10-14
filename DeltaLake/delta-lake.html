@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Delta Lake — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Delta Lake</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Delta Lake is an <strong>open-source transactional storage format</strong> on Parquet. ACID transactions, schema enforcement, time travel, MERGE/UPDATE/DELETE, stats-based skipping — without giving up the open format.</p>
+<ul>
+<li><strong>ACID on object storage</strong>: atomic commits, isolation via the transaction log.</li>
+<li><strong>Open format</strong>: Parquet + JSON+checkpoint log; readable by any Delta reader.</li>
+<li><strong>Substrate of the lakehouse</strong>: every Databricks table is Delta unless stated otherwise.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><strong>Table types</strong>: managed, external, shallow/deep clones, streaming tables, MVs.</li>
+<li><strong>Write</strong>: SQL <code>INSERT/MERGE/UPDATE/DELETE/COPY INTO</code> and DataFrame.</li>
+<li><strong>Schema enforcement</strong>: writes fail on mismatch unless <code>mergeSchema</code>.</li>
+<li><strong>Time travel</strong>: <code>VERSION AS OF</code> / <code>TIMESTAMP AS OF</code>; bounded by VACUUM.</li>
+<li><strong>CDF</strong>: per-row change events via <code>table_changes(...)</code>.</li>
+<li><strong>Optimisation</strong>: OPTIMIZE, ZORDER (legacy), liquid clustering, deletion vectors, Predictive Optimization.</li>
+<li><strong>Constraints</strong>: NOT NULL, CHECK.</li>
+<li><strong>Column mapping</strong>: rename/drop without rewrite.</li>
+<li><strong>Row tracking</strong>: <code>delta.enableRowTracking = true</code>; stable <code>_metadata.row_id</code> + <code>_metadata.row_commit_version</code> per row. GA since DBR 14.0.</li>
+<li><strong>UniForm</strong>: Iceberg metadata (IcebergCompatV2) alongside Delta. Iceberg-only; Hudi support removed.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>Delta table directory
+├── _delta_log/
+│   ├── 00000000000000000000.json   (commit 0)
+│   ├── ...
+│   ├── 00000000000000000010.checkpoint.parquet
+│   └── _last_checkpoint
+├── part-00000-uuid.snappy.parquet
+└── ...</code></pre>
+<p><strong>Transaction log = database.</strong> Each commit is a JSON file of actions: Protocol, Metadata, Add (file+stats), Remove (tombstone), Txn (idempotency), CommitInfo. Periodic checkpoint Parquets avoid full replay. Reads: latest checkpoint + tail of JSON commits → file pruning via stats + partitions. Writes: optimistic concurrency — retry on conflict. Maintenance: OPTIMIZE (compact), VACUUM (delete old files), liquid clustering. Photon reads stats, prunes, vectorises Parquet, applies deletion vectors.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Transaction log in depth</h3>
+<ul>
+<li>Commit files <code>00…json</code>; checkpoints every 10 commits by default (<code>delta.checkpointInterval</code>). Multi-part v2 checkpoints for huge tables.</li>
+<li><code>_last_checkpoint</code> pointer avoids scanning all logs.</li>
+<li>Protocol versions: <code>minReaderVersion</code> / <code>minWriterVersion</code>. Some features (DV, column mapping, type widening) bump them.</li>
+<li>Idempotent writes via <code>txnAppId + txnVersion</code>.</li>
+</ul>
+
+<h3>Add / Remove / Stats</h3>
+<ul>
+<li><code>Add</code>: path, partitionValues, size, dataChange, tags, <strong>stats</strong> (min/max/null per column) — drives pruning.</li>
+<li><code>Remove</code>: tombstone; physical delete only after VACUUM retention.</li>
+<li>OPTIMIZE emits <code>Add</code> + <code>Remove</code> with <code>dataChange=false</code> so streams skip.</li>
+</ul>
+
+<h3>Concurrency model</h3>
+<ul>
+<li>Optimistic concurrency. Loser retries at <code>v+2</code>.</li>
+<li>Conflict on file-touch overlap, not whole table.</li>
+<li>Heavy MERGE benefits from clustering + DV + partitioning to minimise overlap.</li>
+</ul>
+
+<h3>Deletion vectors</h3>
+<ul>
+<li>DV files referenced by <code>Add.deletionVector</code>.</li>
+<li>DELETE/UPDATE/MERGE write DV instead of rewriting Parquet.</li>
+<li>Photon applies natively; some non-Databricks readers don't yet.</li>
+<li>OPTIMIZE periodically compacts DVs back into rewritten Parquet.</li>
+</ul>
+
+<h3>Liquid clustering</h3>
+<ul>
+<li><code>CLUSTER BY (col1, col2)</code> at create.</li>
+<li>Writes routed to clusters; small clusters merge.</li>
+<li>Add/remove cluster columns = metadata-only (unlike PARTITIONED BY).</li>
+</ul>
+
+<h3>Column mapping</h3>
+<ul>
+<li>id mode (field IDs) or name mode (logical→physical).</li>
+<li>Required for RENAME/DROP COLUMN; bumps reader protocol.</li>
+</ul>
+
+<h3>Predictive Optimization</h3>
+<ul>
+<li>UC managed only (not external tables). Auto-runs OPTIMIZE/VACUUM when worthwhile.</li>
+<li>Enabled by default for accounts created on or after November 2024.</li>
+<li>Typically cheaper than naive nightly maintenance.</li>
+</ul>
+
+<h3>Row tracking</h3>
+<ul>
+<li>Enabled per-table via <code>delta.enableRowTracking = true</code>.</li>
+<li>Stable <code>_metadata.row_id</code> (survives MERGE/UPDATE) + <code>_metadata.row_commit_version</code> for row-level lineage.</li>
+<li>Enabling on existing tables requires pausing concurrent writes; bumps writer protocol. GA since DBR 14.0.</li>
+</ul>
+
+<h3>Change Data Feed</h3>
+<ul>
+<li>Enabled per-table; writes per-row change records under <code>_change_data/</code>.</li>
+<li>Read via <code>table_changes('cat.sch.tbl', startV, endV)</code>.</li>
+<li>Feeds <code>APPLY CHANGES INTO</code> downstream.</li>
+</ul>
+
+<h3>UniForm</h3>
+<ul>
+<li>Same Parquet; Iceberg metadata (IcebergCompatV2) generated atomic with Delta commit. Hudi support removed; Iceberg-only.</li>
+<li>OpenSharing: D2O recipients can read via Iceberg REST Catalog API (Public Preview, Runtime 16.1+).</li>
+<li>VACUUM now deletes untracked <code>metadata/</code> files while keeping live Iceberg metadata (Runtime 17.2+).</li>
+<li>Trade-off: small metadata cost; deletion vectors with certain configs limit Iceberg reader visibility.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>High-cardinality partition columns = footgun. Use liquid clustering.</li>
+<li>Time-travel vs VACUUM tension; default 7-day retention.</li>
+<li>Cross-region writes pay commit-PUT latency.</li>
+<li>Stats only on first 32 columns by default — raise <code>delta.dataSkippingNumIndexedCols</code> or reorder.</li>
+<li>Streaming reads with <code>ignoreChanges=true</code> still see deletes.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Parquet with a transaction log on the side."</strong> The log gives you ACID, time travel, CDF, concurrency. Everything else (clustering, DV, UniForm, PO) is built on it. Mastery = log mechanics + optimistic concurrency + protocol management.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Delta Lake</h2>
+<ul>
+<li><strong>Sub-ms key-value lookups.</strong> Use Lakebase or a KV store.</li>
+<li><strong>Tiny frequent point updates.</strong> Batch them.</li>
+<li><strong>High-cardinality partition columns.</strong> Use liquid clustering.</li>
+<li><strong>Substitute for OLTP.</strong> No row-level locking, no FK.</li>
+<li><strong>Many writers on overlapping files.</strong> Write amplification. Cluster or serialise.</li>
+<li><strong>External tables without a maintenance owner.</strong> Predictive Optimization doesn't cover them.</li>
+<li><strong>Pure append + never-read.</strong> Plain Parquet is cheaper.</li>
+<li><strong>New tables with <code>PARTITIONED BY</code>.</strong> Use liquid clustering.</li>
+<li><strong>Time travel as backup.</strong> Bounded by retention; use clone or external backup.</li>
+<li><strong>Huge blobs in columns.</strong> Use UC Volumes.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Tiny-commit explosion.</strong> One-row-per-commit destroys read performance.</li>
+<li><strong>Default stats on 32 cols.</strong> Wide tables need tuning.</li>
+<li><strong>MERGE under contention.</strong> Overlapping partitions retry.</li>
+<li><strong>Renames need column mapping.</strong> Bumps protocol.</li>
+<li><strong>DV not universal in external readers.</strong> Use UniForm or rewrite-OPTIMIZE.</li>
+<li><strong>VACUUM safety is on you.</strong> Low retention destroys time-travel + active reads.</li>
+<li><strong>Cross-region commit latency.</strong></li>
+<li><strong>Protocol coupling.</strong> Enabling new features breaks old engines.</li>
+<li><strong>Audit lives in UC.</strong> Outside UC, only CommitInfo.</li>
+<li><strong>Z-order legacy.</strong> Migrating to clustering needs care.</li>
+<li><strong>Type widening scope is bounded.</strong> GA since DBR 15.4 LTS, but only defined widening paths supported; others still require rewrite. Protocol bump; readers need DBR 15.4+ LTS minimum.</li>
+<li><strong>Big checkpoints for huge tables.</strong> Multi-part v2 needs enablement.</li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/delta/">Delta Lake docs (Databricks)</a></li>
+<li><a href="https://github.com/delta-io/delta/blob/master/PROTOCOL.md">Delta protocol spec</a></li>
+<li><a href="https://docs.databricks.com/aws/en/delta/clustering">Liquid clustering</a></li>
+<li><a href="https://docs.databricks.com/aws/en/delta/deletion-vectors">Deletion vectors</a></li>
+<li><a href="https://docs.databricks.com/aws/en/optimizations/predictive-optimization">Predictive Optimization</a></li>
+<li><a href="https://docs.databricks.com/aws/en/delta/uniform">UniForm</a></li>
+<li><a href="https://docs.databricks.com/aws/en/delta/row-tracking.html">Row tracking</a></li>
+<li><a href="https://docs.databricks.com/aws/en/delta/type-widening.html">Type widening</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

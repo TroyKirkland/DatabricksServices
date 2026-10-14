@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Lakeflow Jobs — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+
+<h1>Lakeflow Jobs</h1>
+<blockquote>Formerly <strong>Databricks Workflows</strong>. Same product, Lakeflow rebrand. APIs/UI still surface "jobs".</blockquote>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Lakeflow Jobs is the <strong>orchestrator</strong> for Databricks. It runs DAGs of <em>tasks</em> (notebooks, Python wheels, SQL, LDP pipelines, dbt, JARs) on a schedule or trigger, with retries, notifications, and observability.</p>
+<ul>
+<li><strong>Native orchestrator</strong> for everything Databricks: notebooks, Python, SQL, LDP, dbt, ML.</li>
+<li><strong>Triggers</strong>: cron, continuous, file arrival, table update, manual, API.</li>
+<li><strong>Resilient by default</strong>: per-task retries, repair runs, conditional execution, notifications.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<p><strong>Core primitives:</strong></p>
+<ul>
+<li><strong>Job</strong> — DAG of tasks with name, owner, permissions, triggers, run-as identity.</li>
+<li><strong>Task</strong> — DAG node. Types: notebook, Python script, wheel, JAR, SQL (query/dashboard/file/alert), LDP pipeline, dbt, run-job, if/else, for-each, condition.</li>
+<li><strong>Dependencies</strong> — declared between tasks; status-aware (Success / All Done / At Least One Success).</li>
+<li><strong>Triggers</strong> — cron, continuous, file arrival, table update, manual, API.</li>
+<li><strong>Compute</strong> — per-task choice: job clusters, all-purpose, serverless jobs compute, SQL warehouses.</li>
+<li><strong>Run-as identity</strong> — service principal or user; controls UC permissions for the run.</li>
+<li><strong>Parameters</strong> — job- and task-level; passed via widgets, SQL param binding, or CLI args.</li>
+<li><strong>TaskValues</strong> — tiny key/value emit/read between tasks.</li>
+<li><strong>Repair run</strong> — re-run only failed tasks.</li>
+<li><strong>Notifications</strong> — email, Slack, Teams, PagerDuty, webhook.</li>
+<li>Authored via UI, REST/SDK, Terraform, or <strong>Databricks Asset Bundles</strong>.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>Trigger ──► Job run ──► Task graph ──► Task runs (each on its own compute)
+                       │                ├─ retries / repair scope
+                       │                ├─ TaskValues bus
+                       │                └─ event/log emission to system.workflow
+                       └─ notifications, lineage to UC</code></pre>
+<p>Control plane orchestrates; tasks run on chosen compute. A job can mix compute types per task. Tasks have retries, timeouts, dependency-and-status edges. Conditional via <code>if/else</code>, fan-out via <code>for_each</code>. Run history lives in <code>system.workflow.*</code>.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Run lifecycle</h3>
+<ul>
+<li>Job run has <code>run_id</code> globally unique within workspace; task run has <code>task_run_id</code>.</li>
+<li>Runs queue briefly when over concurrent-run cap (per-workspace, adjustable).</li>
+<li>Task records state/result_state/cluster instance/error.</li>
+</ul>
+
+<h3>Compute &amp; DBU implications</h3>
+<ul>
+<li><strong>Job clusters</strong> — cheapest DBU SKU; ephemeral; cold-start amortised when tasks share.</li>
+<li><strong>All-purpose</strong> — most expensive SKU; avoid for production.</li>
+<li><strong>Serverless jobs compute</strong> — fast startup, scale-to-zero, often cheapest net.</li>
+<li><strong>SQL warehouses</strong> — SQL tasks bill the warehouse SKU.</li>
+</ul>
+
+<h3>TaskValues mechanics</h3>
+<ul>
+<li>Scoped <code>&lt;run_id, source_task_key, key&gt;</code>; size cap ~48 KB.</li>
+<li><code>dbutils.jobs.taskValues.get(taskKey, key)</code>. Throws unless <code>default</code> supplied.</li>
+<li>Don't pass data — pass UC table names.</li>
+</ul>
+
+<h3>Retries and repair</h3>
+<ul>
+<li>Retries rerun a single task within the same run.</li>
+<li>Repair run inherits prior state, re-executes failed + downstream-of-failed.</li>
+</ul>
+
+<h3>Triggers — depth</h3>
+<ul>
+<li>Cron (quartz, timezone pinnable). Continuous (at-most-one re-trigger). File arrival (UC volume / cloud path). Table update (UC version increment). API (<code>POST /api/2.2/jobs/run-now</code>).</li>
+</ul>
+
+<h3>Permissions and run-as</h3>
+<ul>
+<li>UC checks resolve against <code>run_as</code>, not the trigger caller. View / Manage Run / Manage / Owner are separate.</li>
+</ul>
+
+<h3>System tables</h3>
+<ul>
+<li><code>system.workflow.job_run_timeline</code>, <code>job_task_run_timeline</code>, <code>jobs</code> — source of truth for cost and SLA dashboards.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li><strong>1,000 tasks per job</strong> (hard limit). For larger DAGs, use sub-jobs via run-job tasks. For-each parallelism is separately capped.</li>
+<li>Per-workspace cap: <strong>2,000 concurrent task runs</strong> (429 when exceeded), <strong>12,000 saved jobs</strong>. 2.2 API supports webhook-style notifications.</li>
+<li>Continuous + failing task without <code>max_failures</code> = retry storm.</li>
+<li>Task state should land in UC, not <code>/tmp</code>.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p>Lakeflow Jobs is <strong>a workspace-native Airflow with first-class Databricks task types</strong> and tight UC + system-table integration. Less extensible than Airflow, more native to Databricks compute/lineage/permissions.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use it</h2>
+<ul>
+<li><strong>External orchestration of non-Databricks systems.</strong> Keep Airflow/Dagster on top.</li>
+<li><strong>Heavy fan-out (&gt;1000 parallel tasks).</strong> Use Spark inside one task.</li>
+<li><strong>Sub-minute event-driven workflows.</strong> Use Structured Streaming or a Databricks App webhook.</li>
+<li><strong>Long-running interactive sessions.</strong> Tasks are batch side effects.</li>
+<li><strong>Storing significant state between tasks.</strong> TaskValues are tiny; pass UC table names.</li>
+<li><strong>Cron jobs that should be DBSQL alerts.</strong> Hourly threshold checks belong in Alerts.</li>
+<li><strong>Complex branching on data content.</strong> Embed in one notebook with Python control flow.</li>
+<li><strong>Cross-workspace orchestration.</strong> Jobs are workspace-scoped.</li>
+<li><strong>Job clusters as long-lived shared infra.</strong> They're ephemeral by design.</li>
+<li><strong>Business logic in TaskValues/params.</strong> Knobs, not config systems.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>DAG ergonomics past ~30 tasks.</strong> Use Asset Bundles + YAML.</li>
+<li><strong>No native rich conditional skipping.</strong> Embed in a notebook.</li>
+<li><strong>TaskValues are string-KV with low size.</strong> Not a workflow data system.</li>
+<li><strong>Cluster start dominates short tasks.</strong> A 10-second task can take 90s. Use pools or serverless.</li>
+<li><strong>Repair semantics surprise.</strong> Repair re-runs failed + downstream; can't isolate one task easily.</li>
+<li><strong>For-each result aggregation is awkward.</strong> Write to a UC table within the sub-task.</li>
+<li><strong>Permissions are coarse.</strong> No "edit only this branch" granularity.</li>
+<li><strong>Cross-task logs are not unified.</strong> No first-class cross-task tracing.</li>
+<li><strong>Limited backfill ergonomics.</strong> Re-run a parameterised date range via API; no UI affordance.</li>
+<li><strong>Cron timezone/DST confusion.</strong> Pin timezone explicitly.</li>
+<li><strong>No Airflow-style runtime dynamic task mapping.</strong> For-each list must be known at job start.</li>
+<li><strong>Cost attribution requires system tables.</strong> Build dashboards off <code>system.billing.usage</code> + <code>system.workflow.*</code>.</li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/jobs/">Lakeflow Jobs docs</a></li>
+<li><a href="https://docs.databricks.com/api/workspace/jobs">Jobs API 2.2 reference</a></li>
+<li><a href="https://docs.databricks.com/aws/en/jobs/conditional-tasks">Conditional / for-each tasks</a></li>
+<li><a href="https://docs.databricks.com/aws/en/admin/system-tables/jobs">System tables: workflow</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+
+</body></html>

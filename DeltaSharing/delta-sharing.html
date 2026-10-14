@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Delta Sharing — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Delta Sharing</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Delta Sharing is an <strong>open protocol</strong> for sharing live Delta data between organizations without copy. Provider exposes tables; recipient queries via REST returning short-lived pre-signed URLs to underlying Parquet files; reads happen directly on cloud storage.</p>
+<ul>
+<li><strong>Open protocol</strong>: public spec; any client.</li>
+<li><strong>Live data, no copy</strong>: recipient reads provider's actual files.</li>
+<li><strong>D2D vs D2O</strong>: Databricks-to-Databricks (UC-native) vs Databricks-to-Open (token-based).</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><strong>Share</strong> — UC securable bundling tables/views/volumes/notebooks/models/MVs.</li>
+<li><strong>Recipient</strong> — workspace (D2D) or generic token identity (D2O).</li>
+<li><strong>Recipient profile</strong> (D2O) — JSON with endpoint + bearer token; consumed by open <code>delta-sharing</code> client.</li>
+<li><strong>Grant</strong> — connects share to recipient.</li>
+<li><strong>Read</strong>: D2D = foreign catalog in UC; D2O = OSS library.</li>
+<li><strong>CDF</strong>: shareable; recipients read via <code>table_changes</code>.</li>
+<li><strong>Pushdown</strong>: partition filters and predicates limit URL signing.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Provider Databricks workspace]                                     [Recipient]
+  UC managed tables                                                    │
+  + Share definition                                                   │
+        │                                                              │
+        ▼                                                              ▼
+  Delta Sharing server (control-plane REST API)  ◄────── auth + list/query ───────  D2D UC catalog
+        │                                                              OR
+        ▼                                                              D2O delta-sharing client
+  Pre-signed URLs to Parquet files in provider's cloud storage  ◄── direct read ─── recipient compute</code></pre>
+<p>Thin REST control plane + bulk reads from cloud storage via pre-signed URLs. No engine on provider; recipient does compute. Pre-signed URLs expire (minutes/hours). D2D piggybacks on UC for permissions, lineage, audit. D2O uses bearer token + provider-side server logs.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Wire protocol</h3>
+<ul>
+<li>REST: <code>/shares</code>, <code>/schemas</code>, <code>/tables</code>, <code>/query</code>.</li>
+<li><code>/query</code> takes predicates, returns paginated file objects with pre-signed URLs.</li>
+<li>URLs expire (~1h default); recipient re-signs.</li>
+</ul>
+
+<h3>D2D</h3>
+<ul>
+<li>Provider creates SHARE; grants to recipient (metastore ID + cloud + region).</li>
+<li>Recipient: <code>CREATE CATALOG ... USING SHARE</code> → read-only UC catalog.</li>
+<li>UC-managed perms, lineage, audit (<code>system.access.outbound_*</code>).</li>
+<li>Cloud-native trust; no bearer token.</li>
+</ul>
+
+<h3>D2O</h3>
+<ul>
+<li>Token-based; provider emits recipient profile JSON.</li>
+<li>OSS <code>delta-sharing</code> library reads.</li>
+<li>Token rotation/expiry/audit is provider's job.</li>
+</ul>
+
+<h3>Pre-signed URL mechanics</h3>
+<ul>
+<li>S3 GET / Azure SAS / GCS signed URLs using provider credential.</li>
+<li>Bearer-like; HTTPS only; treat as transient credentials.</li>
+</ul>
+
+<h3>CDF over sharing</h3>
+<ul>
+<li><code>table_changes()</code> works across sharing when provider enabled CDF.</li>
+<li>Feeds downstream LDP <code>APPLY CHANGES INTO</code>.</li>
+</ul>
+
+<h3>Filtering pushdown</h3>
+<ul>
+<li>Partition + predicate filters pushed to server; only matching files signed.</li>
+<li>Liquid clustering prunes effectively via stats.</li>
+</ul>
+
+<h3>Provider-side controls</h3>
+<ul>
+<li>Token / IP allow-lists (D2O).</li>
+<li>Read quotas; revocation via <code>DROP RECIPIENT</code>.</li>
+<li>Audit in <code>system.access.outbound_*</code>.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Pre-signed URLs in flight survive revocation until TTL.</li>
+<li>Streaming tables / MVs shareable with caveats.</li>
+<li>Views: Spark SQL only, no UDFs.</li>
+<li>Notebooks / models D2D-only.</li>
+<li>Egress accrues to provider.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Parquet over HTTPS, brokered by a tiny server."</strong> Recipient gets pre-signed URLs, reads direct. UC layers governance on D2D; D2O falls back to bearer tokens. No copy; queries hit live data.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Delta Sharing</h2>
+<ul>
+<li><strong>Cross-region with egress sensitivity.</strong> Provider pays.</li>
+<li><strong>Real-time low-latency feeds.</strong> Seconds, not ms.</li>
+<li><strong>Sharing OLTP-like data.</strong> Version skew.</li>
+<li><strong>Recipient-specific row-level security.</strong> Use Clean Rooms.</li>
+<li><strong>Internal same-metastore sharing.</strong> UC grants suffice.</li>
+<li><strong>Non-Delta data.</strong> Wrong tool.</li>
+<li><strong>Forwarding pre-signed URLs around.</strong> They're credentials.</li>
+<li><strong>Always-on 24/7 streaming recipients.</strong> Egress + re-sign load.</li>
+<li><strong>Shared tables you VACUUM aggressively.</strong> Breaks recipient reads.</li>
+<li><strong>Distributing huge raw history.</strong> Share a sized snapshot instead.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Egress accrues to provider.</strong></li>
+<li><strong>Revocation isn't instant.</strong> URLs outlive grant.</li>
+<li><strong>CDF caveats.</strong> Schema changes can interrupt recipient.</li>
+<li><strong>D2O auditing thinner than D2D.</strong></li>
+<li><strong>Views are limited.</strong> No UDFs / complex.</li>
+<li><strong>Notebooks/models D2D-only.</strong></li>
+<li><strong>Bandwidth tuning is provider-side.</strong></li>
+<li><strong>OPTIMIZE invalidates cached URLs.</strong></li>
+<li><strong>No per-recipient dynamic filtering.</strong></li>
+<li><strong>Recipient does compute.</strong> Slow on thin recipient cluster.</li>
+<li><strong>Marketplace inherits constraints.</strong></li>
+<li><strong>Cross-cloud egress brutal.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/data-sharing/">Delta Sharing docs</a></li>
+<li><a href="https://github.com/delta-io/delta-sharing/blob/main/PROTOCOL.md">Protocol spec</a></li>
+<li><a href="https://docs.databricks.com/aws/en/data-sharing/share-data-databricks">D2D vs D2O</a></li>
+<li><a href="https://docs.databricks.com/aws/en/data-sharing/share-cdf">Sharing CDF</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

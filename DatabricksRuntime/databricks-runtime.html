@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Databricks Runtime — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Databricks Runtime (DBR)</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>DBR is a <strong>versioned bundle</strong> of Spark + Photon + Delta + cloud SDKs + ML libraries + Java/Python/Scala/R, packaged as a single image picked at cluster create. "The OS for Databricks compute."</p>
+<ul>
+<li><strong>Versioned</strong>: each DBR pins specific Spark, Photon, Delta, Java, Python versions.</li>
+<li><strong>Variants</strong>: standard, <strong>ML</strong>, <strong>GPU</strong>.</li>
+<li><strong>LTS</strong>: ~3 years support; non-LTS ~6 months.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>DBR versions chosen at create (e.g., 18 LTS, 19, 19 ML GPU). Current LTS: 18 LTS (Spark 4.1.0), 17.3 LTS (Spark 4.0.0), 16.4 LTS (Spark 3.5.2), 15.4 LTS (Spark 3.5.0). Latest non-LTS: 19 (Spark 4.2.0).</li>
+<li>Bundled: Spark, Photon, Delta, cloud SDKs, pandas/pyarrow/sklearn, dbutils, MLflow.</li>
+<li>ML adds: PyTorch, TF, transformers, HF, LightGBM, XGBoost.</li>
+<li>GPU adds: CUDA, cuDNN, NCCL, GPU-aware libs.</li>
+<li>Init scripts (UC-volume-scoped recommended).</li>
+<li>Cluster libraries (PyPI/Maven/CRAN).</li>
+<li>Notebook-scoped <code>%pip install</code>.</li>
+<li>Compute policies lock DBR/instance picks.</li>
+<li>Serverless = Databricks-managed equivalent; no version pick.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>Cluster create:
+  ┌─ Cloud VM
+  │   ├─ DBR rootfs
+  │   │   ├─ Spark + Photon (JVM)
+  │   │   ├─ Delta + open-format libs
+  │   │   ├─ Python / R / Scala interpreters
+  │   │   ├─ ML libs (ML runtime)
+  │   │   ├─ CUDA + NCCL (GPU runtime)
+  │   │   └─ dbutils + Databricks SDKs
+  │   ├─ Init scripts run
+  │   ├─ Cluster libraries installed
+  │   └─ Driver / executor processes start
+  └─ Networking + IAM</code></pre>
+<p>Driver + executors are JVM; Python via Py4J + Arrow. Photon loaded as native lib inside executor. Local disk <code>/local_disk0</code> ephemeral; DBFS/Volumes durable.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Versioning</h3>
+<ul>
+<li>Major.minor; minor every 4-6 months.</li>
+<li>LTS every few majors, 36-month (3-year) support; non-LTS 6 months.</li>
+<li>Each DBR pins Spark commit, Photon ver, Delta protocol, Java 21 (since DBR 18; Java 17 on earlier), Python 3.10+ (3.12+ on DBR 18+), Scala 2.13 (since DBR 18; 2.12 on earlier).</li>
+</ul>
+
+<h3>Container architecture</h3>
+<ul>
+<li>Hardened Ubuntu base + Spark/Photon/libs.</li>
+<li>Classic: rootfs on cloud VMs in your VPC.</li>
+<li>Serverless: locked-down equivalent; no init scripts/SSH; restricted libs.</li>
+<li>DCS lets you bring custom Docker images based on Databricks bases.</li>
+</ul>
+
+<h3>Photon engagement</h3>
+<ul>
+<li>Native C++ engine inside executor; reads Parquet/Delta into columnar buffers.</li>
+<li>Falls back to JVM Spark on unsupported operators (some UDFs, windows, sources).</li>
+</ul>
+
+<h3>Library precedence</h3>
+<ul>
+<li>DBR-bundled → cluster libs → notebook-scoped (<code>%pip</code>).</li>
+<li>Init scripts run as root pre-Spark.</li>
+<li>UC-volume init scripts preferred over DBFS (deprecating).</li>
+</ul>
+
+<h3>dbutils</h3>
+<ul>
+<li>secrets, widgets, fs, jobs, taskValues, notebook, library.</li>
+<li>Python dbutils via Py4J to JVM driver.</li>
+</ul>
+
+<h3>Cluster lifecycle</h3>
+<ul>
+<li>States: pending/running/restarting/resizing/terminating/terminated.</li>
+<li>Auto-termination on idle.</li>
+<li>Pools pre-warm to skip cold start.</li>
+<li>Autoscaling: standard or enhanced (jobs/LDP).</li>
+</ul>
+
+<h3>Networking</h3>
+<ul>
+<li>VMs in workspace VPC/VNet.</li>
+<li>Egress to control plane + cloud storage; Private Link optional.</li>
+<li>Cloud auth via instance profile / managed identity / service account; UC layers fine-grained on top.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Many cluster libs = slow start. Bake DCS image.</li>
+<li>Non-LTS can break code. LTS for prod.</li>
+<li>One <code>%pip</code> with all packages beats many.</li>
+<li>ML/GPU runtimes have longer cold start.</li>
+<li>Serverless restricts; refactor required from classic.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Immutable OS image for a cluster."</strong> Pick version + variant + (optionally) init scripts/DCS. Stay on LTS for prod; ML when actually doing DL; GPU only when actually GPU-bound.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not pick non-default DBR</h2>
+<ul>
+<li><strong>Latest non-LTS in prod.</strong></li>
+<li><strong>GPU runtime for non-GPU code.</strong></li>
+<li><strong>ML runtime for non-ML workloads.</strong></li>
+<li><strong>Heavy init-script library installs.</strong> Bake DCS.</li>
+<li><strong>Multiple DBR versions across team.</strong> Use policies.</li>
+<li><strong>ML training on shared all-purpose clusters.</strong></li>
+<li><strong>GPU clusters left running for batch ML.</strong></li>
+<li><strong>Random pip versions conflicting with DBR-bundled.</strong></li>
+<li><strong>Treating notebook-scoped libs as durable.</strong></li>
+<li><strong>DBFS init scripts.</strong> Deprecated.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Cold start slow.</strong> Pools or serverless mitigate.</li>
+<li><strong>Library install compounds slowness.</strong></li>
+<li><strong>Cross-version portability mediocre.</strong></li>
+<li><strong>No first-class <code>requirements.txt</code>.</strong> Need DCS or DABs.</li>
+<li><strong>GPU drivers pinned per DBR.</strong></li>
+<li><strong>Serverless restrictions force refactor.</strong></li>
+<li><strong>Single Python per DBR.</strong></li>
+<li><strong>Memory tuning is on you.</strong></li>
+<li><strong>Scattered logs.</strong></li>
+<li><strong>DCS adds CI burden.</strong></li>
+<li><strong>R / Scala receive less attention.</strong></li>
+<li><strong>Some OSS Spark features lag.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/release-notes/runtime/">DBR release notes</a></li>
+<li><a href="https://docs.databricks.com/aws/en/release-notes/runtime/databricks-runtime-ver">LTS support policy</a></li>
+<li><a href="https://docs.databricks.com/aws/en/release-notes/runtime/18.0">DBR 18.0 release notes</a></li>
+<li><a href="https://docs.databricks.com/aws/en/clusters/custom-containers">Databricks Container Services</a></li>
+<li><a href="https://docs.databricks.com/aws/en/init-scripts/">Init scripts</a></li>
+<li><a href="https://docs.databricks.com/aws/en/libraries/">Cluster libraries</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

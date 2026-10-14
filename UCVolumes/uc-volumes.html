@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>UC Volumes — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>UC Volumes</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>A UC Volume is a <strong>governed non-tabular storage abstraction</strong> in UC. Path-based namespace <code>/Volumes/cat/sch/vol/...</code> on cloud storage with UC permissions, lineage, audit. A "managed folder in the lakehouse for non-table files".</p>
+<ul>
+<li><strong>Non-tabular data</strong>: PDFs, images, JSON blobs, artifacts, init scripts.</li>
+<li><strong>UC-governed</strong>: READ/WRITE/MANAGE VOLUME.</li>
+<li><strong>Universal access</strong>: Python <code>open()</code>, Spark, dbutils.fs, REST, CLI.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Managed volumes (UC-owned) vs External volumes (existing cloud path).</li>
+<li>Path <code>/Volumes/&lt;cat&gt;/&lt;sch&gt;/&lt;vol&gt;/...</code>.</li>
+<li>Ops via Catalog Explorer, dbutils.fs, Files API, CLI, Python open().</li>
+<li>Perms: READ/WRITE/MANAGE VOLUME + USE CATALOG/SCHEMA.</li>
+<li>Uses: Auto Loader inputs, model artifacts, init scripts, app file serving, Lakeflow Connect landing.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Client (cluster / app / dbutils / CLI / Catalog Explorer)]
+        ↓
+  /Volumes/cat/sch/vol/... path
+        ↓
+  UC permission check
+        ↓
+  Storage credential → cloud object storage</code></pre>
+<p>UC fronts authorization; storage is regular S3/ADLS/GCS. Files API supports multipart for large uploads.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>File API + SDK</h3>
+<ul>
+<li>Files API: GET/PUT (multipart)/DELETE/HEAD.</li>
+<li><code>databricks-sdk</code> <code>files.upload</code> / <code>download</code>.</li>
+<li>CLI: <code>databricks fs cp</code>.</li>
+<li>Spark / Python builtins work via FUSE mount on cluster.</li>
+</ul>
+
+<h3>Managed vs external</h3>
+<ul>
+<li>Managed: UC-owned; DROP removes data after retention.</li>
+<li>External: cloud lifecycle yours; multiple external vols can share prefix.</li>
+</ul>
+
+<h3>Permissions</h3>
+<ul>
+<li>READ → list/read; WRITE → modify; MANAGE → drop/alter; plus USE on parents.</li>
+</ul>
+
+<h3>FUSE mount</h3>
+<ul>
+<li>Lazy reads; multipart on close for writes.</li>
+<li><code>os.scandir</code> works; slow on many tiny files.</li>
+</ul>
+
+<h3>Init scripts</h3>
+<ul>
+<li>UC-volume init scripts replace DBFS init scripts.</li>
+<li>Cluster run-as needs READ VOLUME.</li>
+</ul>
+
+<h3>Auto Loader + Volumes</h3>
+<ul>
+<li>cloudFiles can read <code>/Volumes/...</code>.</li>
+<li>Notification mode needs event-source-capable underlying prefix.</li>
+</ul>
+
+<h3>Apps + Volumes</h3>
+<ul>
+<li>Apps reference volumes via <code>app.yaml</code> resources.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Object size = cloud limit (5 TB S3 etc.).</li>
+<li>>1M files listing slow.</li>
+<li>Cross-region egress applies.</li>
+<li>POSIX gaps (no symlinks).</li>
+<li>DBFS root deprecated for new work; volumes are forward path.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"UC-governed folder."</strong> Modern DBFS-replacement with auth + audit. Default to managed; external for cross-system sharing.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use UC Volumes</h2>
+<ul>
+<li><strong>Tabular data.</strong> Use Delta.</li>
+<li><strong>Hot-path KV lookup.</strong> Use Lakebase / KV store.</li>
+<li><strong>Streaming millions of tiny files.</strong> Batch + compact or Delta sink.</li>
+<li><strong>DBFS symlink-style migration.</strong> Replace references via DABs.</li>
+<li><strong>Sharing externally without governance.</strong> Use Delta Sharing.</li>
+<li><strong>Storing secrets.</strong> Use Secrets Manager.</li>
+<li><strong>Large model registry by file path.</strong> Use MLflow + UC.</li>
+<li><strong>Cheap-cold backup.</strong> Lifecycle on external volumes if cost matters.</li>
+<li><strong>Hidden one-off init scripts.</strong> Code-manage them.</li>
+<li><strong>Per-user scratch without policy.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>No first-class versioning.</strong></li>
+<li><strong>No file-level lineage.</strong></li>
+<li><strong>Listing perf on huge prefixes.</strong></li>
+<li><strong>FUSE quirks.</strong></li>
+<li><strong>External cleanup manual.</strong></li>
+<li><strong>Bulk file ops paginated.</strong></li>
+<li><strong>No native pre-signed URLs.</strong></li>
+<li><strong>Init script discovery friction.</strong></li>
+<li><strong>No row/column policies.</strong></li>
+<li><strong>Limited storage-tier choice (managed).</strong></li>
+<li><strong>No multi-region volumes.</strong></li>
+<li><strong>Per-file tagging limited.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/connect/unity-catalog/volumes">UC Volumes docs</a></li>
+<li><a href="https://docs.databricks.com/api/workspace/files">Files API</a></li>
+<li><a href="https://docs.databricks.com/aws/en/init-scripts/cluster-scoped">UC init scripts</a></li>
+<li><a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/manage-volumes">Volumes governance</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

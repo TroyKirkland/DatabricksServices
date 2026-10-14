@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lakeflow Spark Declarative Pipelines (LDP) — L100 to L400</title>
+<style>
+  :root { --bg:#fff; --fg:#1f2328; --muted:#57606a; --accent:#ff3621; --accent-soft:#fff1ee; --border:#d0d7de; --code-bg:#f6f8fa; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.6; color: var(--fg); background: var(--bg); max-width: 880px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  h1 { border-bottom: 3px solid var(--accent); padding-bottom: .5rem; margin-top: 0; font-size: 2.1rem; }
+  h2 { border-bottom: 1px solid var(--border); padding-bottom: .3rem; margin-top: 2.4rem; color: var(--accent); font-size: 1.5rem; }
+  h3 { margin-top: 1.8rem; font-size: 1.15rem; }
+  code { background: var(--code-bg); padding: .12em .4em; border-radius: 4px; font-size: .9em; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; overflow-x: auto; font-size: .88rem; line-height: 1.45; }
+  pre code { background: transparent; padding: 0; }
+  ul, ol { padding-left: 1.4rem; }
+  li { margin-bottom: .3rem; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid var(--accent); background: var(--accent-soft); margin: 1rem 0; padding: .6rem 1rem; color: var(--muted); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+  .level-badge { display: inline-block; background: var(--accent); color: white; font-size: .75rem; font-weight: 600; padding: .15rem .55rem; border-radius: 999px; vertical-align: middle; margin-right: .5rem; letter-spacing: .04em; }
+  .toc { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.4rem; margin: 1.5rem 0 2rem; }
+  .toc h4 { margin: 0 0 .5rem; font-size: .95rem; color: var(--muted); }
+  .toc ul { margin: 0; padding-left: 1.2rem; }
+</style>
+</head>
+<body>
+<h1>Lakeflow Spark Declarative Pipelines (LDP)</h1>
+<blockquote>Formerly <strong>Delta Live Tables (DLT)</strong>. Same engine, rebranded under the Lakeflow umbrella. Most docs and SQL keywords still say "live" or "DLT".</blockquote>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>LDP is a <strong>declarative ETL framework</strong> built on Spark Structured Streaming and Delta Lake. You declare <em>what</em> tables should exist and <em>how each is derived</em>; LDP figures out the DAG, the streaming vs. batch refresh logic, the checkpoints, the retries, and the table maintenance. You write SQL or Python; you do not manage clusters, jobs, or watermarks.</p>
+<ul>
+<li><strong>Declarative</strong>: define tables, not pipelines. LDP composes the DAG from your <code>CREATE STREAMING TABLE</code> / <code>@dlt.table</code> declarations.</li>
+<li><strong>Streaming + batch unified</strong>: streaming tables (incremental) and materialized views (full refresh) coexist in one pipeline.</li>
+<li><strong>Production-grade plumbing free</strong>: <code>EXPECT</code> data quality, schema evolution, checkpoints, retries, and table maintenance all built-in.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<p><strong>Two core table types:</strong></p>
+<ul>
+<li><strong>Streaming Table (ST)</strong> — incrementally updated from a streaming source (Auto Loader, Kafka, Kinesis, UC CDF, another ST). Append-only by default; CDC merges via <code>AUTO CDC</code> (formerly <code>APPLY CHANGES INTO</code>).</li>
+<li><strong>Materialized View (MV)</strong> — fully recomputed each refresh from a deterministic query over batch sources.</li>
+</ul>
+<p><strong>Other surface:</strong></p>
+<ul>
+<li><code>AUTO CDC</code> (current API; <code>APPLY CHANGES INTO</code> is the legacy form, still works but no longer recommended) — collapses a CDC stream onto an ST with SCD Type 1 or Type 2. Also supports <code>AUTO CDC FROM SNAPSHOT</code> (Python only) for snapshot-comparison CDC.</li>
+<li><strong>Expectations</strong> — <code>EXPECT col &gt; 0</code> with <code>ON VIOLATION WARN | DROP | FAIL UPDATE</code>.</li>
+<li>SQL or Python authoring (<code>@dlt.table</code>, <code>dlt.apply_changes(...)</code>).</li>
+<li><strong>Triggered</strong> (run-to-completion) vs <strong>Continuous</strong> (sub-minute streaming) modes.</li>
+<li><strong>Serverless</strong> (recommended; adds incremental MV refresh) vs <strong>Classic</strong> compute.</li>
+<li>UC-native: targets, lineage, audit, system tables.</li>
+<li>Authored in notebooks/SQL/Py files; deployed via UI or Databricks Asset Bundles.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>Source(s) ──► [LDP Compile DAG] ──► [LDP Runtime on (serverless|classic) compute] ──► UC Streaming Tables / MVs
+              ▲                       │
+              │                       ├─ per-flow checkpoints (managed)
+              │                       ├─ expectations engine (filter/warn/fail)
+              │                       ├─ APPLY CHANGES merge engine
+              │                       └─ table maintenance (OPTIMIZE/VACUUM)
+       Your SQL/Python notebooks
+       (CREATE STREAMING TABLE, @dlt.table)</code></pre>
+<p>On each update, LDP:</p>
+<ol>
+<li><strong>Parses</strong> source files, resolves <code>LIVE.&lt;name&gt;</code> references, builds the DAG.</li>
+<li><strong>Validates</strong>: cycles, missing tables, schema compatibility, permissions.</li>
+<li><strong>Plans</strong> each flow as a streaming or batch query. Streaming flows get a managed checkpoint dir under the pipeline's storage root.</li>
+<li><strong>Runs flows</strong> in dependency order; independents in parallel; streaming flows execute as micro-batches under a Spark application.</li>
+<li><strong>Applies expectations</strong> at materialization. Drop filters out, warn logs to <code>event_log</code>, fail aborts and retries.</li>
+<li><strong>Maintains</strong> tables: serverless via Predictive Optimization; classic via a periodic maintenance task.</li>
+</ol>
+<p><strong>Compute</strong>: Classic = sized cluster with enhanced autoscaling. Serverless = managed pool with per-flow autoscale; adds <strong>incremental MV refresh</strong> and stream pipelining.</p>
+<p><strong>Schema evolution</strong>: new columns auto-add (where source supports). Type changes need <code>FULL REFRESH</code>. MVs reflect query schema on each refresh.</p>
+<p><strong>UC integration</strong>: targets must be UC. Lineage, permissions, audit, and system tables are native.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Pipeline graph + flow concept</h3>
+<ul>
+<li>A "flow" is the atomic unit of work: one writer into one target. A table can have multiple flows (e.g., <code>APPLY CHANGES INTO</code> + an <code>APPEND FLOW</code>).</li>
+<li>The DAG is rebuilt from source on every update. No persistent DAG schema.</li>
+<li>Topological execution; independent subtrees run concurrently.</li>
+</ul>
+
+<h3>Checkpoint management</h3>
+<ul>
+<li>Each streaming flow owns <code>&lt;pipeline_storage&gt;/checkpoints/&lt;flow_id&gt;/</code>. Managed by LDP.</li>
+<li>Checkpoints survive code edits as long as the <em>target table identity</em> is unchanged. Renaming detaches → effectively full refresh.</li>
+<li><code>FULL REFRESH</code> deletes the checkpoint and (for STs) truncates the target before reprocessing.</li>
+<li>Watermarks declared via <code>withWatermark()</code> or <code>WATERMARK col DELAY OF '...'</code>; state retention follows.</li>
+</ul>
+
+<h3>Expectations engine</h3>
+<ul>
+<li>Modes: <code>DROP ROW</code>, <code>WARN</code> (default), <code>FAIL UPDATE</code>.</li>
+<li>Implemented as Spark expressions appended to the flow's writer plan; counts emitted to <code>event_log</code> per micro-batch.</li>
+<li><code>FAIL UPDATE</code> aborts + retries; repeated failures park the pipeline.</li>
+</ul>
+
+<h3>AUTO CDC mechanics (formerly APPLY CHANGES INTO)</h3>
+<p><code>AUTO CDC</code> is the current recommended API; <code>APPLY CHANGES INTO</code> uses identical syntax but is no longer the recommended form.</p>
+<ul>
+<li>Compiles to a merge plan: consume change feed → dedupe by <code>KEYS (...)</code> and <code>SEQUENCE BY &lt;col&gt;</code> → apply I/U/D to target.</li>
+<li>SCD Type 2 adds <code>__START_AT</code> / <code>__END_AT</code> and back-dates the prior current row.</li>
+<li>Idempotent on (key, sequence). Out-of-order events handled within watermark; outside it, late events may drop.</li>
+<li><strong>Bitemporal tracking</strong> (Beta): extends SCD Type 2 to track changes across both business time and system time.</li>
+<li><strong>Partial updates</strong>: change records can update only a subset of columns.</li>
+<li><strong>Version functions</strong>: explicit control over snapshot ordering for out-of-order arrivals.</li>
+<li><strong><code>AUTO CDC FROM SNAPSHOT</code></strong> (Python only): compares sequential full snapshots to infer inserts/updates/deletes — no change feed required. Note: expectations are <strong>not supported</strong> with this form.</li>
+</ul>
+
+<h3>Materialized view refresh</h3>
+<ul>
+<li>Classic: full recompute each update.</li>
+<li>Serverless: LDP analyses query; computes <strong>incremental MV refresh</strong> when supported, else full. Supported-operator list is documented.</li>
+</ul>
+
+<h3>Event log</h3>
+<ul>
+<li>Per-pipeline <code>event_log</code> view (UC table): flow lifecycle, micro-batch metrics, expectation violations, schema changes, autoscaling, maintenance.</li>
+<li>Primary observability primitive — build alerts off this, not driver logs.</li>
+</ul>
+
+<h3>Maintenance</h3>
+<ul>
+<li>Both compute flavors run table maintenance: OPTIMIZE, VACUUM, liquid-clustering opt, predictive optimization analysis.</li>
+<li>Serverless defers to Predictive Optimization for managed tables.</li>
+</ul>
+
+<h3>Limits and operational realities</h3>
+<ul>
+<li>One pipeline can launch multiple Spark contexts (serverless). Don't rely on shared in-memory state.</li>
+<li>Two pipelines writing the same target → conflicts. Use <code>@dlt.append_flow</code> within one pipeline for multi-source-to-one-table.</li>
+<li>Python UDFs run on the cluster; serverless restricts library install to top-of-notebook <code>%pip install</code>; no init scripts.</li>
+<li><code>pipelines.notifications</code> wires Slack/email alerts.</li>
+<li>DBSQL streaming tables / MVs are backed by hidden LDP pipelines.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p>LDP is <strong>"Spark Structured Streaming + Delta + a DAG planner + a maintenance scheduler"</strong> hidden behind declarative table definitions. The thing it uniquely owns is the per-flow checkpoint + expectation + maintenance lifecycle, and the planner that decides when to incrementally refresh an MV. Everything else you could (painfully) write yourself in Spark.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use LDP</h2>
+<ul>
+<li><strong>Arbitrary Python jobs.</strong> LDP is for declared <em>tables</em>. Random "read this, call an API, write a CSV" belongs in a notebook task in Lakeflow Jobs.</li>
+<li><strong>One-shot transforms.</strong> Overkill. Use a SQL task or a notebook.</li>
+<li><strong>Heavily imperative logic.</strong> Loops, branches, dynamic table names — LDP wants a static DAG. Drive LDP from a parent Job for control flow.</li>
+<li><strong>Non-Delta sinks.</strong> LDP writes UC STs and MVs only. Forwarding to Snowflake/Kafka/HTTP → use Structured Streaming directly.</li>
+<li><strong>Hot-path / sub-second pipelines.</strong> Smallest unit is a micro-batch. Sub-second event handling → Structured Streaming + foreachBatch, or Zerobus.</li>
+<li><strong>Cross-pipeline writes to the same table.</strong> Two pipelines on one target = race. Use <code>@dlt.append_flow</code> in one pipeline.</li>
+<li><strong>Interactive exploration.</strong> Develop in notebooks; port to LDP when productionising.</li>
+<li><strong>Heavy external libraries on serverless.</strong> Library install is restricted. Use classic LDP or a Job.</li>
+<li><strong>Hand-tuned per-flow cluster sizing.</strong> Autoscale is pipeline-wide.</li>
+<li><strong>Pure event forwarding.</strong> If you don't need data in Delta, LDP is the wrong layer.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Areas LDP does not do well</h2>
+<ul>
+<li><strong>Dev loop friction.</strong> Start → validate → run is much slower than running a notebook cell. Use dev-mode + small datasets.</li>
+<li><strong>Debugging opacity.</strong> Generic Py4J / Spark exceptions; stack traces don't always pinpoint your line.</li>
+<li><strong>Schema evolution gaps.</strong> Adds: yes. Renames: no. Type changes: <code>FULL REFRESH</code>.</li>
+<li><strong>MV incremental refresh isn't universal.</strong> Many queries fall back to full recompute on serverless.</li>
+<li><strong>Continuous cost surprises.</strong> 24/7 pipelines burn DBUs even when idle. Triggered + scheduled is usually cheaper.</li>
+<li><strong>Cross-pipeline coordination.</strong> No first-class chaining; orchestrate via Lakeflow Jobs.</li>
+<li><strong>Local testing is awkward.</strong> No local executor; only orchestration runs on Databricks.</li>
+<li><strong>Streaming source breadth.</strong> First-class: Auto Loader, Kafka, Kinesis, EventHubs, UC CDF, ST. Others need custom Spark sources.</li>
+<li><strong>AUTO CDC needs a sequence.</strong> If your source can't emit one, manufacture one or fall back to SCD Type 1. <code>AUTO CDC FROM SNAPSHOT</code> avoids this constraint but loses expectations support.</li>
+<li><strong>UDF cost.</strong> Python UDFs are row-at-a-time JVM↔Python boundary; prefer SQL or pandas UDFs.</li>
+<li><strong>Layered settings.</strong> Pipeline / table / flow / cluster-policy overrides interact in non-obvious ways.</li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul>
+<li><a href="https://docs.databricks.com/aws/en/dlt/">Lakeflow Spark Declarative Pipelines docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dlt/cdc">AUTO CDC reference (current API, replaces APPLY CHANGES INTO)</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dlt/expectations">Expectations docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dlt/serverless-dlt">Serverless LDP</a></li>
+<li><a href="https://www.databricks.com/product/data-engineering/lakeflow">Lakeflow umbrella</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body>
+</html>

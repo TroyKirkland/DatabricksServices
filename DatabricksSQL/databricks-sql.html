@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Databricks SQL — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Databricks SQL (DBSQL)</h1>
+<blockquote>Includes SQL Warehouses. DBSQL is the product; SQL Warehouses are the compute.</blockquote>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>DBSQL is the <strong>lakehouse data warehouse</strong> surface: serverless SQL warehouses, SQL editor, dashboards, alerts, query history. ANSI SQL over UC tables; engine is Photon-accelerated Spark SQL on Delta.</p>
+<ul>
+<li><strong>Warehouses</strong>: Serverless / Pro / Classic.</li>
+<li><strong>ANSI SQL + extensions</strong>: <code>ai_query</code>, pipe syntax, geo.</li>
+<li><strong>Lakehouse-native BI</strong>: query, share, schedule, alert, dashboard.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><strong>Warehouses</strong>: Serverless (recommended), Pro (in-VPC governance), Classic (legacy). Size 2X-Small → 4X-Large; multi-cluster autoscale; idle auto-stop.</li>
+<li>SQL editor: multi-tab, params, history.</li>
+<li>Queries (saved, parameterised) consumed by dashboards/alerts.</li>
+<li>Dashboards (AI/BI), Alerts (email/Slack/webhook).</li>
+<li>Statement Execution API (REST, inline/arrow/external-links).</li>
+<li>JDBC/ODBC for BI tools.</li>
+<li>AI Functions: <code>ai_query</code>, <code>ai_classify</code>, <code>ai_extract</code>, <code>ai_gen</code>.</li>
+<li>Pipe syntax, recursive CTEs, multi-statement txns, stored procedures (GA, Runtime 17.0+/UC only), MVs, STs, <code>read_files()</code>, <code>http_request()</code>, Federation.</li>
+<li><strong>Metric Views</strong>: semantic-layer business metrics defined in UC; queryable via <code>MEASURE</code> aggregate; surface in dashboards and Genie Agents.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[BI / SQL editor / API] ─► [SQL Warehouse cluster] ─► [Photon SQL engine] ─► UC tables (Delta + Federation)</code></pre>
+<p>Warehouse = long-lived autoscaling Spark cluster tuned for SQL. Photon on by default. Three caching layers: result cache, disk cache (NVMe), query plan cache. Multi-cluster mode scales on queue depth. UC enforces row/column policies; lineage logged.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Warehouse lifecycle</h3>
+<ul>
+<li>States: stopped → starting → running → stopping. Serverless start ~5–15s; Pro 60–180s.</li>
+<li>Auto-stop after idle (1+ min on serverless).</li>
+<li>Multi-cluster: <code>min_num_clusters</code>→<code>max_num_clusters</code> on queue depth.</li>
+<li>Size = workers/memory per cluster; bigger size = faster per query, not more concurrency.</li>
+</ul>
+
+<h3>Result + disk cache</h3>
+<ul>
+<li>Result cache keyed on (SQL text + UC table version + params); ms-latency hits; invalidated on table change.</li>
+<li>Disk cache = NVMe-cached Parquet/Delta decoded form; lives with worker.</li>
+<li>Photon stats + min/max pruning is the cold-cache layer.</li>
+</ul>
+
+<h3>Query lifecycle</h3>
+<ul>
+<li>Parse → resolve (UC + policies) → optimise → execute (Photon) → stream/spill to cloud-fetch.</li>
+<li>Logged in <code>system.query.history</code>.</li>
+</ul>
+
+<h3>Statement Execution API</h3>
+<ul>
+<li><code>POST /api/2.0/sql/statements</code>.</li>
+<li>Formats: inline / arrow stream / EXTERNAL_LINKS (large).</li>
+<li>Async-friendly; poll if needed.</li>
+</ul>
+
+<h3>Federation in DBSQL</h3>
+<ul>
+<li>Foreign catalogs proxy queries; pushdown best-effort.</li>
+<li>Failed pushdown pulls data; federated joins can be heavy.</li>
+</ul>
+
+<h3>AI Functions</h3>
+<ul>
+<li><code>ai_query(endpoint, prompt|col)</code> calls Model Serving.</li>
+<li>Latency dominated by endpoint; rate-limit aware.</li>
+<li>Token usage routes through Unity Gateway (formerly Mosaic AI Gateway) when configured.</li>
+</ul>
+
+<h3>STs + MVs in DBSQL</h3>
+<ul>
+<li>Backed by hidden LDP pipelines.</li>
+<li><code>CREATE STREAMING TABLE</code>, <code>CREATE MATERIALIZED VIEW</code>.</li>
+</ul>
+
+<h3>System tables</h3>
+<ul>
+<li><code>system.query.history</code>, <code>system.compute.warehouses</code>, <code>system.billing.usage</code> for cost.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Result rowset cap; use EXTERNAL_LINKS for big results.</li>
+<li>Statement Execution rate limits per workspace.</li>
+<li>Bursty workloads queue; size up or multi-cluster.</li>
+<li><code>ai_query</code> rate-limited by endpoint.</li>
+<li>Stored procedures GA (Runtime 17.0+, UC only); language semantics differ from legacy procedural SQL.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>Serverless data warehouse on UC + Delta + Photon.</strong> Differentiators vs Snowflake/BigQuery: cheap pause; UC governance; SQL+Spark feature parity; AI functions; JDBC/ODBC.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use DBSQL</h2>
+<ul>
+<li><strong>Heavy ETL transforms.</strong> Use LDP/notebooks.</li>
+<li><strong>Long-running interactive Python.</strong> Notebooks.</li>
+<li><strong>Single-row OLTP.</strong> Use Lakebase.</li>
+<li><strong>AI batch over millions of rows via <code>ai_query</code>.</strong> Spark/LDP + Model Serving batch.</li>
+<li><strong>Repeat federated reads.</strong> Mirror via Lakeflow Connect.</li>
+<li><strong>Oversized warehouses "just in case".</strong></li>
+<li><strong>Classic warehouses for new work.</strong></li>
+<li><strong>Long-held JDBC over idle warehouses.</strong></li>
+<li><strong>Streaming billion-row results to a client.</strong> External links or UC table.</li>
+<li><strong>Mixing prod + dev on one warehouse.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Serverless cold start still measurable.</strong></li>
+<li><strong>Multi-cluster scales on queue depth.</strong> Bursts queue first.</li>
+<li><strong>No inline Python in queries.</strong></li>
+<li><strong>Stored procedures require Runtime 17.0+ / UC only.</strong> Language semantics differ from legacy procedural SQL.</li>
+<li><strong>Result-cache invalidation coarse.</strong></li>
+<li><strong>Federated joins uneven.</strong></li>
+<li><strong>JDBC driver quirks across BI tools.</strong></li>
+<li><strong>Per-query cost needs system tables.</strong></li>
+<li><strong><code>ai_query</code> rate limits surface as failures.</strong></li>
+<li><strong>No cross-warehouse handoff.</strong></li>
+<li><strong>Streaming-table refresh is opaque.</strong></li>
+<li><strong>Multi-statement txn is limited.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/sql/">Databricks SQL docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/compute/sql-warehouse/">SQL Warehouses</a></li>
+<li><a href="https://docs.databricks.com/api/workspace/statementexecution">Statement Execution API</a></li>
+<li><a href="https://docs.databricks.com/aws/en/large-language-models/ai-functions">AI Functions</a></li>
+<li><a href="https://docs.databricks.com/aws/en/views/materialized">MVs and STs in DBSQL</a></li>
+<li><a href="https://docs.databricks.com/en/sql/language-manual/sql-ref-syntax-ddl-create-procedure.html">Stored procedures — CREATE PROCEDURE (GA, Runtime 17.0+)</a></li>
+<li><a href="https://docs.databricks.com/en/metric-views/index.html">Metric Views</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

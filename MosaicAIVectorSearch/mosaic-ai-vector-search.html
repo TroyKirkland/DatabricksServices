@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Mosaic AI Vector Search — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Mosaic AI Vector Search</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Databricks' vector database. Define an index over a UC column (text or pre-computed embeddings); Databricks keeps it in sync with the Delta source; query by similarity at low latency.</p>
+<ul>
+<li><strong>UC-native</strong> indexes; governed and lineage-tracked.</li>
+<li><strong>Delta-synced</strong> embeddings.</li>
+<li><strong>Hybrid</strong>: vector + metadata filters + optional BM25.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Endpoints: <strong>Standard</strong> (fast, costly) vs <strong>Storage-optimized</strong> (cheap, slower).</li>
+<li>Index types: Delta Sync (compute or self-managed embeddings) + Direct Vector Access + <strong>Full-Text Search Index (Beta)</strong> — BM25 keyword search, no embeddings required; storage-optimized + triggered sync only.</li>
+<li>Embeddings via FMAPI (gte-large-en) or external endpoint.</li>
+<li>Query API: <code>similarity_search(text|vec, k, filters)</code>.</li>
+<li>Filters: SQL-like over declared metadata cols.</li>
+<li>Hybrid: vector + keyword via Reciprocal Rank Fusion (RRF); result cap 200 (ANN up to 10,000).</li>
+<li>SDK / REST / LangChain / DSPy integrations.</li>
+<li>Service principals: up to 100 ms faster per-query vs PAT in production.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Source Delta] → [Embedding model endpoint] → [Vector Search index (UC)] → [Endpoint compute]
+                                                       ▲                              ▲
+                                                       CDF-driven sync                similarity_search</code></pre>
+<p>Sync pipeline tails CDF, recomputes embeddings for changed rows. ANN (HNSW-style) for vectors; filters alongside.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Index types</h3>
+<ul>
+<li>Delta Sync + Compute Embeddings: Databricks reads + embeds + stores.</li>
+<li>Delta Sync + Self-Managed: source already has embedding column.</li>
+<li>Direct Vector Access: SDK write; not Delta-bound.</li>
+<li><strong>Full-Text Search Index (Beta)</strong>: BM25 keyword index on text columns; no embeddings; storage-optimized endpoints + triggered sync only.</li>
+</ul>
+
+<h3>Sync semantics</h3>
+<ul>
+<li>Triggered (schedule/on-demand) or continuous (CDF-tail).</li>
+<li>Backfill on create.</li>
+<li>Embedding col change → recreate.</li>
+</ul>
+
+<h3>Embeddings</h3>
+<ul>
+<li>Embedding endpoint = Model Serving endpoint; per-token cost.</li>
+<li>Auto batch + rate-limit-aware.</li>
+<li>Dim fixed at create; can't change.</li>
+</ul>
+
+<h3>Query path</h3>
+<ul>
+<li>Resolve index → apply filters pre-rank → ANN → top-k with score + metadata (up to 10,000 results).</li>
+<li>Hybrid: vector + keyword merged via RRF; capped at 200 results.</li>
+</ul>
+
+<h3>Filters</h3>
+<ul>
+<li>=, &lt;, &gt;, IN, AND/OR/NOT.</li>
+<li>Filterable columns declared at create.</li>
+<li>Heavy exclusion → may need larger k.</li>
+</ul>
+
+<h3>Permissions</h3>
+<ul>
+<li>UC: SELECT (query), MANAGE.</li>
+<li>Endpoint service identity reads source data.</li>
+</ul>
+
+<h3>Performance</h3>
+<ul>
+<li>Standard: tens of ms p50; up to ~320M vectors at 768 dims.</li>
+<li>Storage-optimized: 1B+ vectors at 768 dims; 10–20× faster indexing; ~250 ms extra query latency; no continuous sync.</li>
+<li>Scales with replicas; per-endpoint concurrency cap.</li>
+<li>Service principal auth: up to 100 ms faster per-query than PAT.</li>
+</ul>
+
+<h3>Cost</h3>
+<ul>
+<li>Endpoint hours + embedding compute (rows × model cost) + storage.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>One embedding model per index.</li>
+<li>Dim fixed at create; max 4096 dimensions.</li>
+<li>Delta + UC required for sync indexes.</li>
+<li>Standard: ~320M vector ceiling; storage-optimized: 1B+.</li>
+<li>Up to 50 indexes per endpoint.</li>
+<li>Hybrid result cap: 200 (ANN: 10,000).</li>
+<li>Storage-optimized: no continuous sync.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Semantic indexes on UC tables, synced, filterable, hybrid-scorable."</strong> Differentiator: data + embeddings + ACL + lineage in one place.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Vector Search</h2>
+<ul>
+<li><strong>Tiny indexes.</strong> pandas + cosine wins.</li>
+<li><strong>Storing source docs in the index.</strong> Reference by ID.</li>
+<li><strong>Exact keyword needs.</strong> Use full-text / LIKE.</li>
+<li><strong>Frequent dim changes.</strong></li>
+<li><strong>Sub-ms latency.</strong></li>
+<li><strong>Existing external vector store.</strong> No migration tooling.</li>
+<li><strong>General KV lookup.</strong> Use Lakebase.</li>
+<li><strong>BYO GPU embeddings outside Model Serving.</strong></li>
+<li><strong>Continuous sync on high-churn dimensions.</strong></li>
+<li><strong>Multi-tenant in one index.</strong> One per tenant.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Recreate on schema/dim change.</strong></li>
+<li><strong>Embedding cost dominates large indexes.</strong></li>
+<li><strong>Filter selectivity-recall trade-offs.</strong></li>
+<li><strong>RRF hybrid scoring non-configurable per-query; cap of 200 results.</strong></li>
+<li><strong>No native reranking.</strong></li>
+<li><strong>Internal ANN format only.</strong></li>
+<li><strong>Per-endpoint concurrency caps.</strong></li>
+<li><strong>Storage-optimized latency.</strong></li>
+<li><strong>Distance-metric switches limited.</strong></li>
+<li><strong>Sync lag visibility limited.</strong></li>
+<li><strong>Filter cols declared at create.</strong></li>
+<li><strong>No native cross-region.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/en/generative-ai/vector-search">Vector Search docs</a> (Sept 14, 2026)</li>
+<li><a href="https://docs.databricks.com/aws/en/generative-ai/create-query-vector-search">Index types and sync</a></li>
+<li><a href="https://docs.databricks.com/aws/en/generative-ai/vector-search-storage-optimized">Storage-optimized</a></li>
+<li><a href="https://docs.databricks.com/aws/en/generative-ai/vector-search-hybrid">Hybrid search</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

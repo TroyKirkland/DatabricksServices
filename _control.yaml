@@ -1,0 +1,365 @@
+# Databricks Product Docs — Control File
+# ------------------------------------------------------------
+# Source of truth for the per-product L100→L400 doc set.
+# Edit this file to add / remove / rename / re-status products,
+# then regenerate by re-running the same prompt against Claude.
+#
+# Author: Troy Kirkland  (troy.kirkland@databricks.com)
+# Generated: 2026-05-19
+
+meta:
+  output_root: /Users/troy.kirkland/Documents/Automation/Services
+  glossary_folder: Glossary
+  file_naming:
+    folder_case: PascalCase            # e.g. LakeflowConnect
+    file_case: kebab-case              # e.g. lakeflow-connect.md
+    formats: [md, html]
+  cross_reference:
+    # Every product doc links to Glossary for shared terms.
+    glossary_md: ../Glossary/glossary.md
+    glossary_html: ../Glossary/glossary.html
+
+# ------------------------------------------------------------
+# Process / template
+# Every product doc MUST contain the following sections, in order.
+# Glossary is exempt (it is a flat term list).
+# ------------------------------------------------------------
+template:
+  sections:
+    - id: l100
+      title: "Level 100 — What it is"
+      depth: "elevator pitch + 3 takeaways. No jargon."
+    - id: l200
+      title: "Level 200 — The product surface"
+      depth: "core objects/APIs the user creates; supported variants; how you author it (UI/API/DAB)."
+    - id: l300
+      title: "Level 300 — Architecture"
+      depth: "components + data flow diagram; compute model; security/governance integration; key trade-offs."
+    - id: l400
+      title: "Level 400 — Deep internals"
+      depth: "deep internals: storage layout, protocols, checkpoints, concurrency, fault tolerance, hard limits, mental model."
+    - id: anti_patterns
+      title: "Anti-patterns — where you should not use it"
+      depth: "10 wrong-tool cases. Always recommend the right alternative."
+    - id: weaknesses
+      title: "Weaknesses — areas it does not do well"
+      depth: "10-12 real limitations to design around even when this IS the right tool."
+    - id: sources
+      title: "Sources"
+      depth: "links to authoritative docs/blogs used during writing."
+
+  style:
+    voice: "field-engineer technical, opinionated, no marketing fluff"
+    code_blocks: "ASCII diagrams welcome; SQL/Python snippets short and load-bearing only"
+    cross_links: "[[glossary:term]] for any term defined in Glossary"
+
+# ------------------------------------------------------------
+# Products
+# Edit this list to add/remove/rename. Generation walks it top-down.
+# Status: complete | pending | needs-update | skip
+# ------------------------------------------------------------
+products:
+
+  # ── Cross-cutting topics ──────────────────────────────────
+  # These synthesise across multiple products and live in their own
+  # top-level folder, but follow the same L100→L400 template.
+  - name: storage
+    title: Storage on Databricks
+    folder: Storage
+    category: Cross-cutting Topics
+    status: complete
+    summary: "Cloud object storage + Delta Lake + UC governance + optimization machinery, synthesized."
+
+  - name: compute
+    title: Compute on Databricks
+    folder: Compute
+    category: Cross-cutting Topics
+    status: complete
+    summary: "Spark + Photon on classic vs serverless; clusters, SQL warehouses, Databricks Connect, runtime internals."
+
+  # ── Data engineering & ingestion ──────────────────────────
+  - name: lakeflow-connect
+    title: Lakeflow Connect
+    folder: LakeflowConnect
+    category: Data Engineering & Ingestion
+    status: complete
+    summary: "Managed ingestion for SaaS apps, CDC databases, and files into UC streaming tables."
+
+  - name: lakeflow-spark-declarative-pipelines
+    title: Lakeflow Spark Declarative Pipelines
+    folder: LakeflowSparkDeclarativePipelines
+    aliases: [LDP, DLT, Delta Live Tables]
+    category: Data Engineering & Ingestion
+    status: complete
+    summary: "Declarative ETL framework; streaming tables, materialized views, APPLY CHANGES INTO, expectations."
+
+  - name: lakeflow-jobs
+    title: Lakeflow Jobs
+    folder: LakeflowJobs
+    aliases: [Workflows]
+    category: Data Engineering & Ingestion
+    status: complete
+    summary: "Orchestrator for tasks, dependencies, triggers, repair runs."
+
+  - name: auto-loader
+    title: Auto Loader
+    folder: AutoLoader
+    category: Data Engineering & Ingestion
+    status: complete
+    summary: "Incremental file ingestion (cloudFiles) with schema inference and evolution."
+
+  - name: zerobus-ingest
+    title: Zerobus Ingest
+    folder: ZerobusIngest
+    category: Data Engineering & Ingestion
+    status: complete
+    summary: "gRPC direct-to-Delta low-latency ingest SDK; Kafka-less event landing."
+
+  # ── Storage & format ─────────────────────────────────────
+  - name: delta-lake
+    title: Delta Lake
+    folder: DeltaLake
+    category: Storage & Format
+    status: complete
+    summary: "ACID transactional storage layer; transaction log, OPTIMIZE, liquid clustering, CDF, time travel."
+
+  - name: delta-sharing
+    title: Delta Sharing
+    folder: DeltaSharing
+    category: Storage & Format
+    status: complete
+    summary: "Open protocol for sharing live data across orgs/clouds without copy."
+
+  # ── Compute & runtime ────────────────────────────────────
+  - name: databricks-runtime
+    title: Databricks Runtime
+    folder: DatabricksRuntime
+    aliases: [DBR]
+    category: Compute & Runtime
+    status: complete
+    summary: "Versioned Spark + Photon + libraries runtime; LTS, ML, and GPU variants."
+
+  - name: photon
+    title: Photon
+    folder: Photon
+    category: Compute & Runtime
+    status: complete
+    summary: "C++ vectorized execution engine accelerating Spark SQL and Delta."
+
+  - name: databricks-connect
+    title: Databricks Connect
+    folder: DatabricksConnect
+    category: Compute & Runtime
+    status: complete
+    summary: "Local-IDE to remote-cluster Spark Connect bridge for dev loop."
+
+  # ── SQL & analytics ──────────────────────────────────────
+  - name: databricks-sql
+    title: Databricks SQL
+    folder: DatabricksSQL
+    aliases: [DBSQL, SQL Warehouses]
+    category: SQL & Analytics
+    status: complete
+    summary: "SQL warehouses (serverless/pro/classic), query history, alerts, statement execution API."
+
+  - name: aibi-dashboards
+    title: AI/BI Dashboards
+    folder: AIBIDashboards
+    aliases: [Lakeview]
+    category: SQL & Analytics
+    status: complete
+    summary: "Lakehouse-native dashboarding; datasets, widgets, parameters, subscriptions."
+
+  - name: aibi-genie
+    title: AI/BI Genie
+    folder: AIBIGenie
+    category: SQL & Analytics
+    status: complete
+    summary: "Natural-language to SQL Genie Agents (formerly Genie Spaces); instructions, example queries, trust signals."
+
+  - name: lakehouse-federation
+    title: Lakehouse Federation
+    folder: LakehouseFederation
+    category: SQL & Analytics
+    status: complete
+    summary: "Foreign catalogs that query Snowflake/Postgres/SQLServer/etc. without copy."
+
+  # ── Governance ───────────────────────────────────────────
+  - name: unity-catalog
+    title: Unity Catalog
+    folder: UnityCatalog
+    aliases: [UC]
+    category: Governance
+    status: complete
+    summary: "Metastore for tables, models, volumes, ML assets; lineage, ABAC, row/column masks."
+
+  - name: uc-volumes
+    title: UC Volumes
+    folder: UCVolumes
+    category: Governance
+    status: complete
+    summary: "Governed non-tabular storage abstraction (/Volumes); managed vs external."
+
+  - name: clean-rooms
+    title: Clean Rooms
+    folder: CleanRooms
+    category: Governance
+    status: complete
+    summary: "Multi-party data collaboration with approved-query gating; UC-native."
+
+  # ── AI / ML ──────────────────────────────────────────────
+  - name: mlflow
+    title: MLflow on Databricks
+    folder: MLflow
+    category: AI / ML
+    status: complete
+    summary: "Experiment tracking, GenAI tracing, evaluation, registered models in UC."
+
+  - name: mosaic-ai-model-serving
+    title: Mosaic AI Model Serving
+    folder: MosaicAIModelServing
+    category: AI / ML
+    status: complete
+    summary: "Serverless model endpoints; CPU/GPU, scale-to-zero, external models, payload tables."
+
+  - name: mosaic-ai-vector-search
+    title: Mosaic AI Vector Search
+    folder: MosaicAIVectorSearch
+    category: AI / ML
+    status: complete
+    summary: "Delta-synced vector indexes; hybrid search, storage-optimized endpoints."
+
+  - name: agent-bricks
+    title: Agent Bricks
+    folder: AgentBricks
+    category: AI / ML
+    status: complete
+    summary: "Eval-driven agent builder: Knowledge Assistants, Genie Agents, Multi-Agent Supervisor."
+
+  - name: mosaic-ai-gateway
+    title: Unity Gateway
+    folder: MosaicAIGateway
+    aliases: [Mosaic AI Gateway]
+    category: AI / ML
+    status: complete
+    summary: "Governance/policy layer in front of model endpoints, agents, and MCP servers: rate limits, PII, fallback, smart routing, logging. Formerly Mosaic AI Gateway."
+
+  - name: foundation-model-apis
+    title: Foundation Model APIs
+    folder: FoundationModelAPIs
+    aliases: [FMAPI]
+    category: AI / ML
+    status: complete
+    summary: "Pay-per-token and provisioned-throughput hosted foundation models."
+
+  - name: feature-engineering-uc
+    title: Feature Engineering in Unity Catalog
+    folder: FeatureEngineeringInUC
+    aliases: [Feature Store]
+    category: AI / ML
+    status: complete
+    summary: "Feature tables, online tables, point-in-time joins, training-serving parity."
+
+  # ── Apps & operations ────────────────────────────────────
+  - name: databricks-apps
+    title: Databricks Apps
+    folder: DatabricksApps
+    category: Apps & Operations
+    status: complete
+    summary: "Hosted Python/Node web apps; Streamlit/Dash/Flask/FastAPI/React; app.yaml + resources."
+
+  - name: databricks-asset-bundles
+    title: Declarative Automation Bundles
+    folder: DatabricksAssetBundles
+    aliases: [DAB, Databricks Asset Bundles]
+    category: Apps & Operations
+    status: complete
+    summary: "YAML-defined deployable bundles of jobs, pipelines, dashboards, apps for CI/CD. Formerly Databricks Asset Bundles."
+
+  - name: databricks-marketplace
+    title: Databricks Marketplace
+    folder: DatabricksMarketplace
+    category: Apps & Operations
+    status: complete
+    summary: "Open exchange for data products, AI models, notebooks; Delta-Sharing delivery."
+
+  # ── Operational data ─────────────────────────────────────
+  - name: lakebase
+    title: Lakebase
+    folder: Lakebase
+    category: Operational Data
+    status: complete
+    summary: "Managed Postgres on Databricks; provisioned + autoscale + branching; OLTP companion to lakehouse."
+
+# ------------------------------------------------------------
+# Topic pipelines
+# These are NOT L100→L400 product docs — they generate visual artefacts
+# from external data sources. Not driven by the regeneration prompt below.
+# ------------------------------------------------------------
+topics:
+
+  - name: product-evolution
+    title: Product Evolution
+    folder: ProductEvolution
+    status: complete
+    summary: "Visual reference of Databricks product launches, renames, sunsets, acquisitions, and multi-rename chains."
+    outputs:
+      - product-evolution.png      # rendered timeline (rsvg-convert from .svg)
+      - product-evolution.svg      # hand-authored SVG, single source for the PNG
+      - product-evolution.md       # source narrative + tables + Mermaid blocks
+      - product-evolution.mmd      # standalone Mermaid timeline for external rendering
+    rendering: "rsvg-convert -w 2400 product-evolution.svg -o product-evolution.png  (NOT mmdc — see memory:diagram-rendering)"
+
+  - name: feature-timelines
+    title: Feature Timelines (per product)
+    folder: ProductEvolution/by-product
+    status: complete
+    summary: "Per-product month-by-month timelines of GA/Public Preview/Beta events scraped from docs.databricks.com release notes."
+    pipeline:
+      - feature-scraper.py         # stdlib + urllib; scrapes docs.databricks.com/aws/en/release-notes/product/{year}/{month}
+      - feature-classifier.py      # Anthropic API (Haiku 4.5) via stdlib urllib if ANTHROPIC_API_KEY is set; keyword fallback otherwise
+      - feature-timeline.py        # SVG per bucket -> rsvg-convert to PNG
+      - refresh.sh                 # one-command orchestrator (weekly/monthly cadence)
+    buckets:                       # mirror feature-classifier.py TAXONOMY keys
+      - lakeflow
+      - unity-catalog
+      - delta-lake
+      - databricks-sql
+      - aibi
+      - mosaic-ai
+      - lakebase
+      - compute
+      - apps-ecosystem
+      - workspace
+      - security
+      - other
+    refresh: |
+      cd ProductEvolution && ./refresh.sh
+      # Default: auto-commits + pushes regenerated files to origin (no-op when data unchanged).
+      # --local-only: skip git operations, preview only.
+      # For LLM-quality buckets (vs keyword fallback):
+      #   export ANTHROPIC_API_KEY=sk-ant-...
+      #   ./refresh.sh
+    cadence: "Manual weekly or monthly. Cost is ~$0.01 per refresh on Haiku 4.5."
+    determinism: |
+      feature-timeline.py stamps SVG headers with the latest event date in the bucket
+      (not datetime.now()), so identical input -> identical PNG bytes -> zero git diff
+      and no commit. New events on a refresh = real commit + push.
+
+# ------------------------------------------------------------
+# How to regenerate
+# ------------------------------------------------------------
+regeneration:
+  trigger: |
+    Re-run the original prompt:
+    "Generate L100-L400 + Anti-patterns + Weaknesses docs for every product
+    listed in _control.yaml with status pending or needs-update. Write md + html
+    to <output_root>/<folder>/<name>.{md,html}. Keep Glossary in sync."
+  rules:
+    - Treat this file as the source of truth — do not generate products absent from this list.
+    - If a product already has status=complete, skip unless flagged needs-update.
+    - When adding a new product: append to the products list with status=pending; re-run.
+    - When a referenced term is missing from Glossary, add it before publishing.
+    - Cross-cutting Topics (Storage, Compute) follow the same L100→L400 template; treat them as products.
+    - The `topics:` block (Product Evolution, Feature Timelines) is NOT covered by this prompt — those have their own refresh tooling under ProductEvolution/.
+    - When adding ANY new product or topic, also update index.html and index.md (Cross-cutting Topics section, category sections, and Feature Timelines grid if applicable).

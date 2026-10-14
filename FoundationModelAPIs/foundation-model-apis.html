@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Foundation Model APIs — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Foundation Model APIs (FMAPI)</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Databricks-hosted AI models — open-source and commercial from OpenAI, Anthropic, Google, Meta, xAI, DeepSeek, and others. Served via Mosaic AI Model Serving with two billing modes. LLMs (including multimodal), embeddings, rerankers — Databricks manages billing and infra for the full catalog.</p>
+<ul>
+<li><strong>Hosted models</strong>: OpenAI GPT-5/6; Anthropic Claude (Haiku/Sonnet/Fable/Opus); Google Gemini 3.x; Llama 4; xAI Grok; DeepSeek V4; Qwen3; GTE/BGE embeddings.</li>
+<li><strong>Two billing modes</strong>: pay-per-token vs provisioned throughput.</li>
+<li><strong>Same surface</strong> as any Model Serving endpoint.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Models: OpenAI GPT-5/6 (text+image); Claude Haiku/Sonnet/Fable/Opus 4.x–5.x (text+image); Gemini 3.x Flash/Pro (text/image/video/audio); Llama 4 Maverick + Llama 3.x (text±image); xAI Grok, DeepSeek V4, Qwen3, Zhipu GLM, Kimi; GTE/BGE + Qwen3 embeddings; rerankers. DBRX and Mistral no longer active; Gemini 2.5 retired Oct 2026.</li>
+<li>Pay-per-token (shared infra; global rate limits).</li>
+<li>Provisioned throughput (dedicated capacity; no cold start).</li>
+<li>Stable endpoint names (e.g., <code>databricks-meta-llama-3-x-instruct</code>).</li>
+<li>Optional Unity Gateway routing (policy, smart routing, payload logging).</li>
+<li>OAuth + UC on the endpoint.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Caller] → [FMAPI endpoint = Model Serving endpoint]
+              ├ Pay-per-token → multi-tenant pool (cold start hidden)
+              └ Provisioned   → dedicated replicas
+              ↓
+           [Token meter] → system.serving.endpoint_usage
+              ↓
+           [Response]</code></pre>
+<p>Pay-per-token shares Databricks infra; provisioned commits to tokens/s. Gateway adds policy + payload + fallback.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Pay-per-token</h3>
+<ul>
+<li>Per million tokens billing (model-specific).</li>
+<li>Global rate limits; bursts can fail.</li>
+<li>Warm pool hides cold start.</li>
+<li>Best for prototyping / low-volume / bursty.</li>
+</ul>
+
+<h3>Provisioned throughput</h3>
+<ul>
+<li>Reserve tokens/s; per replica-hour cost.</li>
+<li>No cold start; latency stable.</li>
+<li>Best for steady-state production / strict SLAs.</li>
+</ul>
+
+<h3>Performance</h3>
+<ul>
+<li>TTF token: 8B sub-second; 70B+ seconds.</li>
+<li>Output rate: tens–hundreds of tokens/s per replica.</li>
+<li>Provisioned scales linearly within model-class limits.</li>
+</ul>
+
+<h3>Model lifecycle</h3>
+<ul>
+<li>Databricks introduces/retires models with notice.</li>
+<li>Stable endpoint name + version suffix.</li>
+<li>Region-gated rollouts possible.</li>
+</ul>
+
+<h3>Embeddings</h3>
+<ul>
+<li><code>databricks-gte-large-en</code> = 1024-dim text embeddings; <code>databricks-bge-large-en</code> as alternative.</li>
+<li>Qwen3-Embedding-0.6B: compact multilingual option (Public Preview).</li>
+<li>Pay-per-input-token; provisioned for high-volume indexing.</li>
+</ul>
+
+<h3>Function calling</h3>
+<ul>
+<li>Most families (Llama 3.x/4.x, OpenAI GPT-5/6, Claude, Gemini) support function/tool calling via the chat API.</li>
+<li><code>ai_query</code> with structured outputs in DBSQL.</li>
+</ul>
+
+<h3>Streaming</h3>
+<ul>
+<li>SSE for chat.</li>
+<li>End-of-stream guardrails via Gateway.</li>
+</ul>
+
+<h3>Cost attribution</h3>
+<ul>
+<li><code>system.serving.endpoint_usage</code> tokens.</li>
+<li>Join <code>system.billing.list_prices</code> for $/token.</li>
+<li>Payload tables (Gateway) for per-call.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Pay-per-token rate limits per-workspace + global.</li>
+<li>Provisioned commits aren't instant-undoable.</li>
+<li>Multimodal availability uneven.</li>
+<li>Region availability uneven.</li>
+<li>Tokens = input + output; long prompts + verbose = expensive.</li>
+<li>Context windows per-model.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"OpenAI-style hosted LLMs governed inside Databricks."</strong> Pay-per-token for prototypes; provisioned for production. Building block for Agent Bricks, Genie, <code>ai_query</code>.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use FMAPI</h2>
+<ul>
+<li><strong>Sub-100ms hard latency.</strong></li>
+<li><strong>Pay-per-token at steady high-volume.</strong> Switch to provisioned.</li>
+<li><strong>Provisioned for bursty.</strong> Wasted capacity.</li>
+<li><strong>Long-context without verifying window.</strong></li>
+<li><strong>Assuming uniform multimodal support.</strong> Text+image is mainstream; video/audio = Gemini only; image generation = select Gemini models. Verify on supported-models page.</li>
+<li><strong>FMAPI as a model registry.</strong></li>
+<li><strong>Expecting bigger compute to speed token rate.</strong></li>
+<li><strong>No payload sampling on Gateway.</strong></li>
+<li><strong>Single-provider with no fallback.</strong></li>
+<li><strong>Deterministic outputs.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Curated model selection.</strong></li>
+<li><strong>Pay-per-token rate-limit failures.</strong></li>
+<li><strong>Provisioned commits non-instant.</strong></li>
+<li><strong>No in-place fine-tuning.</strong></li>
+<li><strong>Region gaps.</strong></li>
+<li><strong>Cost prediction tooling basic.</strong></li>
+<li><strong>SSE + structured output edge cases.</strong></li>
+<li><strong>Model upgrade behaviour drift.</strong></li>
+<li><strong>Limited system-prompt customisation.</strong></li>
+<li><strong>Multimodal coverage varies by modality.</strong> Text+image mainstream; video/audio input Gemini-only; image generation model-specific.</li>
+<li><strong>Tokenizer mismatch surprises.</strong></li>
+<li><strong>Latency variability under load.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/foundation-models/">Foundation Model APIs docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/foundation-models/pay-per-token">Pay-per-token</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/foundation-models/provisioned-throughput">Provisioned throughput</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/foundation-models/supported-models">Supported models</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

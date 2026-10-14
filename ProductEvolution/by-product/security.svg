@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 520" width="2400" height="520" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBFCFD"/>
+      <stop offset="1" stop-color="#EEF1F5"/>
+    </linearGradient>
+    <linearGradient id="headerBg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0B1E36"/>
+      <stop offset="1" stop-color="#1F3A5F"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="2400" height="520" fill="url(#bg)"/>
+  <rect x="0" y="0" width="2400" height="80" fill="url(#headerBg)"/>
+  <text x="40" y="44" fill="#FFFFFF" font-size="28" font-weight="700">Security &amp; Networking <tspan fill="#9CB0CC" font-size="18" font-weight="400">— feature timeline</tspan></text>
+  <text x="40" y="68" fill="#9CB0CC" font-size="13">39 events  ·  Oct 2025 → Sep 2026  ·  data through 2026-09-23</text>
+  <rect x="2270" y="22" width="92" height="28" fill="#FF3621" rx="4"/><text x="2316" y="41" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">security</text>
+  <g font-size="14" font-weight="600" fill="#0B1E36" text-anchor="middle">
+    <text x="155.0" y="124">Oct 25</text>
+    <text x="345.0" y="124">Nov 25</text>
+    <text x="535.0" y="124">Dec 25</text>
+    <text x="725.0" y="124">Jan 26</text>
+    <text x="915.0" y="124">Feb 26</text>
+    <text x="1105.0" y="124">Mar 26</text>
+    <text x="1295.0" y="124">Apr 26</text>
+    <text x="1485.0" y="124">May 26</text>
+    <text x="1675.0" y="124">Jun 26</text>
+    <text x="1865.0" y="124">Jul 26</text>
+    <text x="2055.0" y="124">Aug 26</text>
+    <text x="2245.0" y="124">Sep 26</text>
+  </g>
+  <g stroke="#DDE3EB" stroke-width="1">
+    <line x1="60.0" y1="130" x2="60.0" y2="410"/>
+    <line x1="250.0" y1="130" x2="250.0" y2="410"/>
+    <line x1="440.0" y1="130" x2="440.0" y2="410"/>
+    <line x1="630.0" y1="130" x2="630.0" y2="410"/>
+    <line x1="820.0" y1="130" x2="820.0" y2="410"/>
+    <line x1="1010.0" y1="130" x2="1010.0" y2="410"/>
+    <line x1="1200.0" y1="130" x2="1200.0" y2="410"/>
+    <line x1="1390.0" y1="130" x2="1390.0" y2="410"/>
+    <line x1="1580.0" y1="130" x2="1580.0" y2="410"/>
+    <line x1="1770.0" y1="130" x2="1770.0" y2="410"/>
+    <line x1="1960.0" y1="130" x2="1960.0" y2="410"/>
+    <line x1="2150.0" y1="130" x2="2150.0" y2="410"/>
+    <line x1="2340.0" y1="130" x2="2340.0" y2="410"/>
+  </g>
+  <rect x="0" y="130" width="2400" height="280" fill="#0B1E36" fill-opacity="0.02"/>
+  <g font-size="11" fill="#0B1E36">
+    <rect x="68.0" y="144" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="155.0" y="158" text-anchor="middle" font-weight="600">Context based ingress con…</text>
+    <text x="155.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">10/9  ·  Beta</text>
+    <rect x="258.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="345.0" y="158" text-anchor="middle" font-weight="600">Automate classic workspac…</text>
+    <text x="345.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">11/21  ·  Update</text>
+    <rect x="258.0" y="180" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="345.0" y="194" text-anchor="middle" font-weight="600">Automatic email notificat…</text>
+    <text x="345.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">11/20  ·  Public Preview</text>
+    <rect x="258.0" y="216" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="345.0" y="230" text-anchor="middle" font-weight="600">Delta Sharing views autom…</text>
+    <text x="345.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">11/17  ·  Update</text>
+    <rect x="258.0" y="252" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="345.0" y="266" text-anchor="middle" font-weight="600">Audit logs for request-fo…</text>
+    <text x="345.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">11/3  ·  Update</text>
+    <rect x="258.0" y="288" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="345.0" y="302" text-anchor="middle" font-weight="600">Disable DBFS root and mou…</text>
+    <text x="345.0" y="314" text-anchor="middle" font-size="9" fill="#5A7088">11/3  ·  GA</text>
+    <rect x="258.0" y="324" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="345.0" y="338" text-anchor="middle" font-weight="600">TISAX compliance controls</text>
+    <text x="345.0" y="350" text-anchor="middle" font-size="9" fill="#5A7088">11/3  ·  Update</text>
+    <rect x="448.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="535.0" y="158" text-anchor="middle" font-weight="600">Single-use refresh tokens…</text>
+    <text x="535.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">12/22  ·  Update</text>
+    <rect x="448.0" y="180" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="535.0" y="194" text-anchor="middle" font-weight="600">Context based ingress con…</text>
+    <text x="535.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">12/17  ·  Public Preview</text>
+    <rect x="448.0" y="216" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="535.0" y="230" text-anchor="middle" font-weight="600">Login required to downloa…</text>
+    <text x="535.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">12/17  ·  Update</text>
+    <rect x="448.0" y="252" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="535.0" y="266" text-anchor="middle" font-weight="600">Expanded regional availab…</text>
+    <text x="535.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">12/8  ·  Update</text>
+    <rect x="638.0" y="144" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="725.0" y="158" text-anchor="middle" font-weight="600">Front-end PrivateLink for…</text>
+    <text x="725.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">1/22  ·  Beta</text>
+    <rect x="638.0" y="180" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="725.0" y="194" text-anchor="middle" font-weight="600">Automatic email notificat…</text>
+    <text x="725.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">1/6  ·  GA</text>
+    <rect x="828.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="915.0" y="158" text-anchor="middle" font-weight="600">ISMAP compliance support</text>
+    <text x="915.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">2/26  ·  Update</text>
+    <rect x="828.0" y="180" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="915.0" y="194" text-anchor="middle" font-weight="600">HITRUST compliance contro…</text>
+    <text x="915.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">2/26  ·  Public Preview</text>
+    <rect x="828.0" y="216" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="915.0" y="230" text-anchor="middle" font-weight="600">Personal access tokens pr…</text>
+    <text x="915.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">2/23  ·  Update</text>
+    <rect x="828.0" y="252" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="915.0" y="266" text-anchor="middle" font-weight="600">Scoped personal access to…</text>
+    <text x="915.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">2/18  ·  Beta</text>
+    <rect x="1208.0" y="144" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1295.0" y="158" text-anchor="middle" font-weight="600">Scoped personal access to…</text>
+    <text x="1295.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">4/8  ·  GA</text>
+    <rect x="1398.0" y="144" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1485.0" y="158" text-anchor="middle" font-weight="600">Account access denylist f…</text>
+    <text x="1485.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">5/22  ·  Public Preview</text>
+    <rect x="1398.0" y="180" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1485.0" y="194" text-anchor="middle" font-weight="600">Authenticate as a service…</text>
+    <text x="1485.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">5/20  ·  Beta</text>
+    <rect x="1398.0" y="216" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1485.0" y="230" text-anchor="middle" font-weight="600">Automatic identity manage…</text>
+    <text x="1485.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">5/5  ·  Update</text>
+    <rect x="1588.0" y="144" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1675.0" y="158" text-anchor="middle" font-weight="600">Block specific internet d…</text>
+    <text x="1675.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">6/23  ·  Public Preview</text>
+    <rect x="1588.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1675.0" y="194" text-anchor="middle" font-weight="600">OIDC is now supported for…</text>
+    <text x="1675.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">6/15  ·  Update</text>
+    <rect x="1588.0" y="216" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1675.0" y="230" text-anchor="middle" font-weight="600">Email notifications for e…</text>
+    <text x="1675.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">6/12  ·  Beta</text>
+    <rect x="1588.0" y="252" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1675.0" y="266" text-anchor="middle" font-weight="600">Managed disaster recovery…</text>
+    <text x="1675.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">6/12  ·  Public Preview</text>
+    <rect x="1588.0" y="288" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1675.0" y="302" text-anchor="middle" font-weight="600">Mission Critical add-on i…</text>
+    <text x="1675.0" y="314" text-anchor="middle" font-size="9" fill="#5A7088">6/12  ·  Public Preview</text>
+    <rect x="1588.0" y="324" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1675.0" y="338" text-anchor="middle" font-weight="600">Automatic identity manage…</text>
+    <text x="1675.0" y="350" text-anchor="middle" font-size="9" fill="#5A7088">6/9  ·  Public Preview</text>
+    <rect x="1588.0" y="360" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1675.0" y="374" text-anchor="middle" font-weight="600">Identity federation enabl…</text>
+    <text x="1675.0" y="386" text-anchor="middle" font-size="9" fill="#5A7088">6/9  ·  Update</text>
+    <rect x="1778.0" y="144" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1865.0" y="158" text-anchor="middle" font-weight="600">Email notifications for e…</text>
+    <text x="1865.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">7/22  ·  GA</text>
+    <rect x="1778.0" y="180" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1865.0" y="194" text-anchor="middle" font-weight="600">Context-based ingress con…</text>
+    <text x="1865.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">7/21  ·  GA</text>
+    <rect x="1778.0" y="216" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1865.0" y="230" text-anchor="middle" font-weight="600">Allowlist partner platfor…</text>
+    <text x="1865.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">7/14  ·  Beta</text>
+    <rect x="1778.0" y="252" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1865.0" y="266" text-anchor="middle" font-weight="600">Private Link for account-…</text>
+    <text x="1865.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">7/6  ·  Beta</text>
+    <rect x="1778.0" y="288" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1865.0" y="302" text-anchor="middle" font-weight="600">Okta support for automati…</text>
+    <text x="1865.0" y="314" text-anchor="middle" font-size="9" fill="#5A7088">7/3  ·  GA</text>
+    <rect x="1968.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2055.0" y="158" text-anchor="middle" font-weight="600">Restrict service principa…</text>
+    <text x="2055.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">8/29  ·  Update</text>
+    <rect x="1968.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2055.0" y="194" text-anchor="middle" font-weight="600">Query text is now masked…</text>
+    <text x="2055.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">8/26  ·  Update</text>
+    <rect x="1968.0" y="216" width="174.0" height="32" rx="6" fill="#FDE8E0" stroke="#9A3412" stroke-width="1.5"/>
+    <text x="2055.0" y="230" text-anchor="middle" font-weight="600">Private network gateway i…</text>
+    <text x="2055.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">8/24  ·  Private Preview</text>
+    <rect x="1968.0" y="252" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="2055.0" y="266" text-anchor="middle" font-weight="600">Salesforce connector mTLS…</text>
+    <text x="2055.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">8/20  ·  GA</text>
+    <rect x="2158.0" y="144" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2245.0" y="158" text-anchor="middle" font-weight="600">Time travel queries now e…</text>
+    <text x="2245.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">9/23  ·  Beta</text>
+    <rect x="2158.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2245.0" y="194" text-anchor="middle" font-weight="600">Unused OAuth client secre…</text>
+    <text x="2245.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">9/16  ·  Update</text>
+  </g>
+  <g font-size="13" fill="#0B1E36">
+    <text x="40" y="430" font-weight="700" font-size="14">Status</text>
+    <rect x="130" y="414" width="20" height="20" rx="4" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="158" y="430">GA</text>
+    <rect x="202" y="414" width="20" height="20" rx="4" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="230" y="430">Public Preview</text>
+    <rect x="370" y="414" width="20" height="20" rx="4" fill="#FDE8E0" stroke="#9A3412" stroke-width="1.5"/>
+    <text x="398" y="430">Private Preview</text>
+    <rect x="546" y="414" width="20" height="20" rx="4" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="574" y="430">Beta</text>
+    <rect x="634" y="414" width="20" height="20" rx="4" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="662" y="430">Update</text>
+  </g>
+  <text x="40" y="508" font-size="11" fill="#5A7088">Source: docs.databricks.com/aws/en/release-notes/product/  ·  classified into "security" bucket  ·  generated by feature-timeline.py</text>
+</svg>

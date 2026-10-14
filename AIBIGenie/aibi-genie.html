@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>AI/BI Genie — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>AI/BI Genie</h1>
+<blockquote><strong>Rebrand (2026):</strong> Three components: <strong>Genie Agents</strong> (formerly Genie Spaces — the config unit); <strong>Genie One</strong> (end-user NL interface, incl. mobile); <strong>Genie Code</strong> (developer AI assistant, separate). API paths still use <code>/genie/spaces/</code>.</blockquote>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Genie is the <strong>natural-language interface to SQL data</strong>. Data teams configure <strong>Genie Agents</strong> (bounded UC tables + instructions + example queries + metric views); end users interact via <strong>Genie One</strong> (browser or mobile); Genie generates SQL, executes on a warehouse, returns results + charts.</p>
+<ul>
+<li><strong>NL → SQL</strong>, scoped to a curated agent.</li>
+<li><strong>Curated, not "ask anything".</strong></li>
+<li><strong>Self-serve analytics</strong> without SQL knowledge.</li>
+<li>Genie One + Agents free through Jan 31, 2027; Genie Code (developer AI) pay-as-you-go from July 8, 2026.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><strong>Genie Agent</strong> (formerly Genie Space): name + warehouse + UC tables/views + metric views + instructions + example query pairs + trusted assets.</li>
+<li><strong>Instructions</strong>: column definitions, business rules, avoidances.</li>
+<li><strong>Example queries</strong>: few-shot NL/SQL pairs.</li>
+<li><strong>Trusted assets</strong>: certified SQL Genie can reuse.</li>
+<li><strong>Metric Views</strong>: UC semantic-layer metrics; improves KPI accuracy.</li>
+<li><strong>Genie One</strong>: end-user conversational interface (browser + iOS/Android mobile).</li>
+<li><strong>Chat mode API</strong>: <code>start-conversation</code> + <code>send-message</code>; returns SQL, results, chart proposal.</li>
+<li><strong>Agent mode API</strong>: stream reasoning + SQL; final report with citations.</li>
+<li>Permissions: VIEW/EDIT/MANAGE.</li>
+<li>Dashboards can launch a Genie Agent pre-loaded with context.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>Genie One (user) ──► [Genie LLM]
+                          │  context: tables/views, metric views, instructions, examples, trusted assets
+                          ▼
+                     Generated SQL  →  [SQL Warehouse]  →  Result + chart proposal</code></pre>
+<p>Databricks-hosted FM (model managed by Databricks). Generated SQL shown + editable. Warehouse runs with user identity → UC policies apply. Trust score per response.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Agent = trust boundary</h3>
+<ul>
+<li>Tables/views/metric views in the agent are Genie's universe.</li>
+<li>Instructions injected in prompt; prose quality matters.</li>
+<li>5–20 example pairs is the sweet spot.</li>
+<li>Trusted assets preferred over fresh generation.</li>
+<li>Metric views give Genie pre-defined measure semantics; prefer over raw fact tables for KPI questions.</li>
+</ul>
+
+<h3>Generation pipeline</h3>
+<ul>
+<li>Parse question + history.</li>
+<li>Resolve entities against schemas + instructions.</li>
+<li>Plan: certified asset reuse → modify → fresh generation.</li>
+<li>Validate via dry-run.</li>
+<li>Execute with user identity.</li>
+<li>Compose answer: chart + summary + rows.</li>
+</ul>
+
+<h3>Execution semantics</h3>
+<ul>
+<li>One question = one SQL.</li>
+<li>Follow-ups can inject filters into prior SQL.</li>
+<li>Result-cache hits if SQL matches.</li>
+<li>UC enforces; fail-closed on perms.</li>
+</ul>
+
+<h3>Trust signals</h3>
+<ul>
+<li>Trusted-asset use → high confidence.</li>
+<li>Unfamiliar columns → lower confidence + disclosure.</li>
+<li>Multiple draft attempts shown.</li>
+</ul>
+
+<h3>Multi-turn handling</h3>
+<ul>
+<li>Per-user per-space conversation state.</li>
+<li>Follow-up resolution is heuristic.</li>
+</ul>
+
+<h3>Conversation API (Chat mode + Agent mode)</h3>
+<ul>
+<li><strong>Chat mode</strong>: <code>POST /api/2.0/genie/spaces/{space_id}/start-conversation</code> + <code>send-message</code>. Returns SQL, query ID, results, chart proposal. Paths still use <code>spaces</code> resource name.</li>
+<li><strong>Agent mode</strong>: stream reasoning + SQL results; final report with citations. Newer, for agentic apps.</li>
+</ul>
+
+<h3>Curation lifecycle</h3>
+<ul>
+<li>Monitor thumbs-down → add examples / instructions → promote good queries to trusted assets.</li>
+<li>An agent is never "done" — quality is continuous curation, not setup.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>~20–30 tables per space ceiling for quality.</li>
+<li>Multi-table joins hard without supporting views.</li>
+<li>Cohort / window patterns need examples.</li>
+<li>Hallucination still possible.</li>
+<li>Cost = LLM call + warehouse query per question.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"NL → SQL bounded by curation."</strong> The product is the Agent + instructions + metric views + certified queries, not the model.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Genie</h2>
+<ul>
+<li><strong>Ask-anything sprawling agent.</strong> Build domain-focused agents.</li>
+<li><strong>Replace dashboards entirely.</strong> Complement, don't replace.</li>
+<li><strong>DBA tool.</strong> Not for DDL.</li>
+<li><strong>Real-time decisions.</strong> Multi-second latency.</li>
+<li><strong>Behind a customer app expecting deterministic SQL.</strong></li>
+<li><strong>Uncurated data.</strong></li>
+<li><strong>No steward.</strong> Agents rot.</li>
+<li><strong>Cross-agent federation.</strong></li>
+<li><strong>Compliance-grade auditing via NL.</strong></li>
+<li><strong>Long-form analytical reports.</strong> Use notebooks/AI functions.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Quality = curation.</strong></li>
+<li><strong>Complex multi-table joins.</strong></li>
+<li><strong>Stateful follow-up drift.</strong></li>
+<li><strong>Occasional hallucinated columns.</strong></li>
+<li><strong>Limited self-correction.</strong></li>
+<li><strong>No first-class explanation.</strong></li>
+<li><strong>Per-user RLS → per-user variability.</strong></li>
+<li><strong>Opaque per-question cost at scale.</strong></li>
+<li><strong>Basic chart proposals.</strong></li>
+<li><strong>Underlying model evolves.</strong></li>
+<li><strong>No native A/B of instruction changes.</strong></li>
+<li><strong>Cryptic column names defeat it.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/en/genie/index.html">Genie product family overview</a></li>
+<li><a href="https://docs.databricks.com/en/genie/conversation-api.html">Conversation API — Chat mode and Agent mode</a></li>
+<li><a href="https://docs.databricks.com/aws/en/genie/trusted-assets">Trusted assets</a></li>
+<li><a href="https://docs.databricks.com/en/metric-views/index.html">Metric Views</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

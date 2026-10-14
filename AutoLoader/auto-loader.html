@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Auto Loader — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Auto Loader</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Auto Loader is a <strong>Structured Streaming source</strong> (<code>cloudFiles</code>) that incrementally ingests new files from cloud object storage into Delta tables. Tracks seen files, infers/evolves schema, scales from few-files to billions.</p>
+<ul>
+<li><strong>Incremental</strong>: only new files per micro-batch.</li>
+<li><strong>Schema-aware</strong>: inference, evolution modes, <code>_rescued_data</code> for malformed rows.</li>
+<li><strong>Scales</strong>: notification mode avoids re-listing.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><code>cloudFiles</code> Spark source. Formats: JSON, CSV, Parquet, Avro, ORC, binary, text, XML.</li>
+<li><strong>Discovery modes</strong>: directory listing (fine to ~10⁵ files; <code>useIncrementalListing</code> <strong>deprecated</strong>) vs file notification — two sub-variants: classic (SQS/SNS, Event Grid+Queue, Pub/Sub; IAM required) or <strong>file events</strong> (<code>cloudFiles.useManagedFileEvents=true</code>, DBR 14.3 LTS+; shared queue per UC external location; Databricks-managed; <strong>recommended</strong>).</li>
+<li><strong>Schema management</strong>: <code>schemaLocation</code>, <code>schemaEvolutionMode</code> (addNewColumns/addNewColumnsWithTypeWidening/rescue/failOnNewColumns/none), <code>inferColumnTypes</code>, <code>_rescued_data</code> column.</li>
+<li><strong>State</strong>: RocksDB-backed seen-files store.</li>
+<li><strong>Triggers</strong>: <code>Trigger.AvailableNow()</code> or continuous micro-batch.</li>
+<li><strong>Sinks</strong>: any Delta destination; commonly LDP ST or <code>foreachBatch</code>.</li>
+<li><strong>Auth</strong>: UC external location credentials preferred.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>Cloud storage path
+        │
+        ├─[Directory listing]──► periodic LIST                   ──┐
+        │                                                          ├──► [Auto Loader micro-batch] ──► Delta sink
+        └─[File notification]──► SQS/SNS, Event Grid, Pub/Sub ─────┘                ▲
+                                                                                    │
+                                                        RocksDB checkpoint (seen files)
+                                                        schemaLocation (inferred schema)</code></pre>
+<p><strong>Listing mode</strong> costs API calls proportional to file count. <code>useIncrementalListing</code> is <strong>deprecated</strong>; Databricks recommends migrating to file notification mode with file events. <strong>File notification — classic</strong> consumes cloud events; latency drops to seconds; requires IAM. <strong>File notification — file events</strong> (<code>cloudFiles.useManagedFileEvents=true</code>, DBR 14.3 LTS+) uses a shared queue per UC external location and is the current recommended approach; no per-stream IAM needed, but does not guarantee file discovery order. Schema files live next to checkpoint; <code>_rescued_data</code> captures unparseable fields.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Directory-listing mode</h3>
+<ul>
+<li>Paginated <code>LIST</code> per trigger. <code>useIncrementalListing</code> is <strong>deprecated</strong>; migrate to file events mode.</li>
+<li>S3: descend only into new prefixes when partitioned by date.</li>
+</ul>
+
+<h3>File-notification mode</h3>
+<p><strong>Classic:</strong> AWS SNS+SQS, Azure Event Grid+Storage Queue, GCP Pub/Sub. Auto-creates or accepts pre-provisioned IDs (<code>cloudFiles.queueUrl</code>, etc.).</p>
+<p><strong>File events (recommended, DBR 14.3 LTS+):</strong> Set <code>cloudFiles.useManagedFileEvents=true</code>. Shared queue per UC external location; Databricks manages the subscription. No per-stream IAM. Does not guarantee file discovery order — design pipelines accordingly.</p>
+<p>One-shot backfill (both modes) via <code>cloudFiles.includeExistingFiles=true</code>.</p>
+
+<h3>RocksDB state</h3>
+<ul>
+<li>SHA-256 of seen paths. TTL via <code>cloudFiles.maxFileAge</code> (default 7 days in notification mode).</li>
+<li>State at <code>checkpointLocation/sources/&lt;source-id&gt;/</code>.</li>
+</ul>
+
+<h3>Schema inference + evolution</h3>
+<ul>
+<li>First run: sample N files, infer (JSON with <code>inferColumnTypes</code> for typed cols).</li>
+<li>Modes: <code>addNewColumns</code> (stream fails after schema update, then restarts), <code>addNewColumnsWithTypeWidening</code> (same plus auto-widens compatible types, e.g., int→long), <code>rescue</code> (route new fields into <code>_rescued_data</code>), <code>failOnNewColumns</code>, <code>none</code>.</li>
+<li>Type changes are not auto-handled.</li>
+</ul>
+
+<h3>Performance tuning</h3>
+<ul>
+<li><code>maxFilesPerTrigger</code>, <code>maxBytesPerTrigger</code> shape micro-batch.</li>
+<li>Declare <code>partitionColumns</code> for Hive-style partitions.</li>
+<li>For binary at scale, parse downstream async.</li>
+</ul>
+
+<h3>Exactly-once</h3>
+<ul>
+<li>Auto Loader → Delta is exactly-once: transactional seen-files state, Delta ACID, SS offsets committed together.</li>
+<li>Broken by <code>allowOverwrites=true</code> or resetting schema location without checkpoint.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>One source = one schema location. Two streams can't share.</li>
+<li>Notification mode requires elevated IAM in default config; pre-provision otherwise.</li>
+<li>Listing latency grows with file count — switch before pain.</li>
+<li><code>_rescued_data</code> opt-in to query — easy to miss.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>Structured Streaming <code>fileStream</code> for adults</strong>: <code>cloudFiles</code> + scalable seen-files state + schema management + cloud-native event integration. Two design decisions dominate: listing-vs-notification and <code>schemaEvolutionMode</code>.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Auto Loader</h2>
+<ul>
+<li><strong>Reading a single specific file.</strong> Use <code>spark.read</code>.</li>
+<li><strong>Small static datasets.</strong> Use <code>COPY INTO</code> or a one-shot read.</li>
+<li><strong>Sources that mutate files in place.</strong> Default skips re-read; <code>allowOverwrites=true</code> creates duplicates.</li>
+<li><strong>Two streams sharing one checkpoint.</strong> State corruption.</li>
+<li><strong>Sub-second freshness in listing mode.</strong> Use notification mode or Kafka.</li>
+<li><strong>CDC replacement for databases.</strong> Use Lakeflow Connect DB connectors.</li>
+<li><strong>Heavily nested JSON without <code>_rescued_data</code> discipline.</strong> Silent data loss.</li>
+<li><strong>Cross-cloud sources.</strong> Run one Auto Loader per source cloud.</li>
+<li><strong>Inside LDP, ignoring <code>read_files()</code>.</strong> Use the idiomatic SQL helper.</li>
+<li><strong>Non-Delta sinks.</strong> Exactly-once contract hinges on Delta.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Listing-mode cost grows with file count.</strong> Switch to notification mode.</li>
+<li><strong>Classic notification IAM friction.</strong> Auto-create needs elevated perms. File events mode (<code>useManagedFileEvents=true</code>) eliminates this for UC external location sources.</li>
+<li><strong><code>maxFileAge</code> foot-gun.</strong> Late-arriving events past 7 days can re-ingest.</li>
+<li><strong>Sampling-based inference.</strong> Rare type variants land in <code>_rescued_data</code> quietly.</li>
+<li><strong>No multi-tenant schema sharing.</strong></li>
+<li><strong>No content-hash dedup.</strong> Same content, different names = double ingest.</li>
+<li><strong>Thin XML / fixed-width support.</strong> Post-processing required.</li>
+<li><strong>Partition hints needed.</strong> Or partitions become regular columns.</li>
+<li><strong><code>_rescued_data</code> easy to forget.</strong> Hidden visibility gap.</li>
+<li><strong>State migration is hard.</strong> Listing↔notification usually means fresh checkpoint.</li>
+<li><strong>CSV inference is weak.</strong> Provide explicit schema.</li>
+<li><strong>Backfill is one-shot.</strong> Get <code>includeExistingFiles</code> right on first enable.</li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/ingestion/auto-loader/">Auto Loader docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/ingestion/auto-loader/options">Options reference</a></li>
+<li><a href="https://docs.databricks.com/aws/en/ingestion/auto-loader/file-notification-mode">File notification mode</a></li>
+<li><a href="https://docs.databricks.com/aws/en/ingestion/auto-loader/schema">Schema inference and evolution</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

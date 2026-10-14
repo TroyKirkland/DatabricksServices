@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Databricks Glossary</title>
+<style>
+  :root { --bg:#fff; --fg:#1f2328; --muted:#57606a; --accent:#ff3621; --accent-soft:#fff1ee; --border:#d0d7de; --code-bg:#f6f8fa; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.55; color: var(--fg); background: var(--bg); max-width: 920px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  h1 { border-bottom: 3px solid var(--accent); padding-bottom: .5rem; margin-top: 0; }
+  h2 { border-bottom: 1px solid var(--border); padding-bottom: .3rem; margin-top: 2.2rem; color: var(--accent); }
+  dt { font-weight: 600; margin-top: .8rem; }
+  dd { margin: .25rem 0 0 1.2rem; color: var(--fg); }
+  code { background: var(--code-bg); padding: .12em .4em; border-radius: 4px; font-size: .9em; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  blockquote { border-left: 3px solid var(--accent); background: var(--accent-soft); margin: 1rem 0; padding: .6rem 1rem; color: var(--muted); }
+  .toc { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.4rem; margin: 1.5rem 0 2rem; }
+  .toc h4 { margin: 0 0 .5rem; font-size: .95rem; color: var(--muted); }
+  .toc ul { margin: 0; padding-left: 1.2rem; columns: 2; }
+</style>
+</head>
+<body>
+
+<h1>Databricks Glossary</h1>
+
+<p>Shared term reference for the per-product docs in <code>../</code>. Add new entries here whenever a product doc introduces a load-bearing term.</p>
+
+<blockquote>Convention: product docs cite terms as <code>[[glossary:term]]</code>. Terms are alphabetised within each category.</blockquote>
+
+<div class="toc">
+  <h4>Categories</h4>
+  <ul>
+    <li><a href="#compute">Compute &amp; runtime</a></li>
+    <li><a href="#storage">Storage, format, governance</a></li>
+    <li><a href="#streaming">Streaming &amp; change capture</a></li>
+    <li><a href="#orchestration">Orchestration &amp; deployment</a></li>
+    <li><a href="#sql">SQL &amp; analytics</a></li>
+    <li><a href="#aiml">AI / ML</a></li>
+    <li><a href="#apps">Apps &amp; operational data</a></li>
+    <li><a href="#net">Networking &amp; identity</a></li>
+    <li><a href="#legacy">Legacy / deprecated</a></li>
+  </ul>
+</div>
+
+<h2 id="compute">Compute &amp; runtime</h2>
+<dl>
+  <dt>Classic compute</dt><dd>Spark clusters that you size and that run inside your cloud VPC/VNet. Slower to start, supports init scripts and custom libraries. Required for ingestion gateways and some legacy workloads.</dd>
+  <dt>Cluster</dt><dd>Driver + worker VM group running Spark. Single-node, multi-node, or pool-backed. Has a DBR version.</dd>
+  <dt>Databricks Connect</dt><dd>Client library to talk to a remote Databricks cluster from a local IDE via Spark Connect.</dd>
+  <dt>Databricks Runtime (DBR)</dt><dd>Versioned bundle of Spark + Photon + ML libraries + cloud SDKs. LTS releases supported ~3 years (36 months). ML and GPU variants.</dd>
+  <dt>DBU (Databricks Unit)</dt><dd>Billing unit. Different SKUs (Jobs, All-Purpose, SQL, LDP, Serverless) have different DBU rates.</dd>
+  <dt>Photon</dt><dd>Databricks' C++ vectorized execution engine. Engages automatically for supported SQL/DataFrame operators; falls back to JVM Spark otherwise.</dd>
+  <dt>Pool</dt><dd>Pre-warmed VMs clusters can draw from to skip cold-start.</dd>
+  <dt>Serverless compute</dt><dd>Databricks-managed compute that runs in Databricks' account. Scale-to-zero, fast startup. Available for SQL Warehouses, Jobs, Notebooks, LDP, Model Serving.</dd>
+  <dt>Spark Connect</dt><dd>Client/server protocol decoupling Spark client code from the JVM driver. Underpins Databricks Connect.</dd>
+  <dt>SQL Warehouse</dt><dd>SQL-only compute endpoint. Three flavors: <strong>Serverless</strong> (fastest, Databricks-managed), <strong>Pro</strong> (in your VPC, advanced governance), <strong>Classic</strong> (legacy).</dd>
+</dl>
+
+<h2 id="storage">Storage, format, governance</h2>
+<dl>
+  <dt>ACID</dt><dd>Atomic-Consistent-Isolated-Durable transactions. Delta provides ACID at the table level via the transaction log.</dd>
+  <dt>CDF (Change Data Feed)</dt><dd>Delta feature exposing per-row change events with <code>_change_type</code>.</dd>
+  <dt>Column mapping</dt><dd>Delta feature decoupling logical names from physical Parquet field IDs. Required for renames.</dd>
+  <dt>Delta Lake</dt><dd>Open transactional storage on Parquet with a JSON+checkpoint transaction log in <code>_delta_log/</code>.</dd>
+  <dt>Delta Sharing</dt><dd>Open protocol for sharing Delta tables across orgs/clouds without copy. D2D (Databricks-to-Databricks) richer than D2O (open-source, now branded OpenSharing).</dd>
+  <dt>Delta UniForm</dt><dd>A Delta table that simultaneously exposes Iceberg metadata (IcebergCompatV2) for non-Databricks readers. Iceberg-only (Hudi output removed).</dd>
+  <dt>Deletion vector</dt><dd>Soft-delete metadata marking Parquet rows deleted without rewriting the file.</dd>
+  <dt>External location</dt><dd>UC object pointing at a cloud-storage prefix with a storage credential.</dd>
+  <dt>External table</dt><dd>UC table whose data lives outside the metastore-managed root.</dd>
+  <dt>Hive Metastore (HMS)</dt><dd>Legacy per-workspace metastore. Avoid for new work.</dd>
+  <dt>Liquid clustering</dt><dd>Delta layout strategy that auto-clusters on declared columns; supersedes <code>PARTITIONED BY</code> and <code>ZORDER</code> for most cases. Supports hierarchical clustering and partial reclustering (<code>OPTIMIZE … FULL</code>).</dd>
+  <dt>Managed Iceberg table</dt><dd>UC managed table stored in Apache Iceberg format (GA 2026), governed like a managed Delta table. Distinct from UniForm (Iceberg metadata over Delta files).</dd>
+  <dt>Managed table</dt><dd>UC table whose data lives in the metastore-managed root. UC owns the files' lifecycle.</dd>
+  <dt>Metastore</dt><dd>UC's top-level catalog container, one per region per account.</dd>
+  <dt>OpenSharing</dt><dd>Databricks' name for sharing with non-Databricks recipients over the open Delta Sharing protocol (incl. an Iceberg REST Catalog API). The open-recipient path formerly described as D2O.</dd>
+  <dt>OPTIMIZE</dt><dd>Delta command that compacts small files; with <code>ZORDER</code> or liquid clustering, also reorganises layout.</dd>
+  <dt>Predictive optimization</dt><dd>UC feature that auto-runs OPTIMIZE/VACUUM/ANALYZE on managed tables. Enabled by default for accounts created on/after Nov 2024.</dd>
+  <dt>RBAC (Role-Based Access Control)</dt><dd>UC capability (GA 2026) letting a user assume a named role scoped to only that role's privileges. Complements ABAC.</dd>
+  <dt>Row filter / column mask</dt><dd>UC functions applied at query time to filter rows or mask cells based on caller identity/attributes.</dd>
+  <dt>Row tracking</dt><dd>Delta feature assigning a stable <code>_metadata.row_id</code> and <code>row_commit_version</code> per row for row-level lineage. GA since DBR 14.0.</dd>
+  <dt>Schema (UC sense)</dt><dd>Mid-tier namespace inside a catalog: <code>&lt;catalog&gt;.&lt;schema&gt;.&lt;table&gt;</code>.</dd>
+  <dt>Storage credential</dt><dd>UC object wrapping an IAM role / managed identity for cloud storage access.</dd>
+  <dt>System tables</dt><dd>UC <code>system.*</code> catalog exposing billing, audit, lineage, query history.</dd>
+  <dt>Time travel</dt><dd>Querying a Delta table at a prior version or timestamp. Bounded by VACUUM retention.</dd>
+  <dt>Type widening</dt><dd>Delta schema-evolution feature that widens a column's type (e.g. int→long) without rewriting files. GA since DBR 15.4 LTS; bounded to a defined set of widening paths.</dd>
+  <dt>Unity Catalog (UC)</dt><dd>Databricks' unified governance plane for tables, models, volumes, ML assets; lineage, audit, ABAC, fine-grained access control.</dd>
+  <dt>UC Volume</dt><dd>Governed non-tabular storage abstraction. Path scheme <code>/Volumes/&lt;catalog&gt;/&lt;schema&gt;/&lt;volume&gt;/...</code>.</dd>
+  <dt>VACUUM</dt><dd>Delta command that physically removes files no longer in the latest version after retention.</dd>
+  <dt>Z-order</dt><dd>Multi-dimensional Delta data-skipping ordering. Largely superseded by liquid clustering.</dd>
+</dl>
+
+<h2 id="streaming">Streaming &amp; change capture</h2>
+<dl>
+  <dt>APPLY CHANGES INTO</dt><dd>LDP statement that applies a CDC change feed to a streaming table; supports SCD Type 1 or 2. Superseded by AUTO CDC (older API still functions, no longer recommended).</dd>
+  <dt>AUTO CDC</dt><dd>Current LDP API that replaced APPLY CHANGES INTO for applying a CDC feed to a streaming table. <code>AUTO CDC FROM SNAPSHOT</code> (Python) compares sequential full snapshots. Supports bitemporal SCD Type 2.</dd>
+  <dt>Auto Loader</dt><dd><code>cloudFiles</code> Structured Streaming source for incremental file ingestion. Directory listing or file-notification modes (incl. file events mode).</dd>
+  <dt>CDC (Change Data Capture)</dt><dd>Source-DB mechanism emitting insert/update/delete events with column-level history. Heavier than Change Tracking.</dd>
+  <dt>Change Tracking (SQL Server)</dt><dd>Lightweight SQL Server feature recording which rows changed (no values). Lower source overhead than CDC.</dd>
+  <dt>File events mode</dt><dd>Auto Loader file-notification sub-variant (<code>cloudFiles.useManagedFileEvents=true</code>, DBR 14.3 LTS+) using a Databricks-managed shared queue per UC external location; no per-stream cloud IAM.</dd>
+  <dt>Idempotent write</dt><dd>Write that produces the same final state regardless of replay. <code>AUTO CDC</code> is idempotent on its sequence key.</dd>
+  <dt>LSN (Log Sequence Number)</dt><dd>Monotonic position in a source's transaction log. GTID for MySQL, SCN for Oracle, WAL LSN for Postgres.</dd>
+  <dt>Materialized view (MV)</dt><dd>Refreshable result-cached table in LDP or DBSQL.</dd>
+  <dt>SCD Type 1 / Type 2</dt><dd>Slowly-changing-dimension patterns. Type 1 = current state; Type 2 = row-per-version with <code>__START_AT</code>/<code>__END_AT</code>.</dd>
+  <dt>Streaming table (ST)</dt><dd>Delta table written incrementally by a streaming source; declared in LDP or DBSQL.</dd>
+  <dt>Structured Streaming</dt><dd>Spark's streaming framework. Underpins Auto Loader, LDP streaming tables, and most Databricks streaming.</dd>
+  <dt>Zerobus</dt><dd>Databricks' gRPC ingest SDK writing directly to Delta without a message-bus hop.</dd>
+</dl>
+
+<h2 id="orchestration">Orchestration &amp; deployment</h2>
+<dl>
+  <dt>Declarative Automation Bundles (DAB)</dt><dd>YAML-defined deployable bundle of jobs/pipelines/dashboards/apps. <code>databricks bundle deploy</code>. Formerly Databricks Asset Bundles.</dd>
+  <dt>Job (Lakeflow Job)</dt><dd>Orchestration unit with tasks, dependencies, triggers, retries, notifications.</dd>
+  <dt>Notebook</dt><dd>Mixed-language interactive document (Python/SQL/Scala/R).</dd>
+  <dt>Repos / Git folder</dt><dd>Workspace folder synced to a Git remote.</dd>
+  <dt>Service principal</dt><dd>Non-human identity. OAuth, PAT, or federated auth.</dd>
+  <dt>Task</dt><dd>One step in a Job: notebook, wheel, JAR, SQL, dbt, LDP pipeline trigger, for-each.</dd>
+  <dt>TaskValues</dt><dd>Key-value payload one task publishes for downstream tasks to read.</dd>
+  <dt>Trigger</dt><dd>How a Job starts: scheduled, continuous, file arrival, table update.</dd>
+</dl>
+
+<h2 id="sql">SQL &amp; analytics</h2>
+<dl>
+  <dt>AI/BI Dashboards</dt><dd>Successor to Lakeview; native dashboarding inside Databricks.</dd>
+  <dt>AI/BI Genie</dt><dd>NL-to-SQL conversational interface scoped to a Genie Agent.</dd>
+  <dt>Catalog Federation</dt><dd>Lakehouse Federation mode giving direct object-storage access to foreign catalogs (Glue, external/legacy Hive metastore, Salesforce Data 360, Snowflake, Palantir Foundry, Workday) without a JDBC hop; auto-refreshes at query time.</dd>
+  <dt>DBSQL</dt><dd>Databricks SQL: warehouses, queries, dashboards, alerts.</dd>
+  <dt>Genie Agent</dt><dd>Bounded set of tables + instructions + example SQL (and optional metric views) an LLM uses to answer questions. Formerly Genie Space; end-user NL interface is Genie One.</dd>
+  <dt>Lakehouse Federation</dt><dd>UC foreign catalogs proxying queries to Snowflake, Postgres, SQL Server, BigQuery, Redshift, MySQL, Oracle, Teradata. Two modes: Query Federation (JDBC) and Catalog Federation (direct storage).</dd>
+  <dt>Lakeview</dt><dd>Legacy name for AI/BI Dashboards.</dd>
+  <dt>Materialized view</dt><dd>In DBSQL, an MV refreshed by a serverless pipeline behind the scenes.</dd>
+  <dt>Metric View</dt><dd>UC semantic-layer object defining reusable business measures and dimensions, queryable via the <code>MEASURE</code> aggregate and usable as a dashboard/Genie dataset.</dd>
+  <dt>Pipe syntax (<code>|&gt;</code>)</dt><dd>DBSQL operator-chained SQL alternative to nested subqueries.</dd>
+  <dt>Query Federation</dt><dd>The original Lakehouse Federation mode: JDBC pushdown to live external databases (Snowflake, Postgres, SQL Server, BigQuery, Redshift, MySQL, Oracle, Teradata); requires manual schema refresh.</dd>
+  <dt>Statement Execution API</dt><dd>REST API to submit SQL to a warehouse without JDBC/ODBC.</dd>
+</dl>
+
+<h2 id="aiml">AI / ML</h2>
+<dl>
+  <dt>Agent Bricks</dt><dd>Eval-driven agent builder: Knowledge Assistant, Genie Agent, Multi-Agent Supervisor.</dd>
+  <dt>ChatAgent / ResponsesAgent</dt><dd>MLflow agent interfaces for serving conversational/agentic models with tracing.</dd>
+  <dt>External model</dt><dd>Model Serving endpoint proxying to outside provider (OpenAI, Anthropic, Cohere, Bedrock). Subject to Unity Gateway policies.</dd>
+  <dt>Feature Store / Feature Engineering in UC</dt><dd>Feature tables in UC + online tables; point-in-time joins for training-serving parity.</dd>
+  <dt>Feature Views</dt><dd>Public-Preview declarative feature definitions in Feature Engineering (DeltaTableSource, StreamSource, RequestSource). DBR 17.0 ML+ or serverless.</dd>
+  <dt>Foundation Model APIs (FMAPI)</dt><dd>Databricks-hosted foundation models. Pay-per-token or Provisioned Throughput.</dd>
+  <dt>Full-Text Search Index</dt><dd>Vector Search index type (Beta) doing BM25 keyword search on text columns with no embeddings; storage-optimized endpoints, triggered sync only.</dd>
+  <dt>Logged Models</dt><dd>MLflow 3 first-class entity tracking a model's development arc (runs, metrics, params, code); distinct from a UC registered model version.</dd>
+  <dt>MCP server (Model Context Protocol)</dt><dd>Standardised tool/API interface agents call to reach external systems; a resource type for Apps, DABs, and Agent Bricks MAS, governed by Unity Gateway.</dd>
+  <dt>MLflow</dt><dd>OSS experiment tracking + model registry + tracing + evaluation. Registered models live in UC on Databricks.</dd>
+  <dt>Model Serving endpoint</dt><dd>Hosted inference endpoint. Serverless, scale-to-zero, GPU-optional.</dd>
+  <dt>Mosaic AI</dt><dd>Umbrella brand for Model Serving, Vector Search, Unity Gateway, Agent Bricks, FMAPI.</dd>
+  <dt>Online table</dt><dd>Low-latency replica of a Delta feature table used at inference time (backed by Lakebase Autoscaling).</dd>
+  <dt>Pay-per-token</dt><dd>FMAPI billing model: per input+output token on shared infra.</dd>
+  <dt>Payload table</dt><dd>Auto-generated Delta table of Model Serving request/response logs.</dd>
+  <dt>Provisioned Throughput</dt><dd>FMAPI billing model with reserved dedicated capacity.</dd>
+  <dt>Reciprocal Rank Fusion (RRF)</dt><dd>Algorithm Vector Search hybrid queries use to merge vector + keyword result sets; hybrid results capped at 200.</dd>
+  <dt>Unity Gateway</dt><dd>Governance/policy layer in front of model endpoints, agents, and MCP servers: rate limits, PII detection, payload logging, fallback and smart routing. Formerly Mosaic AI Gateway.</dd>
+  <dt>Vector index</dt><dd>Mosaic AI Vector Search index over a column of embeddings; optionally Delta-synced.</dd>
+</dl>
+
+<h2 id="apps">Apps &amp; operational data</h2>
+<dl>
+  <dt>app.yaml</dt><dd>Manifest for a Databricks App declaring command, resources, scopes.</dd>
+  <dt>Databricks App</dt><dd>Hosted Streamlit/Dash/Flask/FastAPI/Node web app inside Databricks with workspace OAuth.</dd>
+  <dt>Lakebase</dt><dd>Managed Postgres on Databricks; provisioned and autoscale flavors; branching, scale-to-zero.</dd>
+  <dt>Marketplace listing</dt><dd>Data product, AI model, or notebook published in Databricks Marketplace; Delta-Sharing delivery.</dd>
+</dl>
+
+<h2 id="net">Networking &amp; identity</h2>
+<dl>
+  <dt>OAuth M2M / U2M</dt><dd>Machine-to-machine (service principal) vs user-to-machine (interactive) OAuth flows.</dd>
+  <dt>Private Link</dt><dd>Cloud-provider private endpoint to reach Databricks control plane and storage privately.</dd>
+  <dt>SCIM</dt><dd>Identity sync protocol for users/groups from your IdP into Databricks.</dd>
+</dl>
+
+<h2 id="legacy">Legacy / deprecated</h2>
+<dl>
+  <dt>Delta Live Tables (DLT)</dt><dd>Renamed to Lakeflow Spark Declarative Pipelines (LDP).</dd>
+  <dt>Workflows</dt><dd>Renamed to Lakeflow Jobs.</dd>
+  <dt>Lakeview</dt><dd>Renamed to AI/BI Dashboards.</dd>
+  <dt>Feature Store (workspace)</dt><dd>Migrated to Feature Engineering in Unity Catalog.</dd>
+  <dt>Databricks Asset Bundles</dt><dd>Renamed to Declarative Automation Bundles (DAB).</dd>
+  <dt>Mosaic AI Gateway</dt><dd>Renamed to Unity Gateway.</dd>
+  <dt>Genie Space</dt><dd>Renamed to Genie Agent (end-user interface: Genie One).</dd>
+</dl>
+
+</body>
+</html>

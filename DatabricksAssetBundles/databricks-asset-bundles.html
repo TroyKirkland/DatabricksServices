@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Declarative Automation Bundles — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Declarative Automation Bundles (DAB)</h1>
+<p><em>Formerly: Databricks Asset Bundles.</em></p>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>IaC for Databricks workloads. Define jobs, pipelines, dashboards, apps, schemas — and 40+ resource types — as YAML (or Python), version in Git, deploy with <code>databricks bundle deploy</code>. Per-env overrides via targets.</p>
+<ul>
+<li><strong>YAML or Python manifest</strong> (<code>databricks.yml</code> or programmatic).</li>
+<li><strong>Targets</strong>: dev/staging/prod with overrides.</li>
+<li><strong>Resources</strong>: jobs, pipelines, dashboards, apps, models, schemas, model serving, vector search, clusters, Lakebase, Genie spaces, MCP services, secret scopes, and more.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li><code>databricks.yml</code> + includes (or Python programmatic definition).</li>
+<li>Resources: jobs, pipelines, models, experiments, dashboards, apps, schemas, volumes, catalogs, external_locations, alerts, clusters, instance_pools, sql_warehouses, model_serving_endpoints, quality_monitors, vector_search_endpoints/indexes, genie_spaces, lakebase_*, mcp_services, secret_scopes.</li>
+<li>Targets with workspace URL, run-as, variable values, overrides.</li>
+<li>Typed variables (<code>type: complex</code> for structured values); prompts for interactive.</li>
+<li>Modular file inclusion.</li>
+<li>CLI: validate / deploy / run / destroy / sync / <strong>generate</strong>. Requires CLI v0.218.0+.</li>
+<li>Workspace-only mode: no local CLI needed if artifacts live in workspace.</li>
+<li>CI integrations (GitHub Actions, Azure DevOps, GitLab).</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Project repo] → databricks bundle deploy → CLI validates, resolves, uploads, upserts → workspace reconciled
+                          state in UC volume (.bundle/state) tracks prior deploys</code></pre>
+<p>Idempotent reconciliation. Run-as per resource per target.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Manifest + merging</h3>
+<ul>
+<li>Base + targets; later targets override earlier.</li>
+<li>Variables <code>${var.foo}</code>; built-ins <code>${bundle.target}</code> etc.</li>
+</ul>
+
+<h3>Resource model</h3>
+<ul>
+<li>Each resource typed; same schema as REST API.</li>
+<li>Cross-resource refs: <code>${resources.pipelines.X.id}</code>.</li>
+</ul>
+
+<h3>Lifecycle</h3>
+<ul>
+<li><code>validate</code>: parse + type-check; no remote calls.</li>
+<li><code>sync</code>: upload sources to workspace / UC volumes.</li>
+<li><code>deploy</code>: apply diffs via REST; preserve IDs by name.</li>
+<li><code>run</code>: trigger declared workload.</li>
+<li><code>destroy</code>: remove bundle-owned resources.</li>
+<li><code>generate</code>: reverse-engineer YAML from existing workspace resources.</li>
+</ul>
+
+<h3>State + ownership</h3>
+<ul>
+<li>State tracks bundle-managed resources.</li>
+<li>Outside-bundle resources unaffected (unless name conflict).</li>
+<li>Multiple bundles per workspace OK if no name collisions.</li>
+</ul>
+
+<h3>Per-target overrides</h3>
+<ul>
+<li>Cluster size / serverless / schedule.</li>
+<li>Source paths.</li>
+<li>Permissions (dev wide; prod restricted).</li>
+</ul>
+
+<h3>Variables + secrets</h3>
+<ul>
+<li>Variables typed; defaults; prompts.</li>
+<li>Secrets via Secret Scopes <code>{{secrets/scope/key}}</code>.</li>
+</ul>
+
+<h3>Source artifacts</h3>
+<ul>
+<li>Notebooks, wheels, SQL files, exported dashboard JSON.</li>
+</ul>
+
+<h3>CI/CD pattern</h3>
+<ul>
+<li>PR: <code>bundle validate</code>.</li>
+<li>Merge: <code>deploy --target staging</code>.</li>
+<li>Manual gate to prod.</li>
+<li>Rollback: redeploy prior commit.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Some preview resources lag.</li>
+<li>No first-class cross-bundle deps.</li>
+<li>Rename = delete + create unless migration logic.</li>
+<li>Big bundles slow deploys; modularise.</li>
+<li>Notebook format gotcha (.py vs .ipynb).</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Terraform for Databricks workloads."</strong> YAML (or Python) as source of truth; reconcile-style deploy.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use DABs</h2>
+<ul>
+<li><strong>Workspace creation itself.</strong> Use Terraform for that.</li>
+<li><strong>Single one-off jobs.</strong></li>
+<li><strong>Runtime config.</strong> YAML is deploy-time.</li>
+<li><strong>Secrets in YAML.</strong> Use Secret Scopes.</li>
+<li><strong>One giant org-wide bundle.</strong> Modularise.</li>
+<li><strong>Cross-environment resource refs.</strong></li>
+<li><strong>As a workflow language.</strong></li>
+<li><strong>State as immutable.</strong></li>
+<li><strong>Skipping <code>validate</code> in CI.</strong></li>
+<li><strong>Auto-destroy of prod from CI failure path.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Preview resource coverage gaps.</strong></li>
+<li><strong>No cross-bundle imports.</strong></li>
+<li><strong>Rename ergonomics rough.</strong></li>
+<li><strong>Limited YAML templating.</strong></li>
+<li><strong>No first-class plan/diff.</strong></li>
+<li><strong>UI edits drift state.</strong></li>
+<li><strong>Local dev slower than UI.</strong></li>
+<li><strong>Notebook PR diffs ugly.</strong></li>
+<li><strong>Secret vs literal confusion.</strong></li>
+<li><strong>Permissions modelling verbose.</strong></li>
+<li><strong>No unit-test framework for YAML logic.</strong></li>
+<li><strong>CLI version pinning needed in CI.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/bundles/">Declarative Automation Bundles docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/bundles/reference">Resource reference</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/bundles/resources">Resources supported in bundles</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/bundles/settings">Targets and variables</a></li>
+<li><a href="https://docs.databricks.com/aws/en/dev-tools/bundles/ci-cd">CI/CD with bundles</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

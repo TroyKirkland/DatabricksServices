@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Mosaic AI Model Serving — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Mosaic AI Model Serving</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Serverless model inference. Register an MLflow model (or wrap external), create endpoint, get scalable REST API with scale-to-zero, GPU, payload logging, Gateway integration. No clusters/K8s.</p>
+<ul>
+<li><strong>Serverless</strong>: scale-to-zero default.</li>
+<li><strong>Open</strong>: MLflow models, FMAPI, external models.</li>
+<li><strong>Production</strong>: autoscaling, payload tables, traffic split, Gateway.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Endpoint hosts served entities: custom models, agent endpoints, FMAPI (Llama/GPT/Claude/Gemini/etc.), external BYOK models.</li>
+<li>Compute: CPU sizes or GPU_SMALL/MEDIUM/LARGE; scale-to-zero on/off.</li>
+<li>Traffic split for canary/A/B.</li>
+<li>Auth: workspace OAuth U2M/M2M.</li>
+<li>Payload table = Delta table of req/resp in UC.</li>
+<li>Unity Gateway optional (rate limit, PII, fallback, smart routing).</li>
+<li>Batch via <code>ai_query()</code> or <code>mlflow.deployments.predict()</code>.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Caller] → REST → [Endpoint: routing + auth + (Gateway) + inference container + payload tap] → response
+                                                                            ↓
+                                                                       Delta payload table</code></pre>
+<p>Inference containers managed by Databricks. Cold start when scaled to zero. Provisioned-capacity avoids it. Payload tap lands req/resp in UC.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Endpoint lifecycle</h3>
+<ul>
+<li>States: pending → ready → updating → ready.</li>
+<li>Blue/green updates with health-check rollback.</li>
+</ul>
+
+<h3>Compute</h3>
+<ul>
+<li>CPU sizes (Small/Medium/Large), GPU classes (Small/Medium/Large).</li>
+<li>Scale-to-zero after idle; cold start cost.</li>
+<li>Provisioned throughput for FMAPI: dedicated tokens/s, no cold start.</li>
+</ul>
+
+<h3>Routing</h3>
+<ul>
+<li>Traffic split percentages.</li>
+<li>Fallback routing via Gateway.</li>
+</ul>
+
+<h3>Payload tables</h3>
+<ul>
+<li>Auto Delta table: timestamp/req/resp/latency/status/version/identity.</li>
+<li>Sampling configurable.</li>
+<li>Drives MLflow eval / monitoring / agent loops.</li>
+</ul>
+
+<h3>Auth + identity</h3>
+<ul>
+<li>OAuth M2M/U2M for callers.</li>
+<li>Endpoint identity can call UC tables, Vector Search, Lakebase via service credentials.</li>
+</ul>
+
+<h3>Unity Gateway integration</h3>
+<ul>
+<li>Rate limits, PII detection, fallback, smart routing, payload logging.</li>
+<li>Fronts internal endpoints, external models, and agent endpoints.</li>
+</ul>
+
+<h3>Performance</h3>
+<ul>
+<li>Cold start: CPU 1–5s; GPU 10–60s; large LLM 30s–2min.</li>
+<li>Latency floor: hundreds of ms for small; LLMs depend on tokens.</li>
+<li>Throughput: replicas scale; per-replica concurrency tunable.</li>
+<li>SSE streaming for LLMs.</li>
+</ul>
+
+<h3>Batch</h3>
+<ul>
+<li><code>ai_query</code> parallelises into endpoint up to concurrency.</li>
+<li>For huge batches, Spark + in-process model.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Per-replica memory caps; large models need GPU_LARGE.</li>
+<li>Cold-start unpredictable without provisioned.</li>
+<li>Payload tables fill fast.</li>
+<li>Per-endpoint concurrency caps (raise via support).</li>
+<li>External endpoints inherit provider rate limits.</li>
+<li>Platform benchmark: >25K QPS with &lt;50ms proxy overhead (model inference adds to this).</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Serverless API gateway in front of a model."</strong> Custom and hosted models look the same to callers. Choose: scale-to-zero vs provisioned, payload logging, Gateway-or-not.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Model Serving</h2>
+<ul>
+<li><strong>Sub-10ms latency.</strong> Use in-process inference.</li>
+<li><strong>Billions-of-rows batch.</strong> Use Spark batch in-process.</li>
+<li><strong>GPU-paid CPU codepaths.</strong></li>
+<li><strong>Streaming high-rate no-provisioned.</strong></li>
+<li><strong>Stateful sessions.</strong> Endpoints are stateless; store in Lakebase/UC.</li>
+<li><strong>Direct from run URI.</strong> Register to UC first.</li>
+<li><strong>Per-customer endpoints at thousands of customers.</strong></li>
+<li><strong>Custom router in front of one endpoint.</strong> Use traffic split + Gateway.</li>
+<li><strong>Endpoints as experiment runners.</strong></li>
+<li><strong>Sensitive prompts un-redacted in payloads.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Cold start without provisioned.</strong></li>
+<li><strong>Per-endpoint concurrency caps.</strong></li>
+<li><strong>GPU class scarcity per region.</strong></li>
+<li><strong>Payload table cost.</strong></li>
+<li><strong>Limited custom container.</strong></li>
+<li><strong>SSE proxy timeouts.</strong></li>
+<li><strong>Limited per-call introspection.</strong></li>
+<li><strong>Per-region availability gaps.</strong></li>
+<li><strong>Egress on external calls.</strong></li>
+<li><strong>Limited startup hooks.</strong></li>
+<li><strong>External integrations vary.</strong></li>
+<li><strong>UI versioning UX basic.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/model-serving/">Model Serving docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/model-serving/provisioned-throughput">Provisioned throughput</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/model-serving/inference-tables">Inference / payload tables</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/model-serving/external-models">External models</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

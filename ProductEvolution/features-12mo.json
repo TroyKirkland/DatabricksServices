@@ -1,0 +1,4007 @@
+[
+  {
+    "date": "October 31, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Salesforce ingestion connector supports history tracking (SCD type 2)",
+    "slug": "salesforce-ingestion-connector-supports-history-tracking-scd-type-2",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#salesforce-ingestion-connector-supports-history-tracking-scd-type-2"
+  },
+  {
+    "date": "October 31, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Skip cells when running notebooks",
+    "slug": "skip-cells-when-running-notebooks",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#skip-cells-when-running-notebooks"
+  },
+  {
+    "date": "October 31, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Improved notebook debugger experience",
+    "slug": "improved-notebook-debugger-experience",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#improved-notebook-debugger-experience"
+  },
+  {
+    "date": "October 29, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "New compute policy form is now generally available",
+    "slug": "new-compute-policy-form-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#new-compute-policy-form-is-now-generally-available"
+  },
+  {
+    "date": "October 29, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Feedback model deprecated for AI agents",
+    "slug": "feedback-model-deprecated-for-ai-agents",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#feedback-model-deprecated-for-ai-agents"
+  },
+  {
+    "date": "October 29, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Request logs and assessment logs tables deprecated",
+    "slug": "request-logs-and-assessment-logs-tables-deprecated",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#request-logs-and-assessment-logs-tables-deprecated"
+  },
+  {
+    "date": "October 28, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Gemini 2.5 Pro and Flash models now supported on pay-per-token endpoints",
+    "slug": "gemini-25-pro-and-flash-models-now-supported-on-pay-per-token-endpoints",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#gemini-25-pro-and-flash-models-now-supported-on-pay-per-token-endpoints"
+  },
+  {
+    "date": "October 28, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "OpenAI GPT 5 models are now generally available in Mosaic AI Model Serving",
+    "slug": "-openai-gpt-5-models-are-now-generally-available-in-mosaic-ai-model-serving",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#-openai-gpt-5-models-are-now-generally-available-in-mosaic-ai-model-serving"
+  },
+  {
+    "date": "October 28, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Serverless compute has been updated to version 17.3",
+    "slug": "serverless-compute-has-been-updated-to-version-173",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#serverless-compute-has-been-updated-to-version-173"
+  },
+  {
+    "date": "October 24, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Configure compute to use AWS Capacity Blocks",
+    "slug": "configure-compute-to-use-aws-capacity-blocks",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#configure-compute-to-use-aws-capacity-blocks"
+  },
+  {
+    "date": "October 23, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Databricks JDBC Driver 2.7.5",
+    "slug": "databricks-jdbc-driver-275",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#databricks-jdbc-driver-275"
+  },
+  {
+    "date": "October 22, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Column drop behavior updated",
+    "slug": "column-drop-behavior-updated",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#column-drop-behavior-updated"
+  },
+  {
+    "date": "October 22, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Alibaba Cloud Qwen3-Next Instruct now available in Beta",
+    "slug": "alibaba-cloud-qwen3-next-instruct-now-available-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#alibaba-cloud-qwen3-next-instruct-now-available-in-beta"
+  },
+  {
+    "date": "October 21, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Compatibility Mode (Public Preview)",
+    "slug": "compatibility-mode-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#compatibility-mode-public-preview"
+  },
+  {
+    "date": "October 21, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Zstd is now the default compression for new managed tables",
+    "slug": "zstd-is-now-the-default-compression-for-new-managed-tables",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#zstd-is-now-the-default-compression-for-new-managed-tables"
+  },
+  {
+    "date": "October 20, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Unified runs list (Public Preview)",
+    "slug": "unified-runs-list-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#unified-runs-list-public-preview"
+  },
+  {
+    "date": "October 17, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Databricks Connector for Google Sheets offers additional features (Public Preview)",
+    "slug": "databricks-connector-for-google-sheets-offers-additional-features-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#databricks-connector-for-google-sheets-offers-additional-features-public-preview"
+  },
+  {
+    "date": "October 16, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Dashboard and Genie Agents tagging (Public Preview)",
+    "slug": "dashboard-and-genie-agents-tagging-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#dashboard-and-genie-agents-tagging-public-preview"
+  },
+  {
+    "date": "October 16, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Jobs can now be triggered on source table update",
+    "slug": "jobs-can-now-be-triggered-on-source-table-update",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#jobs-can-now-be-triggered-on-source-table-update"
+  },
+  {
+    "date": "October 10, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "SQL MCP server now available (Beta)",
+    "slug": "sql-mcp-server-now-available-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#sql-mcp-server-now-available-beta"
+  },
+  {
+    "date": "October 14, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Create backfill job runs",
+    "slug": "create-backfill-job-runs",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#create-backfill-job-runs"
+  },
+  {
+    "date": "October 13, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Improved autoscaling behavior for Mosaic AI Model Serving",
+    "slug": "improved-autoscaling-behavior-for-mosaic-ai-model-serving",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#improved-autoscaling-behavior-for-mosaic-ai-model-serving"
+  },
+  {
+    "date": "October 13, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Multimodal support is now available",
+    "slug": "multimodal-support-is-now-available",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#multimodal-support-is-now-available"
+  },
+  {
+    "date": "October 9, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Context based ingress control (Beta)",
+    "slug": "context-based-ingress-control-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#context-based-ingress-control-beta"
+  },
+  {
+    "date": "October 9, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "The billable usage table now records the performance mode of serverless jobs and pipelines",
+    "slug": "the-billable-usage-table-now-records-the-performance-mode-of-serverless-jobs-and-pipelines",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#the-billable-usage-table-now-records-the-performance-mode-of-serverless-jobs-and-pipelines"
+  },
+  {
+    "date": "October 6, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Mosaic AI Model Serving now supports OpenAI GPT 5 models (preview)",
+    "slug": "-mosaic-ai-model-serving-now-supports-openai-gpt-5-models-preview",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#-mosaic-ai-model-serving-now-supports-openai-gpt-5-models-preview"
+  },
+  {
+    "date": "October 6, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Partition metadata is generally available",
+    "slug": "partition-metadata-is-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#partition-metadata-is-generally-available"
+  },
+  {
+    "date": "October 6, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Certification status system tag is in Public Preview",
+    "slug": "certification-status-system-tag-is-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#certification-status-system-tag-is-in-public-preview"
+  },
+  {
+    "date": "October 3, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Prompt caching is now supported for Claude models",
+    "slug": "prompt-caching-is-now-supported-for-claude-models",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#prompt-caching-is-now-supported-for-claude-models"
+  },
+  {
+    "date": "October 3, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Anthropic Claude Sonnet 4.5 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-sonnet-45-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#anthropic-claude-sonnet-45-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "October 3, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Notebook improvements",
+    "slug": "notebook-improvements",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#notebook-improvements"
+  },
+  {
+    "date": "October 3, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Anthropic Claude Sonnet 4 is available for batch inference in US regions",
+    "slug": "anthropic-claude-sonnet-4-is-available-for-batch-inference-in-us-regions",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#anthropic-claude-sonnet-4-is-available-for-batch-inference-in-us-regions"
+  },
+  {
+    "date": "October 1, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "Git email identity configuration for Git folders",
+    "slug": "git-email-identity-configuration-for-git-folders",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#git-email-identity-configuration-for-git-folders"
+  },
+  {
+    "date": "October 1, 2025",
+    "year": 2025,
+    "month": "october",
+    "title": "New permissions for the Databricks GitHub App",
+    "slug": "new-permissions-for-the-databricks-github-app",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/october#new-permissions-for-the-databricks-github-app"
+  },
+  {
+    "date": "November 24, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Anthropic Claude Opus 4.5 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-opus-45-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#anthropic-claude-opus-45-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "November 21, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Configure full refresh behavior for managed database connectors",
+    "slug": "configure-full-refresh-behavior-for-managed-database-connectors",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#configure-full-refresh-behavior-for-managed-database-connectors"
+  },
+  {
+    "date": "November 21, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Automate classic workspace creation with AWS IAM temporary delegation",
+    "slug": "automate-classic-workspace-creation-with-aws-iam-temporary-delegation",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#automate-classic-workspace-creation-with-aws-iam-temporary-delegation"
+  },
+  {
+    "date": "November 21, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Real-time collaboration in notebook cells, files, and SQL editor",
+    "slug": "real-time-collaboration-in-notebook-cells-files-and-sql-editor",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#real-time-collaboration-in-notebook-cells-files-and-sql-editor"
+  },
+  {
+    "date": "November 21, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Use Git CLI commands in Git folders (Beta)",
+    "slug": "use-git-cli-commands-in-git-folders-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#use-git-cli-commands-in-git-folders-beta"
+  },
+  {
+    "date": "November 20, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Configure compute size for Databricks Apps (Public Preview)",
+    "slug": "configure-compute-size-for-databricks-apps-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#configure-compute-size-for-databricks-apps-public-preview"
+  },
+  {
+    "date": "November 20, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Automatic email notifications for expiring personal access tokens (Public Preview)",
+    "slug": "automatic-email-notifications-for-expiring-personal-access-tokens-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#automatic-email-notifications-for-expiring-personal-access-tokens-public-preview"
+  },
+  {
+    "date": "November 19, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Google Gemini 3 Pro Preview now available as a Databricks-hosted model",
+    "slug": "google-gemini-3-pro-preview-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#google-gemini-3-pro-preview-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "November 19, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Google Gemini 3 Pro Preview now available as a Databricks-hosted model",
+    "slug": "google-gemini-3-pro-preview-now-available-as-a-databricks-hosted-model-1",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#google-gemini-3-pro-preview-now-available-as-a-databricks-hosted-model-1"
+  },
+  {
+    "date": "November 17, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Jobs can now be triggered on source view update",
+    "slug": "jobs-can-now-be-triggered-on-source-view-update",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#jobs-can-now-be-triggered-on-source-view-update"
+  },
+  {
+    "date": "November 17, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Delta Sharing views automatically permitted in serverless network policies",
+    "slug": "delta-sharing-views-automatically-permitted-in-serverless-network-policies",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#delta-sharing-views-automatically-permitted-in-serverless-network-policies"
+  },
+  {
+    "date": "November 14, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Improved full refresh flow for managed database connectors",
+    "slug": "improved-full-refresh-flow-for-managed-database-connectors",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#improved-full-refresh-flow-for-managed-database-connectors"
+  },
+  {
+    "date": "November 14, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "OpenAI GPT-5.1 now available as a Databricks-hosted model",
+    "slug": "openai-gpt-51-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#openai-gpt-51-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "November 14, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Connect Genie Agents to Microsoft Copilot Studio (Public Preview)",
+    "slug": "connect-genie-agents-to-microsoft-copilot-studio-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#connect-genie-agents-to-microsoft-copilot-studio-public-preview"
+  },
+  {
+    "date": "November 13, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "SFTP connector (Public Preview)",
+    "slug": "sftp-connector-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#sftp-connector-public-preview"
+  },
+  {
+    "date": "November 13, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Convert foreign tables to Unity Catalog managed or external tables (Public Preview)",
+    "slug": "convert-foreign-tables-to-unity-catalog-managed-or-external-tables-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#convert-foreign-tables-to-unity-catalog-managed-or-external-tables-public-preview"
+  },
+  {
+    "date": "November 12, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Lakeflow Declarative Pipelines has been renamed to Lakeflow Spark Declarative Pipelines",
+    "slug": "lakeflow-declarative-pipelines-has-been-renamed-to-lakeflow-spark-declarative-pipelines",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#lakeflow-declarative-pipelines-has-been-renamed-to-lakeflow-spark-declarative-pipelines"
+  },
+  {
+    "date": "November 7, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Migrate Community Edition workspaces to Free Edition (Public Preview)",
+    "slug": "migrate-community-edition-workspaces-to-free-edition-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#migrate-community-edition-workspaces-to-free-edition-public-preview"
+  },
+  {
+    "date": "November 6, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "New MCP server tab",
+    "slug": "new-mcp-server-tab",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#new-mcp-server-tab"
+  },
+  {
+    "date": "November 5, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Updated tag search syntax in workspace search",
+    "slug": "updated-tag-search-syntax-in-workspace-search",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#updated-tag-search-syntax-in-workspace-search"
+  },
+  {
+    "date": "November 5, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Serverless notebook tasks can now use jobs environment",
+    "slug": "serverless-notebook-tasks-can-now-use-jobs-environment",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#serverless-notebook-tasks-can-now-use-jobs-environment"
+  },
+  {
+    "date": "November 4, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Function calling and structured output now available using the Alibaba Cloud Qwen3-Next Instruct model (Beta)",
+    "slug": "function-calling-and-structured-output-now-available-using-the-alibaba-cloud-qwen3-next-instruct-model-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#function-calling-and-structured-output-now-available-using-the-alibaba-cloud-qwen3-next-instruct-model-beta"
+  },
+  {
+    "date": "November 3, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Attribute-based access control (ABAC) now in Public Preview",
+    "slug": "attribute-based-access-control-abac-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#attribute-based-access-control-abac-now-in-public-preview"
+  },
+  {
+    "date": "November 3, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Audit logs for request-for-access events are now emitted",
+    "slug": "audit-logs-for-request-for-access-events-are-now-emitted",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#audit-logs-for-request-for-access-events-are-now-emitted"
+  },
+  {
+    "date": "November 3, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "Disable DBFS root and mounts workspace setting is GA",
+    "slug": "disable-dbfs-root-and-mounts-workspace-setting-is-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#disable-dbfs-root-and-mounts-workspace-setting-is-ga"
+  },
+  {
+    "date": "November 3, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "TISAX compliance controls",
+    "slug": "tisax-compliance-controls",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#tisax-compliance-controls"
+  },
+  {
+    "date": "November 3, 2025",
+    "year": 2025,
+    "month": "november",
+    "title": "JAR tasks are now supported on serverless compute",
+    "slug": "jar-tasks-are-now-supported-on-serverless-compute",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/november#jar-tasks-are-now-supported-on-serverless-compute"
+  },
+  {
+    "date": "December 29, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Databricks Assistant on the documentation site",
+    "slug": "databricks-assistant-on-the-documentation-site",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#databricks-assistant-on-the-documentation-site"
+  },
+  {
+    "date": "December 23, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Databricks Assistant Agent mode is now in Public Preview",
+    "slug": "databricks-assistant-agent-mode-is-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#databricks-assistant-agent-mode-is-now-in-public-preview"
+  },
+  {
+    "date": "December 22, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Single-use refresh tokens for OAuth applications",
+    "slug": "single-use-refresh-tokens-for-oauth-applications",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#single-use-refresh-tokens-for-oauth-applications"
+  },
+  {
+    "date": "December 19, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Anthropic Claude Haiku 4.5 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-haiku-45-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#anthropic-claude-haiku-45-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "December 18, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Meta Ads connector (Beta)",
+    "slug": "meta-ads-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#meta-ads-connector-beta"
+  },
+  {
+    "date": "December 18, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "View latest scheduled notebook job results",
+    "slug": "view-latest-scheduled-notebook-job-results",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#view-latest-scheduled-notebook-job-results"
+  },
+  {
+    "date": "December 17, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Context based ingress control is now in Public Preview",
+    "slug": "context-based-ingress-control-is-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#context-based-ingress-control-is-now-in-public-preview"
+  },
+  {
+    "date": "December 17, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Login required to download ODBC driver",
+    "slug": "login-required-to-download-odbc-driver",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#login-required-to-download-odbc-driver"
+  },
+  {
+    "date": "December 17, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Flexible node types are now generally available",
+    "slug": "flexible-node-types-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#flexible-node-types-are-now-generally-available"
+  },
+  {
+    "date": "December 11, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Disable legacy features settings are now GA",
+    "slug": "disable-legacy-features-settings-are-now-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#disable-legacy-features-settings-are-now-ga"
+  },
+  {
+    "date": "December 11, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "OpenAI GPT-5.2 now available as a Databricks-hosted model",
+    "slug": "openai-gpt-52-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#openai-gpt-52-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "December 16, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Confluence connector (Beta)",
+    "slug": "confluence-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#confluence-connector-beta"
+  },
+  {
+    "date": "December 10, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Customizable SharePoint connector (Beta)",
+    "slug": "customizable-sharepoint-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#customizable-sharepoint-connector-beta"
+  },
+  {
+    "date": "December 10, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "NetSuite connector (Public Preview)",
+    "slug": "netsuite-connector-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#netsuite-connector-public-preview"
+  },
+  {
+    "date": "December 10, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Jira connector (Beta)",
+    "slug": "jira-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#jira-connector-beta"
+  },
+  {
+    "date": "December 10, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Microsoft Dynamics 365 connector (Public Preview)",
+    "slug": "microsoft-dynamics-365-connector-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#microsoft-dynamics-365-connector-public-preview"
+  },
+  {
+    "date": "December 9, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "New columns in Lakeflow system tables (Public Preview)",
+    "slug": "new-columns-in-lakeflow-system-tables-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#new-columns-in-lakeflow-system-tables-public-preview"
+  },
+  {
+    "date": "December 8, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Expanded regional availability for C5 and TISAX compliance",
+    "slug": "expanded-regional-availability-for-c5-and-tisax-compliance",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#expanded-regional-availability-for-c5-and-tisax-compliance"
+  },
+  {
+    "date": "December 8, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Vector Search reranker is now generally available",
+    "slug": "vector-search-reranker-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#vector-search-reranker-is-now-generally-available"
+  },
+  {
+    "date": "December 2, 2025",
+    "year": 2025,
+    "month": "december",
+    "title": "Built-in Excel file format support (Beta)",
+    "slug": "built-in-excel-file-format-support-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2025/december#built-in-excel-file-format-support-beta"
+  },
+  {
+    "date": "January 30, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Trigger on update for pipelines (GA)",
+    "slug": "trigger-on-update-for-pipelines-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#trigger-on-update-for-pipelines-ga"
+  },
+  {
+    "date": "January 30, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Lakeflow jobs system tables are now generally available (GA)",
+    "slug": "lakeflow-jobs-system-tables-are-now-generally-available-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#lakeflow-jobs-system-tables-are-now-generally-available-ga"
+  },
+  {
+    "date": "January 29, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "OpenAI GPT-5.2 Codex now available as a Databricks-hosted model",
+    "slug": "openai-gpt-52-codex-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#openai-gpt-52-codex-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "January 29, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "OpenAI GPT-5.2 Codex now available as a Databricks-hosted model",
+    "slug": "openai-gpt-52-codex-now-available-as-a-databricks-hosted-model-1",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#openai-gpt-52-codex-now-available-as-a-databricks-hosted-model-1"
+  },
+  {
+    "date": "January 30, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "View and restore your recent workspace tab sessions",
+    "slug": "view-and-restore-your-recent-workspace-tab-sessions",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#view-and-restore-your-recent-workspace-tab-sessions"
+  },
+  {
+    "date": "January 30, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Paste images into notebooks",
+    "slug": "paste-images-into-notebooks",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#paste-images-into-notebooks"
+  },
+  {
+    "date": "January 29, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Serverless workspaces are now generally available",
+    "slug": "serverless-workspaces-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#serverless-workspaces-are-now-generally-available"
+  },
+  {
+    "date": "January 27, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Managed MCP servers is now Public Preview",
+    "slug": "managed-mcp-servers-is-now-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#managed-mcp-servers-is-now-public-preview"
+  },
+  {
+    "date": "January 23, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Google Drive connector (Beta)",
+    "slug": "google-drive-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#google-drive-connector-beta"
+  },
+  {
+    "date": "January 22, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Front-end PrivateLink for performance-intensive services (Beta)",
+    "slug": "front-end-privatelink-for-performance-intensive-services-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#front-end-privatelink-for-performance-intensive-services-beta"
+  },
+  {
+    "date": "January 20, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "You can now use custom base environments for Python, Python Wheels, and notebook tasks in serverless jobs",
+    "slug": "you-can-now-use-custom-base-environments-for-python-python-wheels-and-notebook-tasks-in-serverless-jobs",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#you-can-now-use-custom-base-environments-for-python-python-wheels-and-notebook-tasks-in-serverless-jobs"
+  },
+  {
+    "date": "January 13, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Ingest Salesforce formula fields incrementally (Beta)",
+    "slug": "ingest-salesforce-formula-fields-incrementally-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#ingest-salesforce-formula-fields-incrementally-beta"
+  },
+  {
+    "date": "January 13, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Row filtering for managed ingestion connectors (Beta)",
+    "slug": "row-filtering-for-managed-ingestion-connectors-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#row-filtering-for-managed-ingestion-connectors-beta"
+  },
+  {
+    "date": "January 12, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "OpenAI GPT-5.1 Codex Max and Codex Mini now available as Databricks-hosted models",
+    "slug": "openai-gpt-51-codex-max-and-codex-mini-now-available-as-databricks-hosted-models",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#openai-gpt-51-codex-max-and-codex-mini-now-available-as-databricks-hosted-models"
+  },
+  {
+    "date": "January 12, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "OpenAI GPT-5.1 Codex Max and Codex Mini now available as Databricks-hosted models",
+    "slug": "openai-gpt-51-codex-max-and-codex-mini-now-available-as-databricks-hosted-models-1",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#openai-gpt-51-codex-max-and-codex-mini-now-available-as-databricks-hosted-models-1"
+  },
+  {
+    "date": "January 6, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Create skills for Databricks Assistant",
+    "slug": "create-skills-for-databricks-assistant",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#create-skills-for-databricks-assistant"
+  },
+  {
+    "date": "January 6, 2026",
+    "year": 2026,
+    "month": "january",
+    "title": "Automatic email notifications for expiring personal access tokens (GA)",
+    "slug": "automatic-email-notifications-for-expiring-personal-access-tokens-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/january#automatic-email-notifications-for-expiring-personal-access-tokens-ga"
+  },
+  {
+    "date": "February 26, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "ISMAP compliance support",
+    "slug": "ismap-compliance-support",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#ismap-compliance-support"
+  },
+  {
+    "date": "February 26, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "HITRUST compliance controls (Public Preview)",
+    "slug": "hitrust-compliance-controls-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#hitrust-compliance-controls-public-preview"
+  },
+  {
+    "date": "February 26, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Python unit testing in the workspace",
+    "slug": "python-unit-testing-in-the-workspace",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#python-unit-testing-in-the-workspace"
+  },
+  {
+    "date": "February 25, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Serverless outbound IPs available through public JSON endpoint (Public Preview)",
+    "slug": "serverless-outbound-ips-available-through-public-json-endpoint-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#serverless-outbound-ips-available-through-public-json-endpoint-public-preview"
+  },
+  {
+    "date": "February 25, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Databricks ODBC Driver renamed from Simba Spark ODBC Driver",
+    "slug": "databricks-odbc-driver-renamed-from-simba-spark-odbc-driver",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#databricks-odbc-driver-renamed-from-simba-spark-odbc-driver"
+  },
+  {
+    "date": "February 25, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "OpenAI GPT-5.3 Codex now available as a Databricks-hosted model",
+    "slug": "openai-gpt-53-codex-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#openai-gpt-53-codex-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "February 23, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "COMMENT ON streaming tables is now GA",
+    "slug": "comment-on-streaming-tables-is-now-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#comment-on-streaming-tables-is-now-ga"
+  },
+  {
+    "date": "February 23, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Personal access tokens preserved when CAN USE permission is revoked",
+    "slug": "personal-access-tokens-preserved-when-can-use-permission-is-revoked",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#personal-access-tokens-preserved-when-can-use-permission-is-revoked"
+  },
+  {
+    "date": "February 20, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "JAR tasks on serverless compute is now in Public Preview",
+    "slug": "jar-tasks-on-serverless-compute-is-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#jar-tasks-on-serverless-compute-is-now-in-public-preview"
+  },
+  {
+    "date": "February 20, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "ADBC driver is now the default driver for new Power BI connections",
+    "slug": "adbc-driver-is-now-the-default-driver-for-new-power-bi-connections",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#adbc-driver-is-now-the-default-driver-for-new-power-bi-connections"
+  },
+  {
+    "date": "February 19, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Google Gemini 3.1 Pro Preview now available as a Databricks-hosted model",
+    "slug": "google-gemini-31-pro-preview-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#google-gemini-31-pro-preview-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "February 18, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "TikTok Ads connector (Beta)",
+    "slug": "tiktok-ads-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#tiktok-ads-connector-beta"
+  },
+  {
+    "date": "February 18, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Discover page and domains (Beta)",
+    "slug": "discover-page-and-domains-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#discover-page-and-domains-beta"
+  },
+  {
+    "date": "February 18, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Scoped personal access tokens (Beta)",
+    "slug": "scoped-personal-access-tokens-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#scoped-personal-access-tokens-beta"
+  },
+  {
+    "date": "February 17, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Qwen3-Embedding-0.6B now available in Public Preview as a Databricks-hosted model",
+    "slug": "qwen3-embedding-06b-now-available-in-public-preview-as-a-databricks-hosted-model",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#qwen3-embedding-06b-now-available-in-public-preview-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "February 17, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Anthropic Claude Sonnet 4.6 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-sonnet-46-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#anthropic-claude-sonnet-46-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "February 12, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "AI Gateway (Beta)",
+    "slug": "ai-gateway-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#ai-gateway-beta"
+  },
+  {
+    "date": "February 12, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "File events enabled by default on new external locations",
+    "slug": "file-events-enabled-by-default-on-new-external-locations",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#file-events-enabled-by-default-on-new-external-locations"
+  },
+  {
+    "date": "February 12, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "HubSpot connector (Beta)",
+    "slug": "hubspot-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#hubspot-connector-beta"
+  },
+  {
+    "date": "February 10, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "New documentation for authoring and deploying agents on Databricks Apps",
+    "slug": "new-documentation-for-authoring-and-deploying-agents-on-databricks-apps",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#new-documentation-for-authoring-and-deploying-agents-on-databricks-apps"
+  },
+  {
+    "date": "February 6, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Query tags for SQL warehouses (Public Preview)",
+    "slug": "query-tags-for-sql-warehouses-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#query-tags-for-sql-warehouses-public-preview"
+  },
+  {
+    "date": "February 5, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Google Ads connector (Beta)",
+    "slug": "google-ads-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#google-ads-connector-beta"
+  },
+  {
+    "date": "February 5, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Decrypt query history system table fields (Public Preview)",
+    "slug": "decrypt-query-history-system-table-fields-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#decrypt-query-history-system-table-fields-public-preview"
+  },
+  {
+    "date": "February 5, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Applying filters, masks, tags, and comments to pipeline-created datasets is now GA",
+    "slug": "applying-filters-masks-tags-and-comments-to-pipeline-created-datasets-is-now-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#applying-filters-masks-tags-and-comments-to-pipeline-created-datasets-is-now-ga"
+  },
+  {
+    "date": "February 5, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Anthropic Claude Opus 4.6 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-opus-46-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#anthropic-claude-opus-46-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "February 5, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Default SQL warehouse settings (General Availability)",
+    "slug": "default-sql-warehouse-settings-general-availability",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#default-sql-warehouse-settings-general-availability"
+  },
+  {
+    "date": "February 4, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Connect Databricks Assistant to MCP servers",
+    "slug": "connect-databricks-assistant-to-mcp-servers",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#connect-databricks-assistant-to-mcp-servers"
+  },
+  {
+    "date": "February 3, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Select tables and create pivot tables in Google Sheets",
+    "slug": "select-tables-and-create-pivot-tables-in-google-sheets",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#select-tables-and-create-pivot-tables-in-google-sheets"
+  },
+  {
+    "date": "February 2, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Regional model hosting for Genie Agents in Japan and Korea",
+    "slug": "regional-model-hosting-for-genie-agents-in-japan-and-korea",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#regional-model-hosting-for-genie-agents-in-japan-and-korea"
+  },
+  {
+    "date": "February 2, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Zendesk Support connector (Beta)",
+    "slug": "zendesk-support-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#zendesk-support-connector-beta"
+  },
+  {
+    "date": "February 2, 2026",
+    "year": 2026,
+    "month": "february",
+    "title": "Data Quality Monitoring Anomaly Detection public preview",
+    "slug": "data-quality-monitoring-anomaly-detection-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/february#data-quality-monitoring-anomaly-detection-public-preview"
+  },
+  {
+    "date": "March 31, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Databricks Documentation site table of contents tabs",
+    "slug": "databricks-documentation-site-table-of-contents-tabs",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#databricks-documentation-site-table-of-contents-tabs"
+  },
+  {
+    "date": "March 30, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Databricks Connector for Google Sheets updates",
+    "slug": "databricks-connector-for-google-sheets-updates",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#databricks-connector-for-google-sheets-updates"
+  },
+  {
+    "date": "March 25, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Type widening is now generally available",
+    "slug": "type-widening-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#type-widening-is-now-generally-available"
+  },
+  {
+    "date": "March 25, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Auto Loader supports automatic type widening (Public Preview)",
+    "slug": "auto-loader-supports-automatic-type-widening-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#auto-loader-supports-automatic-type-widening-public-preview"
+  },
+  {
+    "date": "March 25, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "New fields in lineage system table entity metadata",
+    "slug": "new-fields-in-lineage-system-table-entity-metadata",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#new-fields-in-lineage-system-table-entity-metadata"
+  },
+  {
+    "date": "March 24, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Dynamic parameters in the new SQL editor",
+    "slug": "dynamic-parameters-in-the-new-sql-editor",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#dynamic-parameters-in-the-new-sql-editor"
+  },
+  {
+    "date": "March 19, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Create alerts for anomaly detection in the Data Quality Monitoring UI (Beta)",
+    "slug": "create-alerts-for-anomaly-detection-in-the-data-quality-monitoring-ui-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#create-alerts-for-anomaly-detection-in-the-data-quality-monitoring-ui-beta"
+  },
+  {
+    "date": "March 19, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "SQL alert task for jobs (Beta)",
+    "slug": "sql-alert-task-for-jobs-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#sql-alert-task-for-jobs-beta"
+  },
+  {
+    "date": "March 18, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Databricks JDBC driver 2.8.0 is available",
+    "slug": "databricks-jdbc-driver-280-is-available",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#databricks-jdbc-driver-280-is-available"
+  },
+  {
+    "date": "March 17, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Search in metric views fix",
+    "slug": "search-in-metric-views-fix",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#search-in-metric-views-fix"
+  },
+  {
+    "date": "March 17, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "OpenAI GPT-5.4 mini and GPT-5.4 nano now available as Databricks-hosted models",
+    "slug": "openai-gpt-54-mini-and-gpt-54-nano-now-available-as-databricks-hosted-models",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#openai-gpt-54-mini-and-gpt-54-nano-now-available-as-databricks-hosted-models"
+  },
+  {
+    "date": "March 13, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Health indicators for tables in Catalog Explorer (Public Preview)",
+    "slug": "health-indicators-for-tables-in-catalog-explorer-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#health-indicators-for-tables-in-catalog-explorer-public-preview"
+  },
+  {
+    "date": "March 13, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "ABAC policy functions now use snake_case naming",
+    "slug": "abac-policy-functions-now-use-snake_case-naming",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#abac-policy-functions-now-use-snake_case-naming"
+  },
+  {
+    "date": "March 13, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Some partner-powered AI features are now available in-country for Brazil, Canada, Japan, Korea, Singapore, and the UK",
+    "slug": "some-partner-powered-ai-features-are-now-available-in-country-for-brazil-canada-japan-korea-singapore-and-the-uk",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#some-partner-powered-ai-features-are-now-available-in-country-for-brazil-canada-japan-korea-singapore-and-the-uk"
+  },
+  {
+    "date": "March 13, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Empty vector search endpoints no longer incur charges",
+    "slug": "empty-vector-search-endpoints-no-longer-incur-charges",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#empty-vector-search-endpoints-no-longer-incur-charges"
+  },
+  {
+    "date": "March 13, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "5X-Large SQL warehouse size (Beta)",
+    "slug": "5x-large-sql-warehouse-size-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#5x-large-sql-warehouse-size-beta"
+  },
+  {
+    "date": "March 12, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Data quality monitoring documentation moved to Data governance (Unity Catalog)",
+    "slug": "data-quality-monitoring-documentation-moved-to-data-governance-unity-catalog",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#data-quality-monitoring-documentation-moved-to-data-governance-unity-catalog"
+  },
+  {
+    "date": "March 9, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Workday HCM connector (Beta)",
+    "slug": "workday-hcm-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#workday-hcm-connector-beta"
+  },
+  {
+    "date": "March 9, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Declarative Feature Engineering APIs (Beta)",
+    "slug": "declarative-feature-engineering-apis-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#declarative-feature-engineering-apis-beta"
+  },
+  {
+    "date": "March 9, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "BI compatibility mode for metric views in Power BI (Beta)",
+    "slug": "bi-compatibility-mode-for-metric-views-in-power-bi-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#bi-compatibility-mode-for-metric-views-in-power-bi-beta"
+  },
+  {
+    "date": "March 9, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Multi-table transactions are now in Public Preview",
+    "slug": "multi-table-transactions-are-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#multi-table-transactions-are-now-in-public-preview"
+  },
+  {
+    "date": "March 6, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Google Gemini 3.1 Flash Lite now available as a Databricks-hosted model",
+    "slug": "google-gemini-31-flash-lite-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#google-gemini-31-flash-lite-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "March 6, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Endpoint telemetry for custom model serving endpoints (Beta)",
+    "slug": "endpoint-telemetry-for-custom-model-serving-endpoints-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#endpoint-telemetry-for-custom-model-serving-endpoints-beta"
+  },
+  {
+    "date": "March 5, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "OpenAI GPT-5.4 now available as a Databricks-hosted model",
+    "slug": "openai-gpt-54-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#openai-gpt-54-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "March 5, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Tree view of the workspace browser side panel (Public Preview)",
+    "slug": "tree-view-of-the-workspace-browser-side-panel-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#tree-view-of-the-workspace-browser-side-panel-public-preview"
+  },
+  {
+    "date": "March 2, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Managed OAuth flows for external MCP servers",
+    "slug": "managed-oauth-flows-for-external-mcp-servers",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#managed-oauth-flows-for-external-mcp-servers"
+  },
+  {
+    "date": "March 2, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Notebook tagging (Public Preview)",
+    "slug": "notebook-tagging-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#notebook-tagging-public-preview"
+  },
+  {
+    "date": "March 2, 2026",
+    "year": 2026,
+    "month": "march",
+    "title": "Schedule data refreshes in Google Sheets (Public Preview)",
+    "slug": "schedule-data-refreshes-in-google-sheets-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/march#schedule-data-refreshes-in-google-sheets-public-preview"
+  },
+  {
+    "date": "April 30, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Disabling tasks in Lakeflow Jobs is now GA",
+    "slug": "disabling-tasks-in-lakeflow-jobs-is-now-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#disabling-tasks-in-lakeflow-jobs-is-now-ga"
+  },
+  {
+    "date": "April 28, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Attribute-based access control (ABAC) is now generally available",
+    "slug": "attribute-based-access-control-abac-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#attribute-based-access-control-abac-is-now-generally-available"
+  },
+  {
+    "date": "April 28, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "5X-Large SQL warehouse size (Public Preview)",
+    "slug": "5x-large-sql-warehouse-size-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#5x-large-sql-warehouse-size-public-preview"
+  },
+  {
+    "date": "April 28, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Tag Unity Catalog functions",
+    "slug": "tag-unity-catalog-functions",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#tag-unity-catalog-functions"
+  },
+  {
+    "date": "April 28, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Zendesk Support connector (GA)",
+    "slug": "zendesk-support-connector-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#zendesk-support-connector-ga"
+  },
+  {
+    "date": "April 27, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Recently Resolved Incidents section in Data Quality Monitoring (Beta)",
+    "slug": "recently-resolved-incidents-section-in-data-quality-monitoring-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#recently-resolved-incidents-section-in-data-quality-monitoring-beta"
+  },
+  {
+    "date": "April 25, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Confluence connector (GA)",
+    "slug": "confluence-connector-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#confluence-connector-ga"
+  },
+  {
+    "date": "April 24, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "OpenAI GPT-5.5 and GPT-5.5 Pro now available as Databricks-hosted models",
+    "slug": "openai-gpt-55-and-gpt-55-pro-now-available-as-databricks-hosted-models",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#openai-gpt-55-and-gpt-55-pro-now-available-as-databricks-hosted-models"
+  },
+  {
+    "date": "April 24, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Workspace base environments are now generally available",
+    "slug": "workspace-base-environments-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#workspace-base-environments-are-now-generally-available"
+  },
+  {
+    "date": "April 22, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Language selector for AI-generated comments in Catalog Explorer",
+    "slug": "language-selector-for-ai-generated-comments-in-catalog-explorer",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#language-selector-for-ai-generated-comments-in-catalog-explorer"
+  },
+  {
+    "date": "April 20, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Databricks Data Classification is now GA",
+    "slug": "databricks-data-classification-is-now-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#databricks-data-classification-is-now-ga"
+  },
+  {
+    "date": "April 20, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Supervisor API for building agents (Beta)",
+    "slug": "supervisor-api-for-building-agents-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#supervisor-api-for-building-agents-beta"
+  },
+  {
+    "date": "April 17, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "BI compatibility mode removed from Power BI connector",
+    "slug": "bi-compatibility-mode-removed-from-power-bi-connector",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#bi-compatibility-mode-removed-from-power-bi-connector"
+  },
+  {
+    "date": "April 17, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Altering a catalog or schema's managed storage location is now GA",
+    "slug": "altering-a-catalog-or-schemas-managed-storage-location-is-now-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#altering-a-catalog-or-schemas-managed-storage-location-is-now-ga"
+  },
+  {
+    "date": "April 16, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Databricks Connector for Google Sheets is now generally available",
+    "slug": "databricks-connector-for-google-sheets-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#databricks-connector-for-google-sheets-is-now-generally-available"
+  },
+  {
+    "date": "April 16, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Anthropic Claude Opus 4.7 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-opus-47-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#anthropic-claude-opus-47-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "April 16, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Compute log delivery to volumes is now GA",
+    "slug": "compute-log-delivery-to-volumes-is-now-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#compute-log-delivery-to-volumes-is-now-ga"
+  },
+  {
+    "date": "April 16, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Customer-managed keys now support model serving",
+    "slug": "customer-managed-keys-now-support-model-serving",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#customer-managed-keys-now-support-model-serving"
+  },
+  {
+    "date": "April 15, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Query-based connectors for Lakeflow Connect (Public Preview)",
+    "slug": "query-based-connectors-for-lakeflow-connect-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#query-based-connectors-for-lakeflow-connect-public-preview"
+  },
+  {
+    "date": "April 15, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Sample Data Explorer is generally available",
+    "slug": "sample-data-explorer-is-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#sample-data-explorer-is-generally-available"
+  },
+  {
+    "date": "April 15, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "AI Gateway now governs MCP servers (Beta)",
+    "slug": "ai-gateway-now-governs-mcp-servers-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#ai-gateway-now-governs-mcp-servers-beta"
+  },
+  {
+    "date": "April 15, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Updated AWS tag character restrictions",
+    "slug": "updated-aws-tag-character-restrictions",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#updated-aws-tag-character-restrictions"
+  },
+  {
+    "date": "April 14, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Create and write to Unity Catalog tables from external Delta clients (Beta)",
+    "slug": "create-and-write-to-unity-catalog-tables-from-external-delta-clients-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#create-and-write-to-unity-catalog-tables-from-external-delta-clients-beta"
+  },
+  {
+    "date": "April 13, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Vector Search retrieval quality (Beta)",
+    "slug": "vector-search-retrieval-quality-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#vector-search-retrieval-quality-beta"
+  },
+  {
+    "date": "April 13, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "SQL reference documentation for managing governed tags",
+    "slug": "sql-reference-documentation-for-managing-governed-tags",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#sql-reference-documentation-for-managing-governed-tags"
+  },
+  {
+    "date": "April 8, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Scoped personal access tokens are now generally available",
+    "slug": "scoped-personal-access-tokens-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#scoped-personal-access-tokens-are-now-generally-available"
+  },
+  {
+    "date": "April 7, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Git-backed app deployments are now generally available",
+    "slug": "git-backed-app-deployments-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#git-backed-app-deployments-are-now-generally-available"
+  },
+  {
+    "date": "April 6, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Databricks Marketplace listing creation wizard",
+    "slug": "databricks-marketplace-listing-creation-wizard",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#databricks-marketplace-listing-creation-wizard"
+  },
+  {
+    "date": "April 2, 2026",
+    "year": 2026,
+    "month": "april",
+    "title": "Governed tags are generally available",
+    "slug": "governed-tags-are-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/april#governed-tags-are-generally-available"
+  },
+  {
+    "date": "May 29, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Query-based connectors for Lakeflow Connect are now generally available",
+    "slug": "query-based-connectors-for-lakeflow-connect-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#query-based-connectors-for-lakeflow-connect-are-now-generally-available"
+  },
+  {
+    "date": "May 21, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Workspace sidebar navigation updates",
+    "slug": "workspace-sidebar-navigation-updates",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#workspace-sidebar-navigation-updates"
+  },
+  {
+    "date": "May 28, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Anthropic Claude Opus 4.8 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-opus-48-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#anthropic-claude-opus-48-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "May 28, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Cross-engine attribute-based access controls (Beta)",
+    "slug": "cross-engine-attribute-based-access-controls-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#cross-engine-attribute-based-access-controls-beta"
+  },
+  {
+    "date": "May 27, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Google Drive managed ingestion connector (Beta)",
+    "slug": "google-drive-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#google-drive-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "May 27, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Workspace admin setting for serverless notebook execution timeout",
+    "slug": "workspace-admin-setting-for-serverless-notebook-execution-timeout",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#workspace-admin-setting-for-serverless-notebook-execution-timeout"
+  },
+  {
+    "date": "May 26, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Removed legacy Assistant slash commands",
+    "slug": "removed-legacy-assistant-slash-commands",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#removed-legacy-assistant-slash-commands"
+  },
+  {
+    "date": "May 22, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Account access denylist for automatic identity management (Public Preview)",
+    "slug": "account-access-denylist-for-automatic-identity-management-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#account-access-denylist-for-automatic-identity-management-public-preview"
+  },
+  {
+    "date": "May 21, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Databricks CLI is now GA",
+    "slug": "databricks-cli-is-now-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#databricks-cli-is-now-ga"
+  },
+  {
+    "date": "May 21, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Instance events and instance pools system tables are now available (Public Preview)",
+    "slug": "instance-events-and-instance-pools-system-tables-are-now-available-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#instance-events-and-instance-pools-system-tables-are-now-available-public-preview"
+  },
+  {
+    "date": "May 20, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Vector Search storage-optimized endpoints are GA",
+    "slug": "vector-search-storage-optimized-endpoints-are-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#vector-search-storage-optimized-endpoints-are-ga"
+  },
+  {
+    "date": "May 20, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Fixed LOD expression syntax update for metric views",
+    "slug": "fixed-lod-expression-syntax-update-for-metric-views",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#fixed-lod-expression-syntax-update-for-metric-views"
+  },
+  {
+    "date": "May 20, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Serve custom LLMs with Custom Model Serving (Beta)",
+    "slug": "serve-custom-llms-with-custom-model-serving-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#serve-custom-llms-with-custom-model-serving-beta"
+  },
+  {
+    "date": "May 20, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Authenticate as a service principal using OAuth U2M (Beta)",
+    "slug": "authenticate-as-a-service-principal-using-oauth-u2m-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#authenticate-as-a-service-principal-using-oauth-u2m-beta"
+  },
+  {
+    "date": "May 19, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Customer-managed keys now support MLflow managed evaluation features",
+    "slug": "customer-managed-keys-now-support-mlflow-managed-evaluation-features",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#customer-managed-keys-now-support-mlflow-managed-evaluation-features"
+  },
+  {
+    "date": "May 19, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Databricks Container Services for standard compute is now available (Beta)",
+    "slug": "databricks-container-services-for-standard-compute-is-now-available-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#databricks-container-services-for-standard-compute-is-now-available-beta"
+  },
+  {
+    "date": "May 19, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Google Gemini 3.5 Flash now available as a Databricks-hosted model",
+    "slug": "google-gemini-35-flash-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#google-gemini-35-flash-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "May 19, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Edits to resources in the UI now automatically update YAML",
+    "slug": "edits-to-resources-in-the-ui-now-automatically-update-yaml",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#edits-to-resources-in-the-ui-now-automatically-update-yaml"
+  },
+  {
+    "date": "May 18, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Unified runs list is generally available",
+    "slug": "unified-runs-list-is-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#unified-runs-list-is-generally-available"
+  },
+  {
+    "date": "May 14, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "View run history for scheduled refreshes in Google Sheets",
+    "slug": "view-run-history-for-scheduled-refreshes-in-google-sheets",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#view-run-history-for-scheduled-refreshes-in-google-sheets"
+  },
+  {
+    "date": "May 14, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Configure an additional recipient for workspace operational emails",
+    "slug": "configure-an-additional-recipient-for-workspace-operational-emails",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#configure-an-additional-recipient-for-workspace-operational-emails"
+  },
+  {
+    "date": "May 14, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "SQL alert task in Lakeflow Jobs is now in Public Preview",
+    "slug": "sql-alert-task-in-lakeflow-jobs-is-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#sql-alert-task-in-lakeflow-jobs-is-now-in-public-preview"
+  },
+  {
+    "date": "May 11, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "HubSpot connector (GA)",
+    "slug": "hubspot-connector-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#hubspot-connector-ga"
+  },
+  {
+    "date": "May 8, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Catalog commits are now generally available",
+    "slug": "catalog-commits-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#catalog-commits-are-now-generally-available"
+  },
+  {
+    "date": "May 7, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Standalone pipelines on serverless general compute (Beta)",
+    "slug": "standalone-pipelines-on-serverless-general-compute-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#standalone-pipelines-on-serverless-general-compute-beta"
+  },
+  {
+    "date": "May 7, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Graviton instance types are available for the compliance security profile",
+    "slug": "graviton-instance-types-are-available-for-the-compliance-security-profile",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#graviton-instance-types-are-available-for-the-compliance-security-profile"
+  },
+  {
+    "date": "May 5, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Outlook managed ingestion connector (Beta)",
+    "slug": "outlook-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#outlook-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "May 5, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Alibaba Cloud Qwen3.5 122B A10B now available as a Databricks-hosted model in Public Preview",
+    "slug": "alibaba-cloud-qwen35-122b-a10b-now-available-as-a-databricks-hosted-model-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#alibaba-cloud-qwen35-122b-a10b-now-available-as-a-databricks-hosted-model-in-public-preview"
+  },
+  {
+    "date": "May 5, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "GitHub managed ingestion connector (Beta)",
+    "slug": "github-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#github-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "May 5, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Automatic identity management",
+    "slug": "automatic-identity-management",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#automatic-identity-management"
+  },
+  {
+    "date": "May 5, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Smartsheet managed ingestion connector (Beta)",
+    "slug": "smartsheet-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#smartsheet-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "May 4, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Lakeflow Pipelines Editor is now generally available",
+    "slug": "lakeflow-pipelines-editor-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#lakeflow-pipelines-editor-is-now-generally-available"
+  },
+  {
+    "date": "May 1, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Native data profiling for notebook results tables",
+    "slug": "native-data-profiling-for-notebook-results-tables",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#native-data-profiling-for-notebook-results-tables"
+  },
+  {
+    "date": "May 1, 2026",
+    "year": 2026,
+    "month": "may",
+    "title": "Community connectors (Beta)",
+    "slug": "community-connectors-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/may#community-connectors-beta"
+  },
+  {
+    "date": "June 30, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Anthropic Claude Sonnet 5 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-sonnet-5-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#anthropic-claude-sonnet-5-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "June 30, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Run a subset of job tasks with their dependencies",
+    "slug": "run-a-subset-of-job-tasks-with-their-dependencies",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#run-a-subset-of-job-tasks-with-their-dependencies"
+  },
+  {
+    "date": "June 30, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Lakehouse Real-Time (Beta)",
+    "slug": "lakehouse-real-time-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#lakehouse-real-time-beta"
+  },
+  {
+    "date": "June 29, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "SQL alert task in Lakeflow Jobs is now generally available",
+    "slug": "sql-alert-task-in-lakeflow-jobs-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#sql-alert-task-in-lakeflow-jobs-is-now-generally-available"
+  },
+  {
+    "date": "June 29, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Govern LLMs in Unity Catalog with model services (Beta)",
+    "slug": "govern-llms-in-unity-catalog-with-model-services-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#govern-llms-in-unity-catalog-with-model-services-beta"
+  },
+  {
+    "date": "June 26, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Microsoft Dynamics 365 connector (GA)",
+    "slug": "microsoft-dynamics-365-connector-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#microsoft-dynamics-365-connector-ga"
+  },
+  {
+    "date": "June 26, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Metric view parameters are now in Public Preview",
+    "slug": "metric-view-parameters-are-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#metric-view-parameters-are-now-in-public-preview"
+  },
+  {
+    "date": "June 25, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Solution Accelerators in Databricks Marketplace are now published as apps or notebooks",
+    "slug": "solution-accelerators-in-databricks-marketplace-are-now-published-as-apps-or-notebooks",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#solution-accelerators-in-databricks-marketplace-are-now-published-as-apps-or-notebooks"
+  },
+  {
+    "date": "June 23, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Data Classification is now available by default for some workspaces with the compliance security profile enabled",
+    "slug": "data-classification-is-now-available-by-default-for-some-workspaces-with-the-compliance-security-profile-enabled",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#data-classification-is-now-available-by-default-for-some-workspaces-with-the-compliance-security-profile-enabled"
+  },
+  {
+    "date": "June 23, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Block specific internet destinations in network policies (Public Preview)",
+    "slug": "block-specific-internet-destinations-in-network-policies-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#block-specific-internet-destinations-in-network-policies-public-preview"
+  },
+  {
+    "date": "June 22, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Square managed ingestion connector (Beta)",
+    "slug": "square-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#square-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "June 23, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Managed agent memory is in Beta",
+    "slug": "managed-agent-memory-is-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#managed-agent-memory-is-in-beta"
+  },
+  {
+    "date": "June 22, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Wiz Audit Logs managed ingestion connector (Beta)",
+    "slug": "wiz-audit-logs-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#wiz-audit-logs-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "June 22, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "The Discover page is now in Public Preview",
+    "slug": "the-discover-page-is-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#the-discover-page-is-now-in-public-preview"
+  },
+  {
+    "date": "June 20, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Netskope Logs managed ingestion connector (Beta)",
+    "slug": "netskope-logs-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#netskope-logs-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "June 18, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Salesforce Marketing Cloud managed ingestion connector (Beta)",
+    "slug": "salesforce-marketing-cloud-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#salesforce-marketing-cloud-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "June 18, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Incremental ingestion for Workday Reports (Beta)",
+    "slug": "incremental-ingestion-for-workday-reports-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#incremental-ingestion-for-workday-reports-beta"
+  },
+  {
+    "date": "June 17, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Omnigent coding agent meta-harness is now in Beta",
+    "slug": "omnigent-coding-agent-meta-harness-is-now-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#omnigent-coding-agent-meta-harness-is-now-in-beta"
+  },
+  {
+    "date": "June 17, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Comments on foreign tables (Beta)",
+    "slug": "comments-on-foreign-tables-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#comments-on-foreign-tables-beta"
+  },
+  {
+    "date": "June 16, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Install third-party apps from Databricks Marketplace",
+    "slug": "install-third-party-apps-from-databricks-marketplace",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#install-third-party-apps-from-databricks-marketplace"
+  },
+  {
+    "date": "June 15, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Use Universal Commits to purchase Marketplace partner products",
+    "slug": "use-universal-commits-to-purchase-marketplace-partner-products",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#use-universal-commits-to-purchase-marketplace-partner-products"
+  },
+  {
+    "date": "June 15, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Share data behind a firewall with SecureConnect (Public Preview)",
+    "slug": "share-data-behind-a-firewall-with-secureconnect-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#share-data-behind-a-firewall-with-secureconnect-public-preview"
+  },
+  {
+    "date": "June 15, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "OIDC is now supported for sharing to Iceberg clients",
+    "slug": "oidc-is-now-supported-for-sharing-to-iceberg-clients",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#oidc-is-now-supported-for-sharing-to-iceberg-clients"
+  },
+  {
+    "date": "June 15, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Configure the recovery period for dropped managed tables (Public Preview)",
+    "slug": "configure-the-recovery-period-for-dropped-managed-tables-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#configure-the-recovery-period-for-dropped-managed-tables-public-preview"
+  },
+  {
+    "date": "June 12, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Faster inference tables for custom model serving endpoints",
+    "slug": "faster-inference-tables-for-custom-model-serving-endpoints",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#faster-inference-tables-for-custom-model-serving-endpoints"
+  },
+  {
+    "date": "June 12, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Email notifications for expiring service principal tokens (Beta)",
+    "slug": "email-notifications-for-expiring-service-principal-tokens-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#email-notifications-for-expiring-service-principal-tokens-beta"
+  },
+  {
+    "date": "June 12, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Managed disaster recovery is now in Public Preview",
+    "slug": "managed-disaster-recovery-is-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#managed-disaster-recovery-is-now-in-public-preview"
+  },
+  {
+    "date": "June 12, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Mission Critical add-on is now in Public Preview",
+    "slug": "mission-critical-add-on-is-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#mission-critical-add-on-is-now-in-public-preview"
+  },
+  {
+    "date": "June 12, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Auto time-to-live for automatic row deletion is generally available",
+    "slug": "auto-time-to-live-for-automatic-row-deletion-is-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#auto-time-to-live-for-automatic-row-deletion-is-generally-available"
+  },
+  {
+    "date": "June 12, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Converting a partitioned table to liquid clustering is generally available",
+    "slug": "converting-a-partitioned-table-to-liquid-clustering-is-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#converting-a-partitioned-table-to-liquid-clustering-is-generally-available"
+  },
+  {
+    "date": "June 16, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Improved workspace files read performance",
+    "slug": "improved-workspace-files-read-performance",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#improved-workspace-files-read-performance"
+  },
+  {
+    "date": "June 11, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Endpoint telemetry for custom model serving endpoints is generally available",
+    "slug": "endpoint-telemetry-for-custom-model-serving-endpoints-is-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#endpoint-telemetry-for-custom-model-serving-endpoints-is-generally-available"
+  },
+  {
+    "date": "June 11, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "ABAC GRANT policies for models (Beta)",
+    "slug": "abac-grant-policies-for-models-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#abac-grant-policies-for-models-beta"
+  },
+  {
+    "date": "June 10, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Schedule deferred policy enforcement for all-purpose compute",
+    "slug": "schedule-deferred-policy-enforcement-for-all-purpose-compute",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#schedule-deferred-policy-enforcement-for-all-purpose-compute"
+  },
+  {
+    "date": "June 10, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Lakehouse Replay (Beta)",
+    "slug": "lakehouse-replay-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#lakehouse-replay-beta"
+  },
+  {
+    "date": "June 10, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Delta Sharing is now OpenSharing",
+    "slug": "delta-sharing-is-now-opensharing",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#delta-sharing-is-now-opensharing"
+  },
+  {
+    "date": "June 10, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Zip connector (Beta)",
+    "slug": "zip-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#zip-connector-beta"
+  },
+  {
+    "date": "June 9, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Automatic identity management for Okta (Public Preview)",
+    "slug": "automatic-identity-management-for-okta-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#automatic-identity-management-for-okta-public-preview"
+  },
+  {
+    "date": "June 9, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Anthropic Claude Fable 5 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-fable-5-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#anthropic-claude-fable-5-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "June 9, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Identity federation enabled by default for all new workspaces",
+    "slug": "identity-federation-enabled-by-default-for-all-new-workspaces",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#identity-federation-enabled-by-default-for-all-new-workspaces"
+  },
+  {
+    "date": "June 8, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Monday.com managed ingestion connector (Beta)",
+    "slug": "mondaycom-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#mondaycom-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "June 8, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Zoho Books managed ingestion connector (Beta)",
+    "slug": "zoho-books-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#zoho-books-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "June 8, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "External lineage is now generally available",
+    "slug": "external-lineage-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#external-lineage-is-now-generally-available"
+  },
+  {
+    "date": "June 8, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Aha! connector (Beta)",
+    "slug": "aha-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#aha-connector-beta"
+  },
+  {
+    "date": "June 8, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "AI Search supports selected text columns, sorting, and aggregations (Beta)",
+    "slug": "ai-search-supports-selected-text-columns-sorting-and-aggregations-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#ai-search-supports-selected-text-columns-sorting-and-aggregations-beta"
+  },
+  {
+    "date": "June 5, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Managed SharePoint connector adds structured file ingestion and file metadata support (Beta)",
+    "slug": "managed-sharepoint-connector-adds-structured-file-ingestion-and-file-metadata-support-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#managed-sharepoint-connector-adds-structured-file-ingestion-and-file-metadata-support-beta"
+  },
+  {
+    "date": "June 5, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "AWS Graviton instances are now supported with the compliance security profile",
+    "slug": "aws-graviton-instances-are-now-supported-with-the-compliance-security-profile",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#aws-graviton-instances-are-now-supported-with-the-compliance-security-profile"
+  },
+  {
+    "date": "June 4, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Improved workspace file write performance on classic compute",
+    "slug": "improved-workspace-file-write-performance-on-classic-compute",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#improved-workspace-file-write-performance-on-classic-compute"
+  },
+  {
+    "date": "June 4, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Set budgets for Genie usage",
+    "slug": "set-budgets-for-genie-usage",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#set-budgets-for-genie-usage"
+  },
+  {
+    "date": "June 3, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Table update triggers on Delta Sharing and system tables (Beta)",
+    "slug": "table-update-triggers-on-delta-sharing-and-system-tables-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#table-update-triggers-on-delta-sharing-and-system-tables-beta"
+  },
+  {
+    "date": "June 2, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Pendo connector (Beta)",
+    "slug": "pendo-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#pendo-connector-beta"
+  },
+  {
+    "date": "June 2, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Managed RabbitMQ connector (Beta)",
+    "slug": "managed-rabbitmq-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#managed-rabbitmq-connector-beta"
+  },
+  {
+    "date": "June 1, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Vector Search is now AI Search",
+    "slug": "vector-search-is-now-ai-search",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#vector-search-is-now-ai-search"
+  },
+  {
+    "date": "June 1, 2026",
+    "year": 2026,
+    "month": "june",
+    "title": "Column popularity is now available in the Catalog Explorer",
+    "slug": "column-popularity-is-now-available-in-the-catalog-explorer",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/june#column-popularity-is-now-available-in-the-catalog-explorer"
+  },
+  {
+    "date": "July 31, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Packaged clean rooms are now generally available",
+    "slug": "packaged-clean-rooms-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#packaged-clean-rooms-are-now-generally-available"
+  },
+  {
+    "date": "July 31, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "OpenAI connector (Beta)",
+    "slug": "openai-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#openai-connector-beta"
+  },
+  {
+    "date": "July 30, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Use Unity Gateway with your own Claude enterprise subscription",
+    "slug": "use-unity-gateway-with-your-own-claude-enterprise-subscription",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#use-unity-gateway-with-your-own-claude-enterprise-subscription"
+  },
+  {
+    "date": "July 29, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Automatic upgrades begin rolling out row tracking and Checkpoint V2 to existing tables",
+    "slug": "automatic-upgrades-begin-rolling-out-row-tracking-and-checkpoint-v2-to-existing-tables",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#automatic-upgrades-begin-rolling-out-row-tracking-and-checkpoint-v2-to-existing-tables"
+  },
+  {
+    "date": "July 26, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Unit testing for pipelines (Beta)",
+    "slug": "unit-testing-for-pipelines-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#unit-testing-for-pipelines-beta"
+  },
+  {
+    "date": "July 24, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Governed tags system table is in Beta",
+    "slug": "governed-tags-system-table-is-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#governed-tags-system-table-is-in-beta"
+  },
+  {
+    "date": "July 24, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Git CLI commands in Git folders are now in Public Preview",
+    "slug": "git-cli-commands-in-git-folders-are-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#git-cli-commands-in-git-folders-are-now-in-public-preview"
+  },
+  {
+    "date": "July 24, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Anthropic Claude Opus 5 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-opus-5-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#anthropic-claude-opus-5-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "July 23, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "C++ SDK for the Zerobus Ingest connector is now available in Beta",
+    "slug": "c-sdk-for-the-zerobus-ingest-connector-is-now-available-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#c-sdk-for-the-zerobus-ingest-connector-is-now-available-in-beta"
+  },
+  {
+    "date": "July 22, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Variant and Variant shredding are now generally available",
+    "slug": "variant-and-variant-shredding-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#variant-and-variant-shredding-are-now-generally-available"
+  },
+  {
+    "date": "July 22, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Transactions are now generally available",
+    "slug": "transactions-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#transactions-are-now-generally-available"
+  },
+  {
+    "date": "July 22, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Email notifications for expiring service principal tokens are now generally available",
+    "slug": "email-notifications-for-expiring-service-principal-tokens-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#email-notifications-for-expiring-service-principal-tokens-are-now-generally-available"
+  },
+  {
+    "date": "July 22, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Override the REPLACE WHERE predicate for a single refresh",
+    "slug": "override-the-replace-where-predicate-for-a-single-refresh",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#override-the-replace-where-predicate-for-a-single-refresh"
+  },
+  {
+    "date": "July 22, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Role-based access control (RBAC) is in Public Preview",
+    "slug": "role-based-access-control-rbac-is-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#role-based-access-control-rbac-is-in-public-preview"
+  },
+  {
+    "date": "July 22, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Governance Hub is in Beta",
+    "slug": "governance-hub-is-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#governance-hub-is-in-beta"
+  },
+  {
+    "date": "July 22, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Priority pay-per-token for Foundation Model APIs",
+    "slug": "priority-pay-per-token-for-foundation-model-apis",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#priority-pay-per-token-for-foundation-model-apis"
+  },
+  {
+    "date": "July 22, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Automated setup for S3 external locations",
+    "slug": "automated-setup-for-s3-external-locations",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#automated-setup-for-s3-external-locations"
+  },
+  {
+    "date": "July 21, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Warehouse-level statement timeouts (Beta)",
+    "slug": "warehouse-level-statement-timeouts-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#warehouse-level-statement-timeouts-beta"
+  },
+  {
+    "date": "July 21, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Reddit Ads connector is now available in Beta",
+    "slug": "reddit-ads-connector-is-now-available-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#reddit-ads-connector-is-now-available-in-beta"
+  },
+  {
+    "date": "July 21, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Google Gemini 3.6 Flash now available as a Databricks-hosted model",
+    "slug": "google-gemini-36-flash-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#google-gemini-36-flash-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "July 21, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Google Gemini 3.5 Flash Lite now available as a Databricks-hosted model",
+    "slug": "google-gemini-35-flash-lite-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#google-gemini-35-flash-lite-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "July 21, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Context-based ingress control for workspaces public access is now generally available",
+    "slug": "context-based-ingress-control-for-workspaces-public-access-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#context-based-ingress-control-for-workspaces-public-access-is-now-generally-available"
+  },
+  {
+    "date": "July 17, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Connect and govern any external model provider",
+    "slug": "connect-and-govern-any-external-model-provider",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#connect-and-govern-any-external-model-provider"
+  },
+  {
+    "date": "July 17, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Anthropic managed ingestion connector (Beta)",
+    "slug": "anthropic-managed-ingestion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#anthropic-managed-ingestion-connector-beta"
+  },
+  {
+    "date": "July 16, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Scala and Java UDFs in Unity Catalog are now generally available",
+    "slug": "scala-and-java-udfs-in-unity-catalog-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#scala-and-java-udfs-in-unity-catalog-are-now-generally-available"
+  },
+  {
+    "date": "July 16, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Agentic code converter is in Beta",
+    "slug": "agentic-code-converter-is-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#agentic-code-converter-is-in-beta"
+  },
+  {
+    "date": "July 16, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Google Gemini 3 Pro is retired",
+    "slug": "google-gemini-3-pro-is-retired",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#google-gemini-3-pro-is-retired"
+  },
+  {
+    "date": "July 15, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Thinking Machine Labs Inkling now available as a Databricks-hosted model in Public Preview",
+    "slug": "thinking-machine-labs-inkling-now-available-as-a-databricks-hosted-model-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#thinking-machine-labs-inkling-now-available-as-a-databricks-hosted-model-in-public-preview"
+  },
+  {
+    "date": "July 15, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Data Classification is now available by default for additional compliance standards",
+    "slug": "data-classification-is-now-available-by-default-for-additional-compliance-standards",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#data-classification-is-now-available-by-default-for-additional-compliance-standards"
+  },
+  {
+    "date": "July 15, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "AI Search High QPS is now generally available",
+    "slug": "ai-search-high-qps-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#ai-search-high-qps-is-now-generally-available"
+  },
+  {
+    "date": "July 14, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Allowlist partner platform IPs in context-based ingress control (Beta)",
+    "slug": "allowlist-partner-platform-ips-in-context-based-ingress-control-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#allowlist-partner-platform-ips-in-context-based-ingress-control-beta"
+  },
+  {
+    "date": "July 13, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "View warehouse activity details (General Availability)",
+    "slug": "view-warehouse-activity-details-general-availability",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#view-warehouse-activity-details-general-availability"
+  },
+  {
+    "date": "July 10, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Secrets in Unity Catalog (Public Preview)",
+    "slug": "secrets-in-unity-catalog-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#secrets-in-unity-catalog-public-preview"
+  },
+  {
+    "date": "July 9, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Strac connector (Beta)",
+    "slug": "strac-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#strac-connector-beta"
+  },
+  {
+    "date": "July 9, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Protobuf tensor input for custom model serving endpoints (Public Preview)",
+    "slug": "protobuf-tensor-input-for-custom-model-serving-endpoints-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#protobuf-tensor-input-for-custom-model-serving-endpoints-public-preview"
+  },
+  {
+    "date": "July 9, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "OpenAI GPT-5.6 Sol, GPT-5.6 Terra, and GPT-5.6 Luna now available as Databricks-hosted models",
+    "slug": "openai-gpt-56-sol-gpt-56-terra-and-gpt-56-luna-now-available-as-databricks-hosted-models",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#openai-gpt-56-sol-gpt-56-terra-and-gpt-56-luna-now-available-as-databricks-hosted-models"
+  },
+  {
+    "date": "July 9, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Databricks SQL alerts are now available by default for workspaces with the compliance security profile enabled",
+    "slug": "databricks-sql-alerts-are-now-available-by-default-for-workspaces-with-the-compliance-security-profile-enabled",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#databricks-sql-alerts-are-now-available-by-default-for-workspaces-with-the-compliance-security-profile-enabled"
+  },
+  {
+    "date": "July 8, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Object metadata column is now in Public Preview",
+    "slug": "object-metadata-column-is-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#object-metadata-column-is-now-in-public-preview"
+  },
+  {
+    "date": "July 8, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Zhipu AI GLM 5.2 now available as a Databricks-hosted model",
+    "slug": "zhipu-ai-glm-52-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#zhipu-ai-glm-52-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "July 8, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Google Gemini 2.5 Flash and Pro are scheduled for retirement",
+    "slug": "google-gemini-25-flash-and-pro-are-scheduled-for-retirement",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#google-gemini-25-flash-and-pro-are-scheduled-for-retirement"
+  },
+  {
+    "date": "July 8, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Anthropic Claude Sonnet 4 is scheduled for retirement",
+    "slug": "anthropic-claude-sonnet-4-is-scheduled-for-retirement",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#anthropic-claude-sonnet-4-is-scheduled-for-retirement"
+  },
+  {
+    "date": "July 7, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "REPLACE WHERE flows are now generally available",
+    "slug": "replace-where-flows-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#replace-where-flows-are-now-generally-available"
+  },
+  {
+    "date": "July 7, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Managed Iceberg materialized views are in Public Preview",
+    "slug": "managed-iceberg-materialized-views-are-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#managed-iceberg-materialized-views-are-in-public-preview"
+  },
+  {
+    "date": "July 7, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Excel file format support is now available by default",
+    "slug": "excel-file-format-support-is-now-available-by-default",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#excel-file-format-support-is-now-available-by-default"
+  },
+  {
+    "date": "July 6, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Budgets are now generally available",
+    "slug": "budgets-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#budgets-are-now-generally-available"
+  },
+  {
+    "date": "July 6, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Private Link for account-level resources (Beta)",
+    "slug": "private-link-for-account-level-resources-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#private-link-for-account-level-resources-beta"
+  },
+  {
+    "date": "July 3, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Okta support for automatic identity management is now generally available",
+    "slug": "okta-support-for-automatic-identity-management-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#okta-support-for-automatic-identity-management-is-now-generally-available"
+  },
+  {
+    "date": "July 1, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Veeva Vault connector (Beta)",
+    "slug": "veeva-vault-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#veeva-vault-connector-beta"
+  },
+  {
+    "date": "July 1, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "MySQL integrated CDC pipeline is now in Beta",
+    "slug": "mysql-integrated-cdc-pipeline-is-now-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#mysql-integrated-cdc-pipeline-is-now-in-beta"
+  },
+  {
+    "date": "July 1, 2026",
+    "year": 2026,
+    "month": "july",
+    "title": "Google Gemini 3.1 Flash Image and Gemini 3 Pro Image now available as Databricks-hosted models",
+    "slug": "google-gemini-31-flash-image-and-gemini-3-pro-image-now-available-as-databricks-hosted-models",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/july#google-gemini-31-flash-image-and-gemini-3-pro-image-now-available-as-databricks-hosted-models"
+  },
+  {
+    "date": "August 31, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Pipeline events system table is in Beta",
+    "slug": "pipeline-events-system-table-is-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#pipeline-events-system-table-is-in-beta"
+  },
+  {
+    "date": "August 29, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Restrict service principal OAuth secrets to specific API scopes",
+    "slug": "restrict-service-principal-oauth-secrets-to-specific-api-scopes",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#restrict-service-principal-oauth-secrets-to-specific-api-scopes"
+  },
+  {
+    "date": "August 29, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Zhipu AI GLM 5.3 now available as a Databricks-hosted model",
+    "slug": "zhipu-ai-glm-53-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#zhipu-ai-glm-53-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "August 28, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Monitor and cap external provider costs",
+    "slug": "monitor-and-cap-external-provider-costs",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#monitor-and-cap-external-provider-costs"
+  },
+  {
+    "date": "August 27, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Atlassian Audit Logs connector (Beta)",
+    "slug": "atlassian-audit-logs-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#atlassian-audit-logs-connector-beta"
+  },
+  {
+    "date": "August 27, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "AI Functions REST API is now generally available",
+    "slug": "ai-functions-rest-api-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#ai-functions-rest-api-is-now-generally-available"
+  },
+  {
+    "date": "August 26, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Query text is now masked by default in system tables and APIs",
+    "slug": "query-text-is-now-masked-by-default-in-system-tables-and-apis",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#query-text-is-now-masked-by-default-in-system-tables-and-apis"
+  },
+  {
+    "date": "August 26, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "xAI Grok 4.6 is now available on Unity Gateway",
+    "slug": "xai-grok-46-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#xai-grok-46-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "August 26, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Zhipu AI GLM 5.3 Flash is now available on Unity Gateway",
+    "slug": "zhipu-ai-glm-53-flash-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#zhipu-ai-glm-53-flash-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "August 31, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "ABAC GRANT policies are generally available for models and services",
+    "slug": "abac-grant-policies-are-generally-available-for-models-and-services",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#abac-grant-policies-are-generally-available-for-models-and-services"
+  },
+  {
+    "date": "August 25, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Anysphere Audit Logs connector (Beta)",
+    "slug": "anysphere-audit-logs-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#anysphere-audit-logs-connector-beta"
+  },
+  {
+    "date": "August 24, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Verkada connector (Beta)",
+    "slug": "verkada-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#verkada-connector-beta"
+  },
+  {
+    "date": "August 24, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Unity Gateway now supports Provisioned Throughput",
+    "slug": "unity-gateway-now-supports-provisioned-throughput",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#unity-gateway-now-supports-provisioned-throughput"
+  },
+  {
+    "date": "August 24, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Private network gateway is in Private Preview",
+    "slug": "private-network-gateway-is-in-private-preview",
+    "status": "Private Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#private-network-gateway-is-in-private-preview"
+  },
+  {
+    "date": "August 24, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Connect to the Databricks Genie app in Microsoft Teams with your workspace URL (Public Preview)",
+    "slug": "connect-to-the-databricks-genie-app-in-microsoft-teams-with-your-workspace-url-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#connect-to-the-databricks-genie-app-in-microsoft-teams-with-your-workspace-url-public-preview"
+  },
+  {
+    "date": "August 21, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Monitor all AI activity with the unified trace table (Beta)",
+    "slug": "monitor-all-ai-activity-with-the-unified-trace-table-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#monitor-all-ai-activity-with-the-unified-trace-table-beta"
+  },
+  {
+    "date": "August 21, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Context attributes in ABAC column mask and row filter policies (Beta)",
+    "slug": "context-attributes-in-abac-column-mask-and-row-filter-policies-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#context-attributes-in-abac-column-mask-and-row-filter-policies-beta"
+  },
+  {
+    "date": "August 20, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Salesforce connector mTLS authentication is now generally available",
+    "slug": "salesforce-connector-mtls-authentication-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#salesforce-connector-mtls-authentication-is-now-generally-available"
+  },
+  {
+    "date": "August 19, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Role-based access control (RBAC) is generally available",
+    "slug": "role-based-access-control-rbac-is-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#role-based-access-control-rbac-is-generally-available"
+  },
+  {
+    "date": "August 17, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Session restore for serverless jobs is now in Beta",
+    "slug": "session-restore-for-serverless-jobs-is-now-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#session-restore-for-serverless-jobs-is-now-in-beta"
+  },
+  {
+    "date": "August 17, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Identity attributes in ABAC column mask policies (Beta)",
+    "slug": "identity-attributes-in-abac-column-mask-policies-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#identity-attributes-in-abac-column-mask-policies-beta"
+  },
+  {
+    "date": "August 14, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Workiva connector (Beta)",
+    "slug": "workiva-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#workiva-connector-beta"
+  },
+  {
+    "date": "August 14, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Sharing managed Iceberg tables is now generally available",
+    "slug": "sharing-managed-iceberg-tables-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#sharing-managed-iceberg-tables-is-now-generally-available"
+  },
+  {
+    "date": "August 14, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "DeepSeek V4 Pro (0813) is now available on Unity Gateway",
+    "slug": "deepseek-v4-pro-0813-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#deepseek-v4-pro-0813-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "August 13, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "SQL alert task in Lakeflow Jobs is now available by default for workspaces with the compliance security profile enabled",
+    "slug": "sql-alert-task-in-lakeflow-jobs-is-now-available-by-default-for-workspaces-with-the-compliance-security-profile-enabled",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#sql-alert-task-in-lakeflow-jobs-is-now-available-by-default-for-workspaces-with-the-compliance-security-profile-enabled"
+  },
+  {
+    "date": "August 13, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Smart Routing: Cut AI costs by routing each task to the right model",
+    "slug": "smart-routing-cut-ai-costs-by-routing-each-task-to-the-right-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#smart-routing-cut-ai-costs-by-routing-each-task-to-the-right-model"
+  },
+  {
+    "date": "August 13, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Block or redact sensitive data in requests and responses",
+    "slug": "block-or-redact-sensitive-data-in-requests-and-responses",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#block-or-redact-sensitive-data-in-requests-and-responses"
+  },
+  {
+    "date": "August 13, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "SendGrid connector (Beta)",
+    "slug": "sendgrid-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#sendgrid-connector-beta"
+  },
+  {
+    "date": "August 13, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Share data behind a firewall with SecureConnect is generally available",
+    "slug": "share-data-behind-a-firewall-with-secureconnect-is-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#share-data-behind-a-firewall-with-secureconnect-is-generally-available"
+  },
+  {
+    "date": "August 13, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Identity attributes (Beta)",
+    "slug": "identity-attributes-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#identity-attributes-beta"
+  },
+  {
+    "date": "August 13, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Tags page in Governance Hub (Beta)",
+    "slug": "tags-page-in-governance-hub-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#tags-page-in-governance-hub-beta"
+  },
+  {
+    "date": "August 13, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Google Gemini 3.7 Flash is now available on Unity Gateway",
+    "slug": "google-gemini-37-flash-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#google-gemini-37-flash-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "August 13, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Sharing tables backed by default storage is now generally available",
+    "slug": "sharing-tables-backed-by-default-storage-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#sharing-tables-backed-by-default-storage-is-now-generally-available"
+  },
+  {
+    "date": "August 13, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Cross-workspace access for serverless (Beta)",
+    "slug": "cross-workspace-access-for-serverless-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#cross-workspace-access-for-serverless-beta"
+  },
+  {
+    "date": "August 12, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Define business concepts with Pages (Beta)",
+    "slug": "define-business-concepts-with-pages-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#define-business-concepts-with-pages-beta"
+  },
+  {
+    "date": "August 12, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Custom trace views in the MLflow trace explorer are in Beta",
+    "slug": "custom-trace-views-in-the-mlflow-trace-explorer-are-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#custom-trace-views-in-the-mlflow-trace-explorer-are-in-beta"
+  },
+  {
+    "date": "August 12, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Google Search Console connector is available in Beta",
+    "slug": "google-search-console-connector-is-available-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#google-search-console-connector-is-available-in-beta"
+  },
+  {
+    "date": "August 12, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Amplitude connector (Beta)",
+    "slug": "amplitude-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#amplitude-connector-beta"
+  },
+  {
+    "date": "August 11, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "REPLACE USING flows for standalone streaming tables (Beta)",
+    "slug": "replace-using-flows-for-standalone-streaming-tables-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#replace-using-flows-for-standalone-streaming-tables-beta"
+  },
+  {
+    "date": "August 11, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "ABAC GRANT policies now cover Unity Gateway resource types (Beta)",
+    "slug": "abac-grant-policies-now-cover-unity-gateway-resource-types-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#abac-grant-policies-now-cover-unity-gateway-resource-types-beta"
+  },
+  {
+    "date": "August 10, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Notion connector (Beta)",
+    "slug": "notion-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#notion-connector-beta"
+  },
+  {
+    "date": "August 10, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "DeepSeek V4 Flash (0731) is now available on Unity Gateway",
+    "slug": "deepseek-v4-flash-0731-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#deepseek-v4-flash-0731-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "August 10, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Orchestrate continuous pipelines with continuous jobs",
+    "slug": "orchestrate-continuous-pipelines-with-continuous-jobs",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#orchestrate-continuous-pipelines-with-continuous-jobs"
+  },
+  {
+    "date": "August 10, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Alert system tables are in Public Preview",
+    "slug": "alert-system-tables-are-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#alert-system-tables-are-in-public-preview"
+  },
+  {
+    "date": "August 7, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Tag automations (Beta)",
+    "slug": "tag-automations-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#tag-automations-beta"
+  },
+  {
+    "date": "August 6, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Zerobus Ingest is now enabled by default for workspaces with the compliance security profile",
+    "slug": "zerobus-ingest-is-now-enabled-by-default-for-workspaces-with-the-compliance-security-profile",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#zerobus-ingest-is-now-enabled-by-default-for-workspaces-with-the-compliance-security-profile"
+  },
+  {
+    "date": "August 6, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Unity Gateway API: Manage resources with SDKs, the CLI, and Terraform",
+    "slug": "unity-gateway-api-manage-resources-with-sdks-the-cli-and-terraform",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#unity-gateway-api-manage-resources-with-sdks-the-cli-and-terraform"
+  },
+  {
+    "date": "August 6, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "JAR tasks on serverless compute are now generally available",
+    "slug": "jar-tasks-on-serverless-compute-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#jar-tasks-on-serverless-compute-are-now-generally-available"
+  },
+  {
+    "date": "August 6, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Databricks-managed MCP connectors are now integrated with Unity Gateway (Beta)",
+    "slug": "databricks-managed-mcp-connectors-are-now-integrated-with-unity-gateway-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#databricks-managed-mcp-connectors-are-now-integrated-with-unity-gateway-beta"
+  },
+  {
+    "date": "August 6, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Moonshot AI Kimi K3 is now available on Unity Gateway",
+    "slug": "moonshot-ai-kimi-k3-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#moonshot-ai-kimi-k3-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "August 5, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "REPLACE USING flows for pipelines (Beta)",
+    "slug": "replace-using-flows-for-pipelines-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#replace-using-flows-for-pipelines-beta"
+  },
+  {
+    "date": "August 5, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Search and replace text across files",
+    "slug": "search-and-replace-text-across-files",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#search-and-replace-text-across-files"
+  },
+  {
+    "date": "August 4, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Unity Gateway is now generally available",
+    "slug": "unity-gateway-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#unity-gateway-is-now-generally-available"
+  },
+  {
+    "date": "August 4, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Sharing Delta tables with Iceberg reads enabled is now generally available",
+    "slug": "sharing-delta-tables-with-iceberg-reads-enabled-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#sharing-delta-tables-with-iceberg-reads-enabled-is-now-generally-available"
+  },
+  {
+    "date": "August 4, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Sharing Delta tables with deletion vectors and column mapping is now generally available",
+    "slug": "sharing-delta-tables-with-deletion-vectors-and-column-mapping-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#sharing-delta-tables-with-deletion-vectors-and-column-mapping-is-now-generally-available"
+  },
+  {
+    "date": "August 4, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "SharePoint connector (GA)",
+    "slug": "sharepoint-connector-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#sharepoint-connector-ga"
+  },
+  {
+    "date": "August 4, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Format AI/BI dashboard widget titles and descriptions with rich text",
+    "slug": "format-aibi-dashboard-widget-titles-and-descriptions-with-rich-text",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#format-aibi-dashboard-widget-titles-and-descriptions-with-rich-text"
+  },
+  {
+    "date": "August 4, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "PagerDuty connector (Beta)",
+    "slug": "pagerduty-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#pagerduty-connector-beta"
+  },
+  {
+    "date": "August 4, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "NetSuite connector (GA)",
+    "slug": "netsuite-connector-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#netsuite-connector-ga"
+  },
+  {
+    "date": "August 4, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Google Drive connector (GA)",
+    "slug": "google-drive-connector-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#google-drive-connector-ga"
+  },
+  {
+    "date": "August 3, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Secrets in Unity Catalog is GA",
+    "slug": "secrets-in-unity-catalog-is-ga",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#secrets-in-unity-catalog-is-ga"
+  },
+  {
+    "date": "August 3, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Organize your work with spaces",
+    "slug": "organize-your-work-with-spaces",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#organize-your-work-with-spaces"
+  },
+  {
+    "date": "August 3, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Environment variables for serverless jobs are in Beta",
+    "slug": "environment-variables-for-serverless-jobs-are-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#environment-variables-for-serverless-jobs-are-in-beta"
+  },
+  {
+    "date": "August 3, 2026",
+    "year": 2026,
+    "month": "august",
+    "title": "Serverless compute access control is now generally available",
+    "slug": "serverless-compute-access-control-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/august#serverless-compute-access-control-is-now-generally-available"
+  },
+  {
+    "date": "September 30, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Control spreadsheet writeback with a workspace admin setting",
+    "slug": "control-spreadsheet-writeback-with-a-workspace-admin-setting",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#control-spreadsheet-writeback-with-a-workspace-admin-setting"
+  },
+  {
+    "date": "September 30, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Query tags for SQL warehouses are now generally available",
+    "slug": "query-tags-for-sql-warehouses-are-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#query-tags-for-sql-warehouses-are-now-generally-available"
+  },
+  {
+    "date": "September 29, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Databricks JDBC Driver (Simba) 2.8.4 is available",
+    "slug": "databricks-jdbc-driver-simba-284-is-available",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#databricks-jdbc-driver-simba-284-is-available"
+  },
+  {
+    "date": "September 29, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "OpenAI GPT-6.1 Sol is now available on Unity Gateway",
+    "slug": "openai-gpt-61-sol-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#openai-gpt-61-sol-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "September 29, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Agent Bricks CLI is in Beta",
+    "slug": "agent-bricks-cli-is-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#agent-bricks-cli-is-in-beta"
+  },
+  {
+    "date": "September 29, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "ABAC on views is in Beta",
+    "slug": "abac-on-views-is-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#abac-on-views-is-in-beta"
+  },
+  {
+    "date": "September 28, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Workday Activity Logging connector (Beta)",
+    "slug": "workday-activity-logging-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#workday-activity-logging-connector-beta"
+  },
+  {
+    "date": "September 28, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Okta System Logs connector is available in Beta",
+    "slug": "okta-system-logs-connector-is-available-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#okta-system-logs-connector-is-available-in-beta"
+  },
+  {
+    "date": "September 28, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Microsoft 365 Unified Audit Logs connector is available in Beta",
+    "slug": "microsoft-365-unified-audit-logs-connector-is-available-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#microsoft-365-unified-audit-logs-connector-is-available-in-beta"
+  },
+  {
+    "date": "September 28, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Thinking Machine Labs Inkling is scheduled for retirement",
+    "slug": "thinking-machine-labs-inkling-is-scheduled-for-retirement",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#thinking-machine-labs-inkling-is-scheduled-for-retirement"
+  },
+  {
+    "date": "September 28, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "xAI Grok 4.7 is now available on Unity Gateway",
+    "slug": "xai-grok-47-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#xai-grok-47-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "September 28, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "CrowdStrike Falcon Event Stream connector (Beta)",
+    "slug": "crowdstrike-falcon-event-stream-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#crowdstrike-falcon-event-stream-connector-beta"
+  },
+  {
+    "date": "September 28, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Akamai WAF connector (Beta)",
+    "slug": "akamai-waf-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#akamai-waf-connector-beta"
+  },
+  {
+    "date": "September 28, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "1Password Event Logs connector (Beta)",
+    "slug": "1password-event-logs-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#1password-event-logs-connector-beta"
+  },
+  {
+    "date": "September 27, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Usage tracking adds session metadata and token details (Public Preview)",
+    "slug": "usage-tracking-adds-session-metadata-and-token-details-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#usage-tracking-adds-session-metadata-and-token-details-public-preview"
+  },
+  {
+    "date": "September 25, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Deleting a Unity Catalog pipeline now retains tables by default",
+    "slug": "deleting-a-unity-catalog-pipeline-now-retains-tables-by-default",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#deleting-a-unity-catalog-pipeline-now-retains-tables-by-default"
+  },
+  {
+    "date": "September 23, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Build governed data and AI apps without code (Beta)",
+    "slug": "build-governed-data-and-ai-apps-without-code-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#build-governed-data-and-ai-apps-without-code-beta"
+  },
+  {
+    "date": "September 23, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "DeepSeek V4 Pro (0813) is scheduled for retirement",
+    "slug": "deepseek-v4-pro-0813-is-scheduled-for-retirement",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#deepseek-v4-pro-0813-is-scheduled-for-retirement"
+  },
+  {
+    "date": "September 23, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Time travel queries now enforce ABAC policies (Beta)",
+    "slug": "time-travel-queries-now-enforce-abac-policies-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#time-travel-queries-now-enforce-abac-policies-beta"
+  },
+  {
+    "date": "September 22, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Shopify connector (Beta)",
+    "slug": "shopify-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#shopify-connector-beta"
+  },
+  {
+    "date": "September 22, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "OpenAI GPT-6 Sol is now available on Unity Gateway",
+    "slug": "openai-gpt-6-sol-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#openai-gpt-6-sol-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "September 22, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "OpenAI GPT-6 Luna is now available on Unity Gateway",
+    "slug": "openai-gpt-6-luna-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#openai-gpt-6-luna-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "September 22, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Unified tracing now includes coding agent activity",
+    "slug": "unified-tracing-now-includes-coding-agent-activity",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#unified-tracing-now-includes-coding-agent-activity"
+  },
+  {
+    "date": "September 22, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Centrally configure coding agents",
+    "slug": "centrally-configure-coding-agents",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#centrally-configure-coding-agents"
+  },
+  {
+    "date": "September 22, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Anthropic Claude Opus 5.5 is now available on Unity Gateway",
+    "slug": "anthropic-claude-opus-55-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#anthropic-claude-opus-55-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "September 21, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "The query history system table is now generally available",
+    "slug": "the-query-history-system-table-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#the-query-history-system-table-is-now-generally-available"
+  },
+  {
+    "date": "September 21, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Back model provider service credentials with a Unity Catalog secret",
+    "slug": "back-model-provider-service-credentials-with-a-unity-catalog-secret",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#back-model-provider-service-credentials-with-a-unity-catalog-secret"
+  },
+  {
+    "date": "September 19, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Configure provider discounts for external model spend",
+    "slug": "configure-provider-discounts-for-external-model-spend",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#configure-provider-discounts-for-external-model-spend"
+  },
+  {
+    "date": "September 17, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Unity Gateway support for compliance security profile standards",
+    "slug": "unity-gateway-support-for-compliance-security-profile-standards",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#unity-gateway-support-for-compliance-security-profile-standards"
+  },
+  {
+    "date": "September 17, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Metastore-level ABAC policies are in Beta",
+    "slug": "metastore-level-abac-policies-are-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#metastore-level-abac-policies-are-in-beta"
+  },
+  {
+    "date": "September 17, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Moonshot AI Kimi K2.7 is scheduled for retirement",
+    "slug": "moonshot-ai-kimi-k27-is-scheduled-for-retirement",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#moonshot-ai-kimi-k27-is-scheduled-for-retirement"
+  },
+  {
+    "date": "September 17, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Base environments are now supported on classic compute (Beta)",
+    "slug": "base-environments-are-now-supported-on-classic-compute-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#base-environments-are-now-supported-on-classic-compute-beta"
+  },
+  {
+    "date": "September 16, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Unused OAuth client secrets are automatically deleted after 90 days",
+    "slug": "unused-oauth-client-secrets-are-automatically-deleted-after-90-days",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#unused-oauth-client-secrets-are-automatically-deleted-after-90-days"
+  },
+  {
+    "date": "September 16, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Managed agent memory and sessions are in Beta",
+    "slug": "managed-agent-memory-and-sessions-are-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#managed-agent-memory-and-sessions-are-in-beta"
+  },
+  {
+    "date": "September 16, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "VARIANT cast extends to ARRAY and MAP columns in ABAC column masks",
+    "slug": "variant-cast-extends-to-array-and-map-columns-in-abac-column-masks",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#variant-cast-extends-to-array-and-map-columns-in-abac-column-masks"
+  },
+  {
+    "date": "September 15, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Data Classification now scans Unity Catalog views (Beta)",
+    "slug": "data-classification-now-scans-unity-catalog-views-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#data-classification-now-scans-unity-catalog-views-beta"
+  },
+  {
+    "date": "September 14, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Window measures on a numeric index column in metric views",
+    "slug": "window-measures-on-a-numeric-index-column-in-metric-views",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#window-measures-on-a-numeric-index-column-in-metric-views"
+  },
+  {
+    "date": "September 11, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Standard performance mode is now available for one-time runs in the Jobs API",
+    "slug": "standard-performance-mode-is-now-available-for-one-time-runs-in-the-jobs-api",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#standard-performance-mode-is-now-available-for-one-time-runs-in-the-jobs-api"
+  },
+  {
+    "date": "September 11, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Session restore for serverless jobs is in Public Preview",
+    "slug": "session-restore-for-serverless-jobs-is-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#session-restore-for-serverless-jobs-is-in-public-preview"
+  },
+  {
+    "date": "September 11, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "DeepSeek V4.1 Flash is now available on Unity Gateway",
+    "slug": "deepseek-v41-flash-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#deepseek-v41-flash-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "September 10, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Maintenance windows for continuous pipelines",
+    "slug": "maintenance-windows-for-continuous-pipelines",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#maintenance-windows-for-continuous-pipelines"
+  },
+  {
+    "date": "September 9, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Configurable retention for system tables is in Beta",
+    "slug": "configurable-retention-for-system-tables-is-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#configurable-retention-for-system-tables-is-in-beta"
+  },
+  {
+    "date": "September 9, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "External secrets in Unity Catalog (Beta)",
+    "slug": "external-secrets-in-unity-catalog-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#external-secrets-in-unity-catalog-beta"
+  },
+  {
+    "date": "September 9, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Celigo connector (Beta)",
+    "slug": "celigo-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#celigo-connector-beta"
+  },
+  {
+    "date": "September 9, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Anysphere Organization connector (Beta)",
+    "slug": "anysphere-organization-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#anysphere-organization-connector-beta"
+  },
+  {
+    "date": "September 9, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Anaplan connector (Beta)",
+    "slug": "anaplan-connector-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#anaplan-connector-beta"
+  },
+  {
+    "date": "September 8, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Partner-powered AI features can no longer be disabled in the settings UI",
+    "slug": "partner-powered-ai-features-can-no-longer-be-disabled-in-the-settings-ui",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#partner-powered-ai-features-can-no-longer-be-disabled-in-the-settings-ui"
+  },
+  {
+    "date": "September 8, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "ABAC DENY policies are in Beta",
+    "slug": "abac-deny-policies-are-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#abac-deny-policies-are-in-beta"
+  },
+  {
+    "date": "September 7, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Zerobus Ingest into default storage is now in Public Preview",
+    "slug": "zerobus-ingest-into-default-storage-is-now-in-public-preview",
+    "status": "Public Preview",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#zerobus-ingest-into-default-storage-is-now-in-public-preview"
+  },
+  {
+    "date": "September 4, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "OpenAI GPT-6 Astra is now available on Unity Gateway",
+    "slug": "openai-gpt-6-astra-is-now-available-on-unity-gateway",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#openai-gpt-6-astra-is-now-available-on-unity-gateway"
+  },
+  {
+    "date": "September 3, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Environment version 6 is now available",
+    "slug": "environment-version-6-is-now-available",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#environment-version-6-is-now-available"
+  },
+  {
+    "date": "September 2, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Git Folder Serverless is in Beta",
+    "slug": "git-folder-serverless-is-in-beta",
+    "status": "Beta",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#git-folder-serverless-is-in-beta"
+  },
+  {
+    "date": "September 2, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Google Gemini 3.8 Flash now available as a Databricks-hosted model",
+    "slug": "google-gemini-38-flash-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#google-gemini-38-flash-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "September 2, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "AI Search supports struct and map columns and filter-only queries",
+    "slug": "ai-search-supports-struct-and-map-columns-and-filter-only-queries",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#ai-search-supports-struct-and-map-columns-and-filter-only-queries"
+  },
+  {
+    "date": "September 1, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Apache Arrow support for Zerobus Ingest is now generally available",
+    "slug": "apache-arrow-support-for-zerobus-ingest-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#apache-arrow-support-for-zerobus-ingest-is-now-generally-available"
+  },
+  {
+    "date": "September 1, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Anthropic Claude Fable 5.1 now available as a Databricks-hosted model",
+    "slug": "anthropic-claude-fable-51-now-available-as-a-databricks-hosted-model",
+    "status": "Update",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#anthropic-claude-fable-51-now-available-as-a-databricks-hosted-model"
+  },
+  {
+    "date": "September 1, 2026",
+    "year": 2026,
+    "month": "september",
+    "title": "Automatic change data feed is now generally available",
+    "slug": "automatic-change-data-feed-is-now-generally-available",
+    "status": "GA",
+    "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#automatic-change-data-feed-is-now-generally-available"
+  }
+]

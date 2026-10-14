@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 412" width="2400" height="412" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBFCFD"/>
+      <stop offset="1" stop-color="#EEF1F5"/>
+    </linearGradient>
+    <linearGradient id="headerBg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0B1E36"/>
+      <stop offset="1" stop-color="#1F3A5F"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="2400" height="412" fill="url(#bg)"/>
+  <rect x="0" y="0" width="2400" height="80" fill="url(#headerBg)"/>
+  <text x="40" y="44" fill="#FFFFFF" font-size="28" font-weight="700">Databricks SQL <tspan fill="#9CB0CC" font-size="18" font-weight="400">— feature timeline</tspan></text>
+  <text x="40" y="68" fill="#9CB0CC" font-size="13">14 events  ·  Oct 2025 → Sep 2026  ·  data through 2026-09-30</text>
+  <rect x="2270" y="22" width="92" height="28" fill="#FF3621" rx="4"/><text x="2316" y="41" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">databricks-sql</text>
+  <g font-size="14" font-weight="600" fill="#0B1E36" text-anchor="middle">
+    <text x="155.0" y="124">Oct 25</text>
+    <text x="345.0" y="124">Nov 25</text>
+    <text x="535.0" y="124">Dec 25</text>
+    <text x="725.0" y="124">Jan 26</text>
+    <text x="915.0" y="124">Feb 26</text>
+    <text x="1105.0" y="124">Mar 26</text>
+    <text x="1295.0" y="124">Apr 26</text>
+    <text x="1485.0" y="124">May 26</text>
+    <text x="1675.0" y="124">Jun 26</text>
+    <text x="1865.0" y="124">Jul 26</text>
+    <text x="2055.0" y="124">Aug 26</text>
+    <text x="2245.0" y="124">Sep 26</text>
+  </g>
+  <g stroke="#DDE3EB" stroke-width="1">
+    <line x1="60.0" y1="130" x2="60.0" y2="302"/>
+    <line x1="250.0" y1="130" x2="250.0" y2="302"/>
+    <line x1="440.0" y1="130" x2="440.0" y2="302"/>
+    <line x1="630.0" y1="130" x2="630.0" y2="302"/>
+    <line x1="820.0" y1="130" x2="820.0" y2="302"/>
+    <line x1="1010.0" y1="130" x2="1010.0" y2="302"/>
+    <line x1="1200.0" y1="130" x2="1200.0" y2="302"/>
+    <line x1="1390.0" y1="130" x2="1390.0" y2="302"/>
+    <line x1="1580.0" y1="130" x2="1580.0" y2="302"/>
+    <line x1="1770.0" y1="130" x2="1770.0" y2="302"/>
+    <line x1="1960.0" y1="130" x2="1960.0" y2="302"/>
+    <line x1="2150.0" y1="130" x2="2150.0" y2="302"/>
+    <line x1="2340.0" y1="130" x2="2340.0" y2="302"/>
+  </g>
+  <rect x="0" y="130" width="2400" height="172" fill="#0B1E36" fill-opacity="0.02"/>
+  <g font-size="11" fill="#0B1E36">
+    <rect x="68.0" y="144" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="155.0" y="158" text-anchor="middle" font-weight="600">SQL MCP server now availa…</text>
+    <text x="155.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">10/10  ·  Beta</text>
+    <rect x="828.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="915.0" y="158" text-anchor="middle" font-weight="600">ADBC driver is now the de…</text>
+    <text x="915.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">2/20  ·  Update</text>
+    <rect x="828.0" y="180" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="915.0" y="194" text-anchor="middle" font-weight="600">Query tags for SQL wareho…</text>
+    <text x="915.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">2/6  ·  Public Preview</text>
+    <rect x="828.0" y="216" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="915.0" y="230" text-anchor="middle" font-weight="600">Decrypt query history sys…</text>
+    <text x="915.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">2/5  ·  Public Preview</text>
+    <rect x="828.0" y="252" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="915.0" y="266" text-anchor="middle" font-weight="600">Default SQL warehouse set…</text>
+    <text x="915.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">2/5  ·  Update</text>
+    <rect x="1018.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1105.0" y="158" text-anchor="middle" font-weight="600">Dynamic parameters in the…</text>
+    <text x="1105.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">3/24  ·  Update</text>
+    <rect x="1018.0" y="180" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1105.0" y="194" text-anchor="middle" font-weight="600">SQL alert task for jobs (…</text>
+    <text x="1105.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">3/19  ·  Beta</text>
+    <rect x="1018.0" y="216" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1105.0" y="230" text-anchor="middle" font-weight="600">5X-Large SQL warehouse si…</text>
+    <text x="1105.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">3/13  ·  Beta</text>
+    <rect x="1208.0" y="144" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1295.0" y="158" text-anchor="middle" font-weight="600">5X-Large SQL warehouse si…</text>
+    <text x="1295.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">4/28  ·  Public Preview</text>
+    <rect x="1778.0" y="144" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1865.0" y="158" text-anchor="middle" font-weight="600">Warehouse-level statement…</text>
+    <text x="1865.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">7/21  ·  Beta</text>
+    <rect x="1778.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1865.0" y="194" text-anchor="middle" font-weight="600">View warehouse activity d…</text>
+    <text x="1865.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">7/13  ·  Update</text>
+    <rect x="1778.0" y="216" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1865.0" y="230" text-anchor="middle" font-weight="600">Databricks SQL alerts are…</text>
+    <text x="1865.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">7/9  ·  Update</text>
+    <rect x="2158.0" y="144" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="2245.0" y="158" text-anchor="middle" font-weight="600">Query tags for SQL wareho…</text>
+    <text x="2245.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">9/30  ·  GA</text>
+    <rect x="2158.0" y="180" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="2245.0" y="194" text-anchor="middle" font-weight="600">The query history system…</text>
+    <text x="2245.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">9/21  ·  GA</text>
+  </g>
+  <g font-size="13" fill="#0B1E36">
+    <text x="40" y="322" font-weight="700" font-size="14">Status</text>
+    <rect x="130" y="306" width="20" height="20" rx="4" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="158" y="322">GA</text>
+    <rect x="202" y="306" width="20" height="20" rx="4" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="230" y="322">Public Preview</text>
+    <rect x="370" y="306" width="20" height="20" rx="4" fill="#FDE8E0" stroke="#9A3412" stroke-width="1.5"/>
+    <text x="398" y="322">Private Preview</text>
+    <rect x="546" y="306" width="20" height="20" rx="4" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="574" y="322">Beta</text>
+    <rect x="634" y="306" width="20" height="20" rx="4" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="662" y="322">Update</text>
+  </g>
+  <text x="40" y="400" font-size="11" fill="#5A7088">Source: docs.databricks.com/aws/en/release-notes/product/  ·  classified into "databricks-sql" bucket  ·  generated by feature-timeline.py</text>
+</svg>

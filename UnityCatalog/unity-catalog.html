@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Unity Catalog — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Unity Catalog (UC)</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Unity Catalog is Databricks' <strong>unified governance plane</strong>. One metastore per region per account governs tables, views, models, volumes, features, functions, MVs, streaming tables, external sources — across all workspaces. Permissions, lineage, audit, discovery — all UC.</p>
+<ul>
+<li><strong>One metastore</strong>, many workspaces.</li>
+<li><strong>3-level namespace</strong>: <code>catalog.schema.object</code>.</li>
+<li><strong>Fine-grained</strong>: GRANT, row filters, column masks, ABAC.</li>
+<li><strong>First-class lineage + audit.</strong></li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Metastore (1 per region per account).</li>
+<li>Catalog → Schema → Object.</li>
+<li>Object types: tables, views, MVs, STs, volumes, functions, models, ML features, connections, foreign catalogs, clean rooms, <strong>managed and foreign Iceberg tables</strong> (GA May 2026), <strong>secrets</strong> (<code>catalog.schema.secret</code>, GA August 2026).</li>
+<li>External locations + storage credentials.</li>
+<li>Permissions with inheritance.</li>
+<li>Row filters + column masks (SQL UDFs at read time).</li>
+<li>ABAC: tag-based policies.</li>
+<li>Lineage table- + column-level.</li>
+<li>System tables: billing, audit, lineage, query history.</li>
+<li>Catalog Explorer; comments + tags; AI-generated descriptions.</li>
+<li>Delta Sharing + foreign catalogs (Federation).</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>Account console
+       ↓
+┌────────────────┐
+│ UC Metastore   │ ── catalog/schema/object metadata, credentials, grants, policies, lineage, audit
+└────────────────┘
+   ▲          ▲
+  W1         W2  ... (workspaces attach)
+   │          │
+queries from clusters / warehouses / jobs / apps
+   ↓
+UC enforces: permission, row filter, column mask, ABAC
+   ↓
+Storage credentials → cloud object storage</code></pre>
+<p>Metastore = source of truth. Every read/write goes through UC permission checks before storage I/O. Storage credentials bridge to cloud IAM. Lineage emits async events; audit logs every operation.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Object model</h3>
+<ul>
+<li>3-level naming; case-insensitive on access, case-preserving on creation.</li>
+<li>Stable UUIDs; renames preserve ID + lineage.</li>
+<li>Comments + tags first-class.</li>
+</ul>
+
+<h3>Permission model</h3>
+<ul>
+<li>SELECT, MODIFY, USE CATALOG/SCHEMA, CREATE TABLE, EXECUTE, BROWSE, READ/WRITE VOLUME.</li>
+<li><strong>Fine-grained DML privileges</strong> (Beta, DBR 18.1+): INSERT, UPDATE, DELETE separate from MODIFY — for least-privilege write grants.</li>
+<li><strong>READ METADATA</strong> (GA): read-only visibility into grants, row filters, column masks, and ABAC policies for auditors.</li>
+<li>Inheritance: USE on parents required.</li>
+<li>Grants to groups/SPs/users.</li>
+<li><strong>Role-Based Access Control (RBAC)</strong> (GA August 2026): users can assume a named role applying only that role's permissions.</li>
+<li>Owner has full perms + grant.</li>
+</ul>
+
+<h3>Row filters + column masks</h3>
+<ul>
+<li>SQL UDF returning bool (filter) or transformed value (mask).</li>
+<li>Evaluated on every read; keep cheap.</li>
+<li>Use <code>current_user()</code> / <code>is_account_group_member()</code>.</li>
+</ul>
+
+<h3>ABAC</h3>
+<ul>
+<li>Policies over tags on objects + identities.</li>
+<li><strong>Metastore-level attachment</strong> (Beta): one policy across all catalogs in the account.</li>
+<li><strong>DENY policies</strong> (Beta): block <code>MANAGE ACCESS CONTROL</code> on supported securables.</li>
+<li><strong>Identity Attributes</strong> (Beta Aug 2026): up to 9 IdP attributes (dept, country, etc.) on users, usable in column-masking policies via SCIM 2.1.</li>
+<li><strong>AI asset coverage</strong> (Beta Aug 2026): applies to model services, model provider services, MCP services, and agent services.</li>
+<li>Scales beyond per-table grants; combines with row filters / column masks.</li>
+</ul>
+
+<h3>Storage credentials + external locations</h3>
+<ul>
+<li>Credential wraps cloud IAM identity.</li>
+<li>External location = (URL, credential); UC fronts cluster IAM.</li>
+</ul>
+
+<h3>Lineage</h3>
+<ul>
+<li>Table + column from UC queries; visible in Catalog Explorer + system tables.</li>
+<li><strong>Model service lineage</strong>: tracks data assets feeding served models (model services and external model providers).</li>
+<li><strong>External asset lineage</strong>: upstream sources (Salesforce, MySQL) and downstream tools (Tableau, Power BI) linkable for end-to-end graphs.</li>
+<li>Async, can have gaps; stops at foreign edges.</li>
+</ul>
+
+<h3>System tables</h3>
+<ul>
+<li><code>system.access.audit</code>, <code>access.table_lineage</code>, <code>access.column_lineage</code></li>
+<li><code>system.billing.usage</code>, <code>billing.list_prices</code></li>
+<li><code>system.compute.warehouses</code> / clusters</li>
+<li><code>system.query.history</code> — query text <strong>masked by default</strong> (Aug 2026); <code>databricks_pii_access</code> group required for unmasked.</li>
+<li><code>system.workflow.*</code></li>
+<li><code>system.tags.governed_tags</code> (Beta July 2026) — governed tag keys across account.</li>
+</ul>
+
+<h3>Volumes</h3>
+<ul>
+<li>Non-tabular data; path <code>/Volumes/cat/sch/vol/...</code>.</li>
+<li>READ/WRITE/MANAGE VOLUME perms.</li>
+</ul>
+
+<h3>Multi-workspace</h3>
+<ul>
+<li>One metastore serves many workspaces.</li>
+<li>Workspace bindings allow dev/prod separation.</li>
+<li>Catalog isolated or shared.</li>
+</ul>
+
+<h3>Managed vs external</h3>
+<ul>
+<li>Managed: UC owns files; PO applies.</li>
+<li>External: cloud lifecycle yours.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>One metastore per region per account.</li>
+<li>HMS legacy migration is a project.</li>
+<li>Grants propagate in seconds — CI may need retry.</li>
+<li>100K+ tables → Catalog Explorer slows.</li>
+<li>ABAC complexity needs tag discipline.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"IAM + lineage + audit for the lakehouse."</strong> Biggest design decision: catalog/schema taxonomy — hard to undo at scale.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use UC (or avoid these designs)</h2>
+<ul>
+<li><strong>Skipping UC on new workspaces.</strong></li>
+<li><strong>One giant catalog with thousands of schemas.</strong></li>
+<li><strong>Per-table grants for hundreds of users.</strong> Use groups/ABAC.</li>
+<li><strong>Row filters that join other tables.</strong> Use identity predicates.</li>
+<li><strong>Environment-suffix catalogs.</strong> Use workspace bindings.</li>
+<li><strong>External tables when managed works.</strong></li>
+<li><strong>SP-only access.</strong> Mix groups for discoverability.</li>
+<li><strong>Blob columns.</strong> Use UC Volumes.</li>
+<li><strong>Cross-region single metastore.</strong></li>
+<li><strong>UC as documentation only.</strong> It's enforcement.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Cross-region multi-metastore management.</strong></li>
+<li><strong>ABAC complexity.</strong></li>
+<li><strong>Row filter / column mask perf cost.</strong></li>
+<li><strong>Permission propagation not instant.</strong></li>
+<li><strong>Lineage async + gappy.</strong></li>
+<li><strong>HMS migration effort.</strong></li>
+<li><strong>Basic credential rotation tooling.</strong></li>
+<li><strong>Tagging needs governance.</strong></li>
+<li><strong>Catalog Explorer scales OK, not great.</strong></li>
+<li><strong>System tables retention finite.</strong></li>
+<li><strong>Federation lineage limited.</strong></li>
+<li><strong>Workspace vs account identity confusion.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/">Unity Catalog docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/admin/system-tables/">System tables</a></li>
+<li><a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/row-and-column-filters">Row filters & column masks</a></li>
+<li><a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/abac">ABAC docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/data-lineage">Lineage</a></li>
+<li><a href="https://docs.databricks.com/en/release-notes/product/2026/august.html">August 2026 release notes</a></li>
+<li><a href="https://docs.databricks.com/en/release-notes/product/2026/july.html">July 2026 release notes</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

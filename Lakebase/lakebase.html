@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Lakebase — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Lakebase</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Managed Postgres on Databricks for OLTP alongside the analytical lakehouse. Two tiers: <strong>Provisioned</strong> (always-on production Postgres) and <strong>Autoscale</strong> (scale-to-zero, branchable, instant-restore).</p>
+<ul>
+<li><strong>Postgres-compatible</strong> wire protocol; standard tooling works.</li>
+<li><strong>UC-integrated</strong>: governance, lineage.</li>
+<li><strong>Sync with Delta</strong>: bi-directional patterns.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Instance: Provisioned (instance class + storage) or Autoscale (CUs + storage).</li>
+<li>DB / schema / table — standard Postgres.</li>
+<li>Autoscale: scale-to-zero, branching, instant restore.</li>
+<li>Provisioned: HA + automated backups + PITR.</li>
+<li>Synced tables (Delta → Lakebase) via CDF.</li>
+<li>Lakehouse Federation back into UC for analytics.</li>
+<li>Access via Postgres conn string + UC creds.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[App/agent/notebook] → Postgres wire → [Lakebase instance]
+                                          ├ Provisioned: dedicated Postgres + HA + backups
+                                          └ Autoscale: scale-to-zero, branchable, CoW storage
+                                          ↓
+                                       [Tables: synced from Delta or native]
+                                          ↓ (optional) Federation back into UC</code></pre>
+<p>Two tiers, different ops profiles. Synced tables are the standard low-latency-reads-from-Delta pattern.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Provisioned</h3>
+<ul>
+<li>Managed Postgres cluster; instance class + storage sizing.</li>
+<li>HA primary+standby; auto failover.</li>
+<li>PITR via base + WAL retention.</li>
+<li>Curated extensions (pgvector + others).</li>
+</ul>
+
+<h3>Autoscale</h3>
+<ul>
+<li>Separation of storage + compute.</li>
+<li>Branching = CoW reference at branch time; writes diverge.</li>
+<li>Scale-to-zero with seconds resume.</li>
+<li>Instant restore = pick timestamp; new branch immediately.</li>
+</ul>
+
+<h3>Synced tables (from Delta)</h3>
+<ul>
+<li>PK matches Delta source.</li>
+<li>CDF-driven inserts/updates/deletes.</li>
+<li>Seconds latency.</li>
+<li>New columns auto-flow; renames/type changes need care.</li>
+<li>Same engine as Feature Engineering online tables.</li>
+<li><strong><code>ai_search</code> on synced tables</strong> (Beta Sep 2026): <code>ai_search</code> SQL function can search Lakebase synced tables — semantic search without a separate Vector Search index.</li>
+</ul>
+
+<h3>UC integration</h3>
+<ul>
+<li>Instance is a UC object; UC governs permissions.</li>
+<li>Connection identity = SP for app access.</li>
+<li>Federation re-exposes Lakebase tables as UC tables (analytics).</li>
+</ul>
+
+<h3>Performance</h3>
+<ul>
+<li>Provisioned: instance-class dependent.</li>
+<li>Autoscale: cold-resume seconds; warm = Postgres expectations; branching = metadata-only.</li>
+<li>Pool connections (pgbouncer or app pools).</li>
+</ul>
+
+<h3>Use cases</h3>
+<ul>
+<li>App backend (Databricks Apps state).</li>
+<li>Agent memory / sessions.</li>
+<li>Online feature serving.</li>
+<li>Operational dashboards.</li>
+<li>Branched envs for dev/preview.</li>
+<li>Semantic search on synced tables via <code>ai_search</code> (Beta Sep 2026).</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Curated extensions only.</li>
+<li>Synced tables one-way; bi-directional needs custom logic.</li>
+<li>No native cross-region.</li>
+<li>Connection caps per tier.</li>
+<li>Tier migration not in-place.</li>
+<li>Long-running diverged branches cost.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"OLTP companion to the lakehouse."</strong> Provisioned = classic managed Postgres + UC; Autoscale = serverless Postgres (scale-to-zero, branch, restore) for AI/app workloads.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use Lakebase</h2>
+<ul>
+<li><strong>Heavy analytical queries.</strong> Use DBSQL on Delta.</li>
+<li><strong>Multi-TB OLAP.</strong></li>
+<li><strong>Primary copy of analytical source-of-truth.</strong> Land in Delta first.</li>
+<li><strong>Whole-table replication to Lakebase "just in case".</strong></li>
+<li><strong>Cross-cloud / cross-region heavy use.</strong></li>
+<li><strong>Long-running analytics-style transactions.</strong></li>
+<li><strong>Unbounded app connection growth.</strong> Pool.</li>
+<li><strong>Huge BLOBs.</strong> Use UC Volumes.</li>
+<li><strong>Forever-on dev branches without budget.</strong></li>
+<li><strong>Hardcoded Postgres creds bypassing UC.</strong></li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Curated extension set only.</strong></li>
+<li><strong>One-way synced tables.</strong></li>
+<li><strong>No native cross-region.</strong></li>
+<li><strong>Tier migration effort.</strong></li>
+<li><strong>Connection caps without pooling.</strong></li>
+<li><strong>Synced-table schema evolution gaps.</strong></li>
+<li><strong>Autoscale cold start.</strong></li>
+<li><strong>Branch storage cost.</strong></li>
+<li><strong>PITR retention limits.</strong></li>
+<li><strong>Federation latency analytics.</strong></li>
+<li><strong>Lagging Postgres feature parity.</strong></li>
+<li><strong>UC vs Postgres role duality.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/lakebase/">Lakebase docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/lakebase/provisioned">Provisioned</a></li>
+<li><a href="https://docs.databricks.com/aws/en/lakebase/autoscale">Autoscale (next-gen)</a></li>
+<li><a href="https://docs.databricks.com/aws/en/lakebase/synced-tables">Synced tables</a></li>
+<li><a href="https://docs.databricks.com/aws/en/lakebase/branching">Branching and instant restore</a></li>
+<li><a href="https://docs.databricks.com/en/release-notes/product/index.html">Release notes overview (ai_search on synced tables, Sep 2026)</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

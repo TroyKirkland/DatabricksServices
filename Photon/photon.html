@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Photon — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Photon</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Photon is Databricks' <strong>native C++ vectorized execution engine</strong> inside Spark workers. Takes over query execution for supported operators; falls back to JVM Spark otherwise. Up to 5× price/performance on TPC-DS benchmarks; no code changes required.</p>
+<ul>
+<li><strong>Native, vectorized</strong>: C++ + SIMD on Arrow-style columnar buffers.</li>
+<li><strong>Drop-in</strong>: enabled per SKU.</li>
+<li><strong>Partial coverage</strong>: mixed plans are normal.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>No user API.</li>
+<li>Enabled on: Photon DBR, Serverless/Pro SQL Warehouses, Serverless Jobs, Serverless LDP.</li>
+<li>Billing: higher DBU rate; net cost typically lower due to speedup.</li>
+<li>Workloads: Spark SQL, DataFrame, Delta r/w, Lakeflow pipelines, stateless Structured Streaming (Delta, Parquet, Kafka, Kinesis), feature engineering. Accelerated Parquet writes for Delta and Apache Iceberg. <strong>Stateful streaming not supported.</strong></li>
+<li>Observability: Spark UI Photon highlights; <code>EXPLAIN FORMATTED</code> shows <code>PhotonResultStage</code>/<code>PhotonScan</code>.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>Spark Logical Plan
+        │
+        ▼
+Spark Physical Plan (Photon transformer pass)
+        │
+        ▼
+Stage: PhotonShuffleExchangeExec / PhotonAggregate / PhotonScan ...
+        │
+        ▼
+  Arrow-style columnar batches via SIMD kernels</code></pre>
+<p>Photon = native library inside executor JVM; planner runs a Photon transformer to rewrite supported operators. Mixed plans common; conversion at boundaries via Arrow batches.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Operator coverage</h3>
+<ul>
+<li>Photonised: scan (Delta/Parquet), filter, project, hash agg, joins, sort, limit, window (subset), shuffle (partial), primitive expressions. Also: Parquet writes for Delta and Apache Iceberg.</li>
+<li>Not Photonised: Python row-UDFs, R UDFs, some non-Delta sources, decimal/string edge cases, stateful streaming operators.</li>
+<li>Coverage grows per DBR release.</li>
+</ul>
+
+<h3>Mixed-plan cost</h3>
+<ul>
+<li>Photon → JVM crossing materialises Arrow batches; non-trivial overhead.</li>
+<li>Use pandas UDFs or SQL/Spark expressions to keep Photon end-to-end.</li>
+</ul>
+
+<h3>Memory + CPU</h3>
+<ul>
+<li>Off-heap memory separate from JVM heap.</li>
+<li>Spill to disk in Photon-native format.</li>
+<li>SIMD: AVX2/AVX-512 on Intel, NEON on Graviton.</li>
+</ul>
+
+<h3>Predicate pushdown + stats</h3>
+<ul>
+<li>Reads <code>_delta_log</code> stats; aggressive column pruning, dictionary filtering, predicate vectorisation.</li>
+<li>Deletion vectors applied inside native scan.</li>
+</ul>
+
+<h3>Shuffles</h3>
+<ul>
+<li>Partially Photonised; wire format Spark-compatible.</li>
+<li><code>PhotonShuffleExchangeExec</code> markers indicate participation.</li>
+</ul>
+
+<h3>Expressions</h3>
+<ul>
+<li>Most arithmetic / comparison / string / date Photonised.</li>
+<li>Locale-sensitive / decimal-precision edge cases escalate to JVM.</li>
+<li>Window functions Photonised; skew problems unchanged.</li>
+</ul>
+
+<h3>Streaming</h3>
+<ul>
+<li>Accelerates <strong>stateless</strong> Structured Streaming micro-batches: aggregations, projections, filters, sinks for Delta/Parquet/Kafka/Kinesis.</li>
+<li><strong>Stateful streaming not supported</strong> — stateful operators run on JVM Spark regardless of Photon enablement.</li>
+<li>Lakeflow serverless pipelines lean on Photon for stateless throughput.</li>
+</ul>
+
+<h3>Limits / gotchas</h3>
+<ul>
+<li>No Python row-UDF acceleration.</li>
+<li>Photon DBU higher; scan-heavy low-compute workloads may net more expensive.</li>
+<li>Subtle semantic differences vs JVM Spark (decimal, error messages).</li>
+<li>No way to force pure-JVM in mixed plans without disabling Photon.</li>
+<li>OSS Spark features not always Photon-supported on day one.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"C++ engine quietly executing SQL on Arrow buffers with SIMD."</strong> Photon takes what it can; rest stays JVM; boundary costs. Win by writing SQL/DataFrame and avoiding Python row-UDFs.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where Photon doesn't pay off</h2>
+<ul>
+<li><strong>Workloads dominated by Python row-UDFs.</strong></li>
+<li><strong>R / Scala UDFs that escape engine.</strong></li>
+<li><strong>Pure file-listing / metadata work.</strong></li>
+<li><strong>Tiny fast queries on serverless warehouse.</strong></li>
+<li><strong>Massive unfixed skew.</strong></li>
+<li><strong>CSV/JSON-heavy reads.</strong> Less Photonised.</li>
+<li><strong>Heavy decimal-edge logic.</strong></li>
+<li><strong>Bad query design.</strong> Engine won't save you.</li>
+<li><strong>All-UDF streaming.</strong></li>
+<li><strong>Single-node ML training.</strong> Not the right tool.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Python row-UDFs.</strong> Hard ceiling.</li>
+<li><strong>Mixed-plan overhead.</strong></li>
+<li><strong>Partial operator coverage.</strong></li>
+<li><strong>Higher DBU rate.</strong></li>
+<li><strong>Subtle semantic diffs vs JVM Spark.</strong></li>
+<li><strong>Closed-source, no extension.</strong></li>
+<li><strong>Opaque profiling.</strong></li>
+<li><strong>No GPU codepath.</strong></li>
+<li><strong>Few tuning knobs.</strong></li>
+<li><strong>Tied to DBR version.</strong></li>
+<li><strong>Some Delta features lag.</strong></li>
+<li><strong>Stateful streaming not supported.</strong> Stateful operators run on JVM Spark.</li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/compute/photon">Photon docs</a></li>
+<li><a href="https://www.databricks.com/wp-content/uploads/2022/07/photon-sigmod22.pdf">Photon SIGMOD 2022 paper</a></li>
+<li><a href="https://docs.databricks.com/aws/en/runtime/photon">Photon-enabled DBR</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>

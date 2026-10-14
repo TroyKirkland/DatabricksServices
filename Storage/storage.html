@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Storage on Databricks — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>Storage on Databricks</h1>
+<p><em>Cross-cutting topic doc. Synthesizes Delta Lake, Unity Catalog, UC Volumes, cloud object storage, and the optimization machinery on top.</em></p>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Storage on Databricks is <strong>cloud object storage (S3 / ADLS Gen2 / GCS) governed by Unity Catalog and accessed almost always through Delta Lake</strong>. No Databricks-owned disk array. Bytes live in your cloud (or the metastore's managed root) as Parquet; Delta's log makes them transactional; UC decides who reads or writes.</p>
+<ul>
+<li><strong>Bring your own bucket</strong> — files sit on cloud object storage.</li>
+<li><strong>Delta is the default</strong> — every table is Delta unless you opt out.</li>
+<li><strong>Governance is centralized in UC</strong> — one metastore per region; <code>catalog.schema.object</code> namespace; uniform permissions and lineage.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<p><strong>Three storage abstractions you actually create:</strong></p>
+<ul>
+<li><strong>Tables</strong> (managed | external | streaming | materialized view | foreign | shared) — <code>catalog.schema.table</code></li>
+<li><strong>Volumes</strong> (managed | external) — files at <code>/Volumes/&lt;cat&gt;/&lt;sch&gt;/&lt;vol&gt;/...</code></li>
+<li><strong>Specialised assets</strong> — registered models, functions, vector indexes</li>
+</ul>
+<p><strong>Plumbing in UC:</strong></p>
+<ul>
+<li><strong>Storage credential</strong> — wraps IAM role / managed identity / GCP SA.</li>
+<li><strong>External location</strong> — credential + URI prefix.</li>
+<li><strong>Managed storage root</strong> — default for managed tables/volumes.</li>
+</ul>
+<p><strong>Table flavors:</strong> managed (UC owns lifecycle) · external (UC points at your path) · streaming/MV (pipeline-managed) · foreign (Lakehouse Federation) · share/recipient (Delta Sharing).</p>
+<p><strong>Write APIs:</strong> SQL (<code>INSERT/MERGE/COPY INTO</code>), DataFrame (<code>.write.format("delta")</code>), Auto Loader for incremental, Lakeflow Connect for managed source-to-Delta.</p>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>           ┌──────────── Unity Catalog ────────────┐
+           │  Metastore → Catalog → Schema → {       │
+           │    Tables, Volumes, Models, ...,        │
+           │    External locations → Storage creds   │
+           │  }                                      │
+           └──────────┬──────────────────┬───────────┘
+            permission│              path→cred
+                      ▼                  ▼
+        ┌─── Compute (Spark/Photon, SQL, Serverless) ───┐
+        │ reads _delta_log → prunes via stats → opens  │
+        │ Parquet → applies DVs + row filters/masks    │
+        └──────────────────────┬───────────────────────┘
+                               ▼
+                  ┌──────────────────────┐
+                  │ Cloud object store   │  S3 / ADLS / GCS
+                  │ _delta_log/, part-*  │
+                  └──────────────────────┘
+</code></pre>
+<p><strong>Three layers, top down:</strong></p>
+<ul>
+<li><strong>Logical (UC)</strong> — names, permissions, lineage, audit.</li>
+<li><strong>Format (Delta)</strong> — <code>_delta_log/</code> = the database; JSON commits + checkpoints; Add/Remove/Metadata/Protocol actions; stats power pruning.</li>
+<li><strong>Physical (cloud storage)</strong> — Parquet, deletion-vector files, <code>_change_data/</code>.</li>
+</ul>
+<p><strong>Read path:</strong> UC checks permission → short-lived cred → read <code>_last_checkpoint</code> + log tail → snapshot → prune via stats + partitions/cluster → open Parquet → apply DVs + row filters/column masks.</p>
+<p><strong>Write path:</strong> optimistic concurrency. Read version <code>v</code>, attempt commit at <code>v+1</code>; if log file exists, retry on new snapshot. Conflicts at file level, not row level.</p>
+<p><strong>Maintenance:</strong> OPTIMIZE compacts; liquid clustering routes writes; DVs soft-delete; VACUUM physically removes past retention; Predictive Optimization runs OPTIMIZE/VACUUM/ANALYZE automatically on UC managed tables.</p>
+<p><strong>Governance overlay:</strong> UC injects row filters / column masks into the logical plan before files are read — engines can't bypass. Audit/lineage in <code>system.*</code>.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Cloud object store characteristics that matter</h3>
+<ul>
+<li>S3 / ADLS Gen2 / GCS are read-after-write consistent — Delta depends on this.</li>
+<li>S3 commit atomicity via <strong>conditional PUT</strong> (if-none-match) on the next JSON log file; loser gets 412, retries.</li>
+<li>Per-prefix throughput limits (S3 ~3,500 PUT / 5,500 GET per prefix per sec baseline). Hot <code>_delta_log/</code> on extreme write rates is a bottleneck.</li>
+<li>Standard tier for hot tables; Intelligent-Tiering for cold. <strong>Archive tiers break Delta</strong> — files become unreadable.</li>
+</ul>
+
+<h3>The transaction log, for real</h3>
+<ul>
+<li>Each commit <code>0…XXX.json</code> = lines of JSON actions. Checkpoints (<code>*.checkpoint.parquet</code>) every <code>delta.checkpointInterval</code> (default 10) materialise the snapshot.</li>
+<li><strong>Multi-part v2 checkpoints</strong> split logical checkpoints for huge tables — required at millions of files.</li>
+<li><code>_last_checkpoint</code> = tiny pointer file. Lost → readers fall back to log scan.</li>
+<li>Protocol versions gate features. DV / column mapping / type widening bump them; old clients refuse the table.</li>
+<li>Idempotent writes via <code>Txn(appId, version)</code> — at-most-once on retry.</li>
+</ul>
+
+<h3>Concurrency, conflicts, isolation</h3>
+<ul>
+<li>Default <strong>WriteSerializable</strong>; <strong>Serializable</strong> opt-in via <code>delta.isolationLevel</code>.</li>
+<li>File-level conflicts. Disjoint partition writes never collide; overlapping MERGEs retry.</li>
+<li>MERGE is the contention magnet — mitigate with clustering, DVs, partitioning.</li>
+<li>Streaming triggers: sub-second creates log explosion; 30s–5min is typical.</li>
+</ul>
+
+<h3>File layout</h3>
+<ul>
+<li><strong>Liquid clustering</strong> is the modern default. Add/remove cluster columns = metadata-only. GA for Delta (DBR 15.4+); public preview for Iceberg (DBR 16.4+).</li>
+<li><strong>Hierarchical clustering</strong> (DBR 17.1+) — columns in priority order; lower-cardinality columns first maximize data skipping.</li>
+<li><strong>Partial reclustering with predicates</strong> (DBR 18.1+) — <code>OPTIMIZE tbl FULL WHERE &lt;predicate&gt;</code> targets a subset without reclustering the full table.</li>
+<li><code>PARTITIONED BY</code> is legacy except for: bounded low cardinality, partition-level ops, external Iceberg reader compatibility.</li>
+<li>Target file size 128MB–1GB. OPTIMIZE defaults ~1GB; lower for interactive selectivity.</li>
+<li>Stats on first <code>delta.dataSkippingNumIndexedCols=32</code> cols — reorder hot predicates first or raise the limit.</li>
+</ul>
+
+<h3>Deletion vectors</h3>
+<ul>
+<li>Roaring bitmap files referenced by <code>Add.deletionVector</code>.</li>
+<li>Mark-on-read; Photon applies natively. External readers need V3+ or UniForm positional-delete mapping.</li>
+<li>Net win for sparse deletes; periodic OPTIMIZE rewrites to keep DV count bounded.</li>
+<li><code>REORG TABLE tbl APPLY (PURGE)</code> physically rewrites files containing DV-flagged rows; use <code>spark.databricks.delta.reorg.purgeMode=rows</code> for targeted large-table purges.</li>
+<li>On Iceberg v3 tables (DBR 18.0+), deletion vectors are included by default.</li>
+</ul>
+
+<h3>Column mapping & type widening</h3>
+<ul>
+<li>id-mode (Parquet field IDs) or name-mode (logical→physical map). Required for RENAME / DROP COLUMN. Bumps <code>minReaderVersion</code>.</li>
+<li>Type widening lets INT→BIGINT etc. without rewrite; narrowing still rewrites; partial coverage.</li>
+</ul>
+
+<h3>Change Data Feed</h3>
+<ul>
+<li>Per-table opt-in. Per-row events in <code>_change_data/</code> with <code>_change_type</code>.</li>
+<li>Read via <code>SELECT * FROM table_changes('cat.sch.tbl', startV, endV)</code>. Feeds <code>APPLY CHANGES INTO</code>.</li>
+</ul>
+
+<h3>Predictive Optimization</h3>
+<ul>
+<li>UC <strong>managed</strong> tables only (Delta and Iceberg). External tables, OpenSharing recipient tables, HMS tables = your problem.</li>
+<li>Automates OPTIMIZE / VACUUM / <strong>ANALYZE</strong> (stats collection) based on small-file count, write rate, query patterns. Beats naive nightly cron by skipping no-ops.</li>
+<li>Enabled by default for accounts created on or after November 11, 2024; existing accounts being gradually rolled out.</li>
+</ul>
+
+<h3>UniForm</h3>
+<ul>
+<li>One Parquet directory, two metadata layers: Delta <code>_delta_log/</code> + Iceberg <code>metadata/</code> generated asynchronously each commit. (Hudi was removed; Iceberg is the only supported external format.)</li>
+<li>Non-Databricks engines (BigQuery, Athena, Redshift, Trino, OSS Spark) read as Iceberg with no copy. OpenSharing recipients can also read via the Iceberg REST Catalog API (public preview).</li>
+<li>Trade-off: small per-commit metadata cost; some Delta features (DV configs, column-mapping name mode) limit external reader visibility.</li>
+</ul>
+
+<h3>Volumes</h3>
+<ul>
+<li>Non-tabular escape hatch. Same permission model as tables. Path <code>/Volumes/cat/sch/vol/...</code>.</li>
+<li>Use for: model artifacts, RAG sources, raw drops before Auto Loader, init scripts, JARs.</li>
+<li><strong>Not</strong> a substitute for tables — no ACID, no stats-based pruning.</li>
+</ul>
+
+<h3>Cross-region and cross-cloud</h3>
+<ul>
+<li>Storage + metastore are <strong>regional</strong>. Cross-region reads pay egress.</li>
+<li>Delta Sharing is the right cross-region/cross-org primitive — no copy, recipient reads via protocol.</li>
+<li>True active-active multi-region is not a managed product — roll your own with deep clones or sharing.</li>
+</ul>
+
+<h3>Hard limits</h3>
+<ul>
+<li>~10⁹ files per table soft ceiling — planning latency grows.</li>
+<li><code>delta.logRetentionDuration</code> default 30 days — time-travel bounded by it.</li>
+<li>VACUUM default 7 days exists for a reason; lowering below it requires disabling the safety check.</li>
+<li>Storage-credential token TTL short; long jobs auto-refresh, raw <code>boto3</code> from a notebook does not.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>"Cloud bucket + Delta log + UC permissions, in that order of importance."</strong> Bucket holds bytes. Log makes them transactional. UC decides who can see the log. Debug in three jumps: <em>permissions (UC) → snapshot (Delta) → cloud storage (S3/ADLS/GCS)</em>.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use storage like this</h2>
+<ul>
+<li><strong>OLTP working sets in Delta.</strong> Use Lakebase; sync to Delta for analytics.</li>
+<li><strong>High-cardinality <code>PARTITIONED BY</code>.</strong> Liquid clustering.</li>
+<li><strong>Tables on archive storage tiers.</strong> Delta needs random reads on the log — archive breaks it.</li>
+<li><strong>Volumes as tables.</strong> No ACID, no stats.</li>
+<li><strong>Manual file writes into a table dir.</strong> Bypasses the log; corrupts the table.</li>
+<li><strong>One table per tenant for SaaS multi-tenancy.</strong> Use row filters in UC.</li>
+<li><strong>Hive metastore for new work.</strong> No UC features. Migrate.</li>
+<li><strong>Huge blobs in columns.</strong> Volumes + path reference.</li>
+<li><strong>Time travel as backup.</strong> Use clone or external backup.</li>
+<li><strong>Cross-region writes to one hot table.</strong> Co-locate writers and storage.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where storage does not do well</h2>
+<ul>
+<li><strong>Sub-second write latency</strong> isn't a goal. Even Zerobus is seconds end-to-end.</li>
+<li><strong>Per-row reads on huge tables</strong> without good clustering are slow.</li>
+<li><strong>Schema drift across many writers</strong> is brittle.</li>
+<li><strong>UniForm interop parity</strong> is an ops job — feature visibility varies by external reader.</li>
+<li><strong>Permission-propagation latency</strong> — UC changes can take seconds to minutes.</li>
+<li><strong>External tables outside Predictive Optimization.</strong> Bloat without an owner.</li>
+<li><strong>DV not universal in external readers.</strong> Pre-V3 readers may show deleted rows.</li>
+<li><strong>Storage credential errors are opaque.</strong> Audit isn't real-time.</li>
+<li><strong>No managed multi-region active-active.</strong></li>
+<li><strong>Big checkpoints</strong> for billions of files — v2 multi-part is opt-in and tricky.</li>
+<li><strong>Volumes have no stats or clustering.</strong> Not for SQL.</li>
+<li><strong>VACUUM is a foot-cannon</strong> with 0-hour retention.</li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://docs.databricks.com/aws/en/delta/">Delta Lake docs (Databricks)</a></li>
+<li><a href="https://github.com/delta-io/delta/blob/master/PROTOCOL.md">Delta protocol spec</a></li>
+<li><a href="https://docs.databricks.com/aws/en/data-governance/unity-catalog/">Unity Catalog</a></li>
+<li><a href="https://docs.databricks.com/aws/en/tables/managed">Managed vs external tables</a></li>
+<li><a href="https://docs.databricks.com/aws/en/volumes/">UC Volumes</a></li>
+<li><a href="https://docs.databricks.com/aws/en/connect/unity-catalog/external-locations">External locations</a></li>
+<li><a href="https://docs.databricks.com/aws/en/delta/clustering">Liquid clustering</a></li>
+<li><a href="https://docs.databricks.com/aws/en/delta/deletion-vectors">Deletion vectors</a></li>
+<li><a href="https://docs.databricks.com/aws/en/optimizations/predictive-optimization">Predictive Optimization</a></li>
+<li><a href="https://docs.databricks.com/aws/en/delta/uniform">UniForm</a></li>
+<li><a href="https://docs.databricks.com/aws/en/delta-sharing/">Delta Sharing</a></li>
+<li><a href="https://docs.databricks.com/aws/en/release-notes/runtime/18.html">DBR 18 LTS release notes</a></li>
+<li>Companion docs: <a href="../DeltaLake/delta-lake.html">Delta Lake</a> · <a href="../UCVolumes/uc-volumes.html">UC Volumes</a> · <a href="../UnityCatalog/unity-catalog.html">Unity Catalog</a> · <a href="../AutoLoader/auto-loader.html">Auto Loader</a> · <a href="../DeltaSharing/delta-sharing.html">Delta Sharing</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+
+</body></html>

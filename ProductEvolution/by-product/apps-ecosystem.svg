@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 376" width="2400" height="376" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBFCFD"/>
+      <stop offset="1" stop-color="#EEF1F5"/>
+    </linearGradient>
+    <linearGradient id="headerBg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0B1E36"/>
+      <stop offset="1" stop-color="#1F3A5F"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="2400" height="376" fill="url(#bg)"/>
+  <rect x="0" y="0" width="2400" height="80" fill="url(#headerBg)"/>
+  <text x="40" y="44" fill="#FFFFFF" font-size="28" font-weight="700">Apps &amp; Ecosystem <tspan fill="#9CB0CC" font-size="18" font-weight="400">— feature timeline</tspan></text>
+  <text x="40" y="68" fill="#9CB0CC" font-size="13">8 events  ·  Nov 2025 → Jun 2026  ·  data through 2026-06-25</text>
+  <rect x="2270" y="22" width="92" height="28" fill="#FF3621" rx="4"/><text x="2316" y="41" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">apps-ecosystem</text>
+  <g font-size="14" font-weight="600" fill="#0B1E36" text-anchor="middle">
+    <text x="202.5" y="124">Nov 25</text>
+    <text x="487.5" y="124">Dec 25</text>
+    <text x="772.5" y="124">Jan 26</text>
+    <text x="1057.5" y="124">Feb 26</text>
+    <text x="1342.5" y="124">Mar 26</text>
+    <text x="1627.5" y="124">Apr 26</text>
+    <text x="1912.5" y="124">May 26</text>
+    <text x="2197.5" y="124">Jun 26</text>
+  </g>
+  <g stroke="#DDE3EB" stroke-width="1">
+    <line x1="60.0" y1="130" x2="60.0" y2="266"/>
+    <line x1="345.0" y1="130" x2="345.0" y2="266"/>
+    <line x1="630.0" y1="130" x2="630.0" y2="266"/>
+    <line x1="915.0" y1="130" x2="915.0" y2="266"/>
+    <line x1="1200.0" y1="130" x2="1200.0" y2="266"/>
+    <line x1="1485.0" y1="130" x2="1485.0" y2="266"/>
+    <line x1="1770.0" y1="130" x2="1770.0" y2="266"/>
+    <line x1="2055.0" y1="130" x2="2055.0" y2="266"/>
+    <line x1="2340.0" y1="130" x2="2340.0" y2="266"/>
+  </g>
+  <rect x="0" y="130" width="2400" height="136" fill="#0B1E36" fill-opacity="0.02"/>
+  <g font-size="11" fill="#0B1E36">
+    <rect x="68.0" y="144" width="269.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="202.5" y="158" text-anchor="middle" font-weight="600">Configure compute size for Databricks A…</text>
+    <text x="202.5" y="170" text-anchor="middle" font-size="9" fill="#5A7088">11/20  ·  Public Preview</text>
+    <rect x="923.0" y="144" width="269.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1057.5" y="158" text-anchor="middle" font-weight="600">New documentation for authoring and dep…</text>
+    <text x="1057.5" y="170" text-anchor="middle" font-size="9" fill="#5A7088">2/10  ·  Update</text>
+    <rect x="1493.0" y="144" width="269.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1627.5" y="158" text-anchor="middle" font-weight="600">Git-backed app deployments are now gene…</text>
+    <text x="1627.5" y="170" text-anchor="middle" font-size="9" fill="#5A7088">4/7  ·  GA</text>
+    <rect x="1493.0" y="180" width="269.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1627.5" y="194" text-anchor="middle" font-weight="600">Databricks Marketplace listing creation…</text>
+    <text x="1627.5" y="206" text-anchor="middle" font-size="9" fill="#5A7088">4/6  ·  Update</text>
+    <rect x="1778.0" y="144" width="269.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1912.5" y="158" text-anchor="middle" font-weight="600">Edits to resources in the UI now automa…</text>
+    <text x="1912.5" y="170" text-anchor="middle" font-size="9" fill="#5A7088">5/19  ·  Update</text>
+    <rect x="2063.0" y="144" width="269.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2197.5" y="158" text-anchor="middle" font-weight="600">Solution Accelerators in Databricks Mar…</text>
+    <text x="2197.5" y="170" text-anchor="middle" font-size="9" fill="#5A7088">6/25  ·  Update</text>
+    <rect x="2063.0" y="180" width="269.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2197.5" y="194" text-anchor="middle" font-weight="600">Install third-party apps from Databrick…</text>
+    <text x="2197.5" y="206" text-anchor="middle" font-size="9" fill="#5A7088">6/16  ·  Update</text>
+    <rect x="2063.0" y="216" width="269.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2197.5" y="230" text-anchor="middle" font-weight="600">Use Universal Commits to purchase Marke…</text>
+    <text x="2197.5" y="242" text-anchor="middle" font-size="9" fill="#5A7088">6/15  ·  Update</text>
+  </g>
+  <g font-size="13" fill="#0B1E36">
+    <text x="40" y="286" font-weight="700" font-size="14">Status</text>
+    <rect x="130" y="270" width="20" height="20" rx="4" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="158" y="286">GA</text>
+    <rect x="202" y="270" width="20" height="20" rx="4" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="230" y="286">Public Preview</text>
+    <rect x="370" y="270" width="20" height="20" rx="4" fill="#FDE8E0" stroke="#9A3412" stroke-width="1.5"/>
+    <text x="398" y="286">Private Preview</text>
+    <rect x="546" y="270" width="20" height="20" rx="4" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="574" y="286">Beta</text>
+    <rect x="634" y="270" width="20" height="20" rx="4" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="662" y="286">Update</text>
+  </g>
+  <text x="40" y="364" font-size="11" fill="#5A7088">Source: docs.databricks.com/aws/en/release-notes/product/  ·  classified into "apps-ecosystem" bucket  ·  generated by feature-timeline.py</text>
+</svg>

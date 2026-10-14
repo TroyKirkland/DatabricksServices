@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 556" width="2400" height="556" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBFCFD"/>
+      <stop offset="1" stop-color="#EEF1F5"/>
+    </linearGradient>
+    <linearGradient id="headerBg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0B1E36"/>
+      <stop offset="1" stop-color="#1F3A5F"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="2400" height="556" fill="url(#bg)"/>
+  <rect x="0" y="0" width="2400" height="80" fill="url(#headerBg)"/>
+  <text x="40" y="44" fill="#FFFFFF" font-size="28" font-weight="700">Workspace &amp; Notebooks <tspan fill="#9CB0CC" font-size="18" font-weight="400">— feature timeline</tspan></text>
+  <text x="40" y="68" fill="#9CB0CC" font-size="13">52 events  ·  Oct 2025 → Sep 2026  ·  data through 2026-09-30</text>
+  <rect x="2270" y="22" width="92" height="28" fill="#FF3621" rx="4"/><text x="2316" y="41" fill="#FFFFFF" font-size="13" font-weight="700" text-anchor="middle">workspace</text>
+  <g font-size="14" font-weight="600" fill="#0B1E36" text-anchor="middle">
+    <text x="155.0" y="124">Oct 25</text>
+    <text x="345.0" y="124">Nov 25</text>
+    <text x="535.0" y="124">Dec 25</text>
+    <text x="725.0" y="124">Jan 26</text>
+    <text x="915.0" y="124">Feb 26</text>
+    <text x="1105.0" y="124">Mar 26</text>
+    <text x="1295.0" y="124">Apr 26</text>
+    <text x="1485.0" y="124">May 26</text>
+    <text x="1675.0" y="124">Jun 26</text>
+    <text x="1865.0" y="124">Jul 26</text>
+    <text x="2055.0" y="124">Aug 26</text>
+    <text x="2245.0" y="124">Sep 26</text>
+  </g>
+  <g stroke="#DDE3EB" stroke-width="1">
+    <line x1="60.0" y1="130" x2="60.0" y2="446"/>
+    <line x1="250.0" y1="130" x2="250.0" y2="446"/>
+    <line x1="440.0" y1="130" x2="440.0" y2="446"/>
+    <line x1="630.0" y1="130" x2="630.0" y2="446"/>
+    <line x1="820.0" y1="130" x2="820.0" y2="446"/>
+    <line x1="1010.0" y1="130" x2="1010.0" y2="446"/>
+    <line x1="1200.0" y1="130" x2="1200.0" y2="446"/>
+    <line x1="1390.0" y1="130" x2="1390.0" y2="446"/>
+    <line x1="1580.0" y1="130" x2="1580.0" y2="446"/>
+    <line x1="1770.0" y1="130" x2="1770.0" y2="446"/>
+    <line x1="1960.0" y1="130" x2="1960.0" y2="446"/>
+    <line x1="2150.0" y1="130" x2="2150.0" y2="446"/>
+    <line x1="2340.0" y1="130" x2="2340.0" y2="446"/>
+  </g>
+  <rect x="0" y="130" width="2400" height="316" fill="#0B1E36" fill-opacity="0.02"/>
+  <g font-size="11" fill="#0B1E36">
+    <rect x="68.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="155.0" y="158" text-anchor="middle" font-weight="600">Skip cells when running n…</text>
+    <text x="155.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">10/31  ·  Update</text>
+    <rect x="68.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="155.0" y="194" text-anchor="middle" font-weight="600">Improved notebook debugge…</text>
+    <text x="155.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">10/31  ·  Update</text>
+    <rect x="68.0" y="216" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="155.0" y="230" text-anchor="middle" font-weight="600">Unified runs list (Public…</text>
+    <text x="155.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">10/20  ·  Public Preview</text>
+    <rect x="68.0" y="252" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="155.0" y="266" text-anchor="middle" font-weight="600">Databricks Connector for…</text>
+    <text x="155.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">10/17  ·  Public Preview</text>
+    <rect x="68.0" y="288" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="155.0" y="302" text-anchor="middle" font-weight="600">The billable usage table…</text>
+    <text x="155.0" y="314" text-anchor="middle" font-size="9" fill="#5A7088">10/9  ·  Update</text>
+    <rect x="68.0" y="324" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="155.0" y="338" text-anchor="middle" font-weight="600">Notebook improvements</text>
+    <text x="155.0" y="350" text-anchor="middle" font-size="9" fill="#5A7088">10/3  ·  Update</text>
+    <rect x="68.0" y="360" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="155.0" y="374" text-anchor="middle" font-weight="600">Git email identity config…</text>
+    <text x="155.0" y="386" text-anchor="middle" font-size="9" fill="#5A7088">10/1  ·  Update</text>
+    <rect x="68.0" y="396" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="155.0" y="410" text-anchor="middle" font-weight="600">New permissions for the D…</text>
+    <text x="155.0" y="422" text-anchor="middle" font-size="9" fill="#5A7088">10/1  ·  Update</text>
+    <rect x="258.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="345.0" y="158" text-anchor="middle" font-weight="600">Real-time collaboration i…</text>
+    <text x="345.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">11/21  ·  Update</text>
+    <rect x="258.0" y="180" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="345.0" y="194" text-anchor="middle" font-weight="600">Use Git CLI commands in G…</text>
+    <text x="345.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">11/21  ·  Beta</text>
+    <rect x="258.0" y="216" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="345.0" y="230" text-anchor="middle" font-weight="600">Migrate Community Edition…</text>
+    <text x="345.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">11/7  ·  Public Preview</text>
+    <rect x="258.0" y="252" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="345.0" y="266" text-anchor="middle" font-weight="600">New MCP server tab</text>
+    <text x="345.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">11/6  ·  Update</text>
+    <rect x="258.0" y="288" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="345.0" y="302" text-anchor="middle" font-weight="600">Updated tag search syntax…</text>
+    <text x="345.0" y="314" text-anchor="middle" font-size="9" fill="#5A7088">11/5  ·  Update</text>
+    <rect x="448.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="535.0" y="158" text-anchor="middle" font-weight="600">View latest scheduled not…</text>
+    <text x="535.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">12/18  ·  Update</text>
+    <rect x="448.0" y="180" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="535.0" y="194" text-anchor="middle" font-weight="600">Disable legacy features s…</text>
+    <text x="535.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">12/11  ·  GA</text>
+    <rect x="638.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="725.0" y="158" text-anchor="middle" font-weight="600">View and restore your rec…</text>
+    <text x="725.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">1/30  ·  Update</text>
+    <rect x="638.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="725.0" y="194" text-anchor="middle" font-weight="600">Paste images into noteboo…</text>
+    <text x="725.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">1/30  ·  Update</text>
+    <rect x="638.0" y="216" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="725.0" y="230" text-anchor="middle" font-weight="600">Managed MCP servers is no…</text>
+    <text x="725.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">1/27  ·  Public Preview</text>
+    <rect x="828.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="915.0" y="158" text-anchor="middle" font-weight="600">Python unit testing in th…</text>
+    <text x="915.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">2/26  ·  Update</text>
+    <rect x="828.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="915.0" y="194" text-anchor="middle" font-weight="600">Select tables and create…</text>
+    <text x="915.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">2/3  ·  Update</text>
+    <rect x="1018.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1105.0" y="158" text-anchor="middle" font-weight="600">Databricks Documentation…</text>
+    <text x="1105.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">3/31  ·  Update</text>
+    <rect x="1018.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1105.0" y="194" text-anchor="middle" font-weight="600">Databricks Connector for…</text>
+    <text x="1105.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">3/30  ·  Update</text>
+    <rect x="1018.0" y="216" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1105.0" y="230" text-anchor="middle" font-weight="600">Tree view of the workspac…</text>
+    <text x="1105.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">3/5  ·  Public Preview</text>
+    <rect x="1018.0" y="252" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1105.0" y="266" text-anchor="middle" font-weight="600">Managed OAuth flows for e…</text>
+    <text x="1105.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">3/2  ·  Update</text>
+    <rect x="1018.0" y="288" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1105.0" y="302" text-anchor="middle" font-weight="600">Notebook tagging (Public…</text>
+    <text x="1105.0" y="314" text-anchor="middle" font-size="9" fill="#5A7088">3/2  ·  Public Preview</text>
+    <rect x="1018.0" y="324" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1105.0" y="338" text-anchor="middle" font-weight="600">Schedule data refreshes i…</text>
+    <text x="1105.0" y="350" text-anchor="middle" font-size="9" fill="#5A7088">3/2  ·  Public Preview</text>
+    <rect x="1208.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1295.0" y="158" text-anchor="middle" font-weight="600">Language selector for AI-…</text>
+    <text x="1295.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">4/22  ·  Update</text>
+    <rect x="1208.0" y="180" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1295.0" y="194" text-anchor="middle" font-weight="600">Databricks Connector for…</text>
+    <text x="1295.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">4/16  ·  GA</text>
+    <rect x="1208.0" y="216" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1295.0" y="230" text-anchor="middle" font-weight="600">Sample Data Explorer is g…</text>
+    <text x="1295.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">4/15  ·  GA</text>
+    <rect x="1208.0" y="252" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1295.0" y="266" text-anchor="middle" font-weight="600">Updated AWS tag character…</text>
+    <text x="1295.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">4/15  ·  Update</text>
+    <rect x="1398.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1485.0" y="158" text-anchor="middle" font-weight="600">Removed legacy Assistant…</text>
+    <text x="1485.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">5/26  ·  Update</text>
+    <rect x="1398.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1485.0" y="194" text-anchor="middle" font-weight="600">Workspace sidebar navigat…</text>
+    <text x="1485.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">5/21  ·  Update</text>
+    <rect x="1398.0" y="216" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1485.0" y="230" text-anchor="middle" font-weight="600">Unified runs list is gene…</text>
+    <text x="1485.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">5/18  ·  GA</text>
+    <rect x="1398.0" y="252" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1485.0" y="266" text-anchor="middle" font-weight="600">View run history for sche…</text>
+    <text x="1485.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">5/14  ·  Update</text>
+    <rect x="1398.0" y="288" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1485.0" y="302" text-anchor="middle" font-weight="600">Configure an additional r…</text>
+    <text x="1485.0" y="314" text-anchor="middle" font-size="9" fill="#5A7088">5/14  ·  Update</text>
+    <rect x="1398.0" y="324" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1485.0" y="338" text-anchor="middle" font-weight="600">Native data profiling for…</text>
+    <text x="1485.0" y="350" text-anchor="middle" font-size="9" fill="#5A7088">5/1  ·  Update</text>
+    <rect x="1588.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1675.0" y="158" text-anchor="middle" font-weight="600">Improved workspace files…</text>
+    <text x="1675.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">6/16  ·  Update</text>
+    <rect x="1588.0" y="180" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1675.0" y="194" text-anchor="middle" font-weight="600">Improved workspace file w…</text>
+    <text x="1675.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">6/4  ·  Update</text>
+    <rect x="1588.0" y="216" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="1675.0" y="230" text-anchor="middle" font-weight="600">Column popularity is now…</text>
+    <text x="1675.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">6/1  ·  Update</text>
+    <rect x="1778.0" y="144" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="1865.0" y="158" text-anchor="middle" font-weight="600">Git CLI commands in Git f…</text>
+    <text x="1865.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">7/24  ·  Public Preview</text>
+    <rect x="1778.0" y="180" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1865.0" y="194" text-anchor="middle" font-weight="600">Governance Hub is in Beta</text>
+    <text x="1865.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">7/22  ·  Beta</text>
+    <rect x="1778.0" y="216" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="1865.0" y="230" text-anchor="middle" font-weight="600">Agentic code converter is…</text>
+    <text x="1865.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">7/16  ·  Beta</text>
+    <rect x="1778.0" y="252" width="174.0" height="32" rx="6" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="1865.0" y="266" text-anchor="middle" font-weight="600">Budgets are now generally…</text>
+    <text x="1865.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">7/6  ·  GA</text>
+    <rect x="1968.0" y="144" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2055.0" y="158" text-anchor="middle" font-weight="600">Identity attributes (Beta)</text>
+    <text x="2055.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">8/13  ·  Beta</text>
+    <rect x="1968.0" y="180" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2055.0" y="194" text-anchor="middle" font-weight="600">Tags page in Governance H…</text>
+    <text x="2055.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">8/13  ·  Beta</text>
+    <rect x="1968.0" y="216" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2055.0" y="230" text-anchor="middle" font-weight="600">Tag automations (Beta)</text>
+    <text x="2055.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">8/7  ·  Beta</text>
+    <rect x="1968.0" y="252" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2055.0" y="266" text-anchor="middle" font-weight="600">Search and replace text a…</text>
+    <text x="2055.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">8/5  ·  Update</text>
+    <rect x="1968.0" y="288" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2055.0" y="302" text-anchor="middle" font-weight="600">Organize your work with s…</text>
+    <text x="2055.0" y="314" text-anchor="middle" font-size="9" fill="#5A7088">8/3  ·  Update</text>
+    <rect x="2158.0" y="144" width="174.0" height="32" rx="6" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="2245.0" y="158" text-anchor="middle" font-weight="600">Control spreadsheet write…</text>
+    <text x="2245.0" y="170" text-anchor="middle" font-size="9" fill="#5A7088">9/30  ·  Update</text>
+    <rect x="2158.0" y="180" width="174.0" height="32" rx="6" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="2245.0" y="194" text-anchor="middle" font-weight="600">Usage tracking adds sessi…</text>
+    <text x="2245.0" y="206" text-anchor="middle" font-size="9" fill="#5A7088">9/27  ·  Public Preview</text>
+    <rect x="2158.0" y="216" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2245.0" y="230" text-anchor="middle" font-weight="600">Configurable retention fo…</text>
+    <text x="2245.0" y="242" text-anchor="middle" font-size="9" fill="#5A7088">9/9  ·  Beta</text>
+    <rect x="2158.0" y="252" width="174.0" height="32" rx="6" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="2245.0" y="266" text-anchor="middle" font-weight="600">Git Folder Serverless is…</text>
+    <text x="2245.0" y="278" text-anchor="middle" font-size="9" fill="#5A7088">9/2  ·  Beta</text>
+  </g>
+  <g font-size="13" fill="#0B1E36">
+    <text x="40" y="466" font-weight="700" font-size="14">Status</text>
+    <rect x="130" y="450" width="20" height="20" rx="4" fill="#E1EFE5" stroke="#166534" stroke-width="1.5"/>
+    <text x="158" y="466">GA</text>
+    <rect x="202" y="450" width="20" height="20" rx="4" fill="#FAEFE0" stroke="#B45309" stroke-width="1.5"/>
+    <text x="230" y="466">Public Preview</text>
+    <rect x="370" y="450" width="20" height="20" rx="4" fill="#FDE8E0" stroke="#9A3412" stroke-width="1.5"/>
+    <text x="398" y="466">Private Preview</text>
+    <rect x="546" y="450" width="20" height="20" rx="4" fill="#E6EAF3" stroke="#1E3A8A" stroke-width="1.5"/>
+    <text x="574" y="466">Beta</text>
+    <rect x="634" y="450" width="20" height="20" rx="4" fill="#E7EAF0" stroke="#475569" stroke-width="1.5"/>
+    <text x="662" y="466">Update</text>
+  </g>
+  <text x="40" y="544" font-size="11" fill="#5A7088">Source: docs.databricks.com/aws/en/release-notes/product/  ·  classified into "workspace" bucket  ·  generated by feature-timeline.py</text>
+</svg>

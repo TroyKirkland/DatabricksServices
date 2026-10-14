@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>MLflow on Databricks — L100 to L400</title><link rel="stylesheet" href="../_style.css"></head><body>
+<h1>MLflow on Databricks</h1>
+
+<div class="toc"><h4>Contents</h4><ul>
+<li><a href="#l100">L100 — What it is</a></li>
+<li><a href="#l200">L200 — Product surface</a></li>
+<li><a href="#l300">L300 — Architecture</a></li>
+<li><a href="#l400">L400 — Deep internals</a></li>
+<li><a href="#anti">Anti-patterns</a></li>
+<li><a href="#weak">Weaknesses</a></li>
+<li><a href="#sources">Sources</a></li>
+</ul></div>
+
+<h2 id="l100"><span class="level-badge">L100</span>What it is</h2>
+<p>Open-source standard for ML experiment tracking, model registry, agent tracing, and evaluation. On Databricks: preinstalled in DBR, models live in UC, tracing wired into compute and agent runtimes.</p>
+<ul>
+<li><strong>Tracking</strong>: runs (params, metrics, artifacts).</li>
+<li><strong>Registry</strong>: UC models with versions, aliases.</li>
+<li><strong>Tracing</strong>: span-based observability for LLM/agent apps.</li>
+<li><strong>Evaluation</strong>: <code>mlflow.genai.evaluate()</code> + scorers.</li>
+</ul>
+
+<h2 id="l200"><span class="level-badge">L200</span>The product surface</h2>
+<ul>
+<li>Experiments + Runs (params/metrics/tags/artifacts/traces).</li>
+<li>Models via pyfunc + framework flavors (sklearn, pytorch, transformers, langchain).</li>
+<li>Registered models in UC with versions + aliases (<code>@production</code>).</li>
+<li>Tracing: <code>@mlflow.trace</code> + framework autolog (LangChain, OpenAI, DSPy, CrewAI).</li>
+<li>GenAI evaluation: built-ins (Guidelines, Correctness, Safety, RetrievalGroundedness) + custom <code>@scorer</code>.</li>
+<li><strong>Logged Models</strong> (MLflow 3): persistent model objects tracking lifecycle from prototype to UC-registered version; linked to runs, metrics, params, generation code.</li>
+<li><strong>Deployment Jobs</strong> (MLflow 3): managed evaluate → approve → deploy workflow; UC-governed, activity-logged.</li>
+<li><strong>Prompt management</strong>: version, store, and compare prompt templates across agent iterations.</li>
+<li>Deploy → Mosaic AI Model Serving.</li>
+<li>Auto-logging hooks for most frameworks.</li>
+<li>SDK: Python, TypeScript/JavaScript, R, Java, REST.</li>
+</ul>
+
+<h2 id="l300"><span class="level-badge">L300</span>Architecture</h2>
+<pre><code>[Training/agent code] → mlflow.* SDK → MLflow tracking server
+                                       ├ Experiments/Runs metadata (workspace)
+                                       ├ Artifacts (UC cloud storage)
+                                       └ Traces (traces store)
+
+Registered models live in UC: catalog.schema.name + versions → consumed by Model Serving / Spark / external</code></pre>
+<p>Experiments workspace-local; registered models UC-scoped. Artifacts in your cloud (UC credentials). Lineage propagates from UC tables logged on runs.</p>
+
+<h2 id="l400"><span class="level-badge">L400</span>Deep internals</h2>
+
+<h3>Run lifecycle</h3>
+<ul>
+<li><code>start_run</code> creates run; logging targets active run.</li>
+<li>Nested runs for sweeps.</li>
+<li>Sealed on end; only tags/description editable.</li>
+</ul>
+
+<h3>Models + pyfunc</h3>
+<ul>
+<li>Saved model dir: MLmodel meta, code, weights, python_function wrapper.</li>
+<li>pyfunc universal; agents use <code>ChatAgent</code> / <code>ResponsesAgent</code> for chat schemas.</li>
+</ul>
+
+<h3>UC registered models</h3>
+<ul>
+<li><code>register_model("runs:/&lt;run-id&gt;/model", "cat.sch.name")</code>.</li>
+<li>Aliases (<code>@production</code>) are pointers; promote = update alias.</li>
+<li>UC governance applies.</li>
+</ul>
+
+<h3>Tracing</h3>
+<ul>
+<li>Tree of spans: function calls, latency, IO.</li>
+<li>Autolog: LangChain, LangGraph, OpenAI, DSPy, CrewAI, AutoGen.</li>
+<li>Manual via <code>@mlflow.trace</code>.</li>
+<li>Queryable by experiment/time/tags/status/latency.</li>
+</ul>
+
+<h3>Evaluation</h3>
+<ul>
+<li><code>mlflow.genai.evaluate(data, predict_fn, scorers=[...])</code> runs + scores + logs.</li>
+<li>Built-in scorers wrap LLM judges or deterministic checks.</li>
+<li>Custom <code>@scorer</code> for domain logic.</li>
+</ul>
+
+<h3>Production loop</h3>
+<ul>
+<li>Sample prod traces → label → eval dataset → re-evaluate.</li>
+</ul>
+
+<h3>Logged Models + Deployment Jobs (MLflow 3)</h3>
+<ul>
+<li><strong>Logged Models</strong>: first-class entity separate from UC registered model versions. Persists the development arc — created during a run, linked to metrics/params/code, promotable to UC. Replaces hunting for "which run ID held the best artifact."</li>
+<li><strong>Deployment Jobs</strong>: pipeline object sequencing evaluate → approve → deploy. UC-governed; each transition is activity-logged. Formalises the alias-promotion ceremony.</li>
+</ul>
+
+<h3>Prompt management</h3>
+<ul>
+<li>Store prompt templates in MLflow with versions and aliases.</li>
+<li>Compare prompt versions against an eval dataset before deploying.</li>
+<li>SDK-accessible and surfaced in the MLflow UI.</li>
+</ul>
+
+<h3>Autolog gotchas</h3>
+<ul>
+<li>Custom training loops skip autolog.</li>
+<li>Use framework callbacks (PL, HF Trainer) for full control.</li>
+</ul>
+
+<h3>Limits / realities</h3>
+<ul>
+<li>Search paginated.</li>
+<li>Artifact storage in your cloud; cleanup is on you.</li>
+<li>Trace storage cost → sample in prod.</li>
+<li>Version-pinned autolog.</li>
+<li>MLflow 3 tracing model differs from 2.x.</li>
+</ul>
+
+<h3>Mental model</h3>
+<p><strong>Connective tissue between training and serving + observability for agents.</strong> MLflow 3 makes agent tracing + eval first-class; UC owns model identity.</p>
+
+<hr>
+
+<h2 id="anti"><span class="level-badge">Anti-patterns</span>Where you should not use MLflow</h2>
+<ul>
+<li><strong>Logging huge artifacts every run.</strong> Log references.</li>
+<li><strong>Sub-second serving from MLflow directly.</strong> Use Model Serving.</li>
+<li><strong>No-sample prod traces.</strong> Fills storage fast.</li>
+<li><strong>Flat thousand-sibling sweeps.</strong> Use nested runs.</li>
+<li><strong>Every dev model in prod catalog.</strong></li>
+<li><strong>Custom pyfunc when a flavor exists.</strong></li>
+<li><strong>Manual trace of autologged frameworks.</strong></li>
+<li><strong>Experiments as compliance audit.</strong> Use UC audit.</li>
+<li><strong>PII in logged params.</strong> Redact first.</li>
+<li><strong>Local-path artifacts.</strong> Use UC volumes.</li>
+</ul>
+
+<h2 id="weak"><span class="level-badge">Weaknesses</span>Where it does not do well</h2>
+<ul>
+<li><strong>Search across many experiments slow.</strong></li>
+<li><strong>Trace storage cost at scale.</strong></li>
+<li><strong>Autolog version pinning fragility.</strong></li>
+<li><strong>Alias UX is basic.</strong></li>
+<li><strong>LLM-judge scorers cost a lot.</strong></li>
+<li><strong>Cross-experiment compare manual.</strong></li>
+<li><strong>Distributed training instrumentation uneven.</strong></li>
+<li><strong>Notebook trace UX is awkward.</strong></li>
+<li><strong>Limited custom UI on trace viewer.</strong></li>
+<li><strong>No scorer registry; bake into wheels.</strong></li>
+<li><strong>Per-region models.</strong></li>
+<li><strong>Prod→eval wiring is manual.</strong></li>
+</ul>
+
+<hr>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+<li><a href="https://mlflow.org/docs/latest/index.html">MLflow docs</a></li>
+<li><a href="https://docs.databricks.com/aws/en/mlflow/">MLflow on Databricks</a></li>
+<li><a href="https://mlflow.org/docs/latest/llms/llm-evaluate/index.html">GenAI evaluation</a></li>
+<li><a href="https://mlflow.org/docs/latest/llms/tracing/index.html">Tracing</a></li>
+<li><a href="https://docs.databricks.com/aws/en/machine-learning/manage-model-lifecycle/">Models in UC</a></li>
+<li><a href="https://docs.databricks.com/aws/en/mlflow/">Logged Models and Deployment Jobs (MLflow 3)</a></li>
+<li><a href="../Glossary/glossary.html">Glossary</a></li>
+</ul>
+</body></html>
